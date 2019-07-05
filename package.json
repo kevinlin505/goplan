@@ -1,0 +1,56 @@
+{
+  "name": "goplan",
+  "version": "0.1.0",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "webpack-dev-server --watch --env.environment development",
+    "build": "",
+    "lint": "eslint . --ext .js,.ts --cache",
+    "lint:check": "eslint --print-config . | eslint-config-prettier-check"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "7.5.0",
+    "core-js": "2.6.5",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-redux": "7.1.0",
+    "redux": "4.0.1",
+    "redux-devtools-extension": "2.13.8",
+    "redux-thunk": "2.3.0",
+    "styled-components": "4.3.2",
+    "whatwg-fetch": "3.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.5.0",
+    "@babel/core": "7.5.0",
+    "@babel/plugin-proposal-class-properties": "7.5.0",
+    "@babel/plugin-proposal-object-rest-spread": "7.5.0",
+    "@babel/plugin-transform-async-to-generator": "7.5.0",
+    "@babel/plugin-transform-modules-commonjs": "7.5.0",
+    "@babel/plugin-transform-runtime": "7.5.0",
+    "@babel/preset-env": "7.5.0",
+    "@babel/preset-react": "7.0.0",
+    "babel-loader": "8.0.6",
+    "babel-plugin-styled-components": "1.10.6",
+    "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "eslint": "6.0.1",
+    "eslint-config-airbnb-base": "13.2.0",
+    "eslint-config-prettier": "6.0.0",
+    "eslint-import-resolver-alias": "1.1.2",
+    "eslint-import-resolver-webpack": "0.11.1",
+    "eslint-plugin-import": "2.18.0",
+    "eslint-plugin-prettier": "3.1.0",
+    "eslint-plugin-react": "7.14.2",
+    "html-webpack-plugin": "3.2.0",
+    "nodemon": "1.19.1",
+    "prettier": "1.18.2",
+    "react-hot-loader": "4.12.3",
+    "webpack": "4.35.2",
+    "webpack-bundle-analyzer": "3.3.2",
+    "webpack-cli": "3.3.5",
+    "webpack-dev-server": "3.7.2"
+  }
+}
