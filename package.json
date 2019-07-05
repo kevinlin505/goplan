@@ -6,7 +6,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "webpack-dev-server --watch --env.environment development",
+    "start": "webpack --env.environment development && webpack-dev-server --env.environment development --watch",
     "build": "",
     "lint": "eslint . --ext .js,.ts --cache",
     "lint:check": "eslint --print-config . | eslint-config-prettier-check"
@@ -33,6 +33,7 @@
     "@babel/plugin-transform-runtime": "7.5.0",
     "@babel/preset-env": "7.5.0",
     "@babel/preset-react": "7.0.0",
+    "babel-eslint": "10.0.2",
     "babel-loader": "8.0.6",
     "babel-plugin-styled-components": "1.10.6",
     "case-sensitive-paths-webpack-plugin": "2.2.0",

@@ -55,7 +55,11 @@ module.exports = function returnConfig(env) {
       // if errors, do not emit files
       new webpack.NoEmitOnErrorsPlugin(),
 
-      new HtmlWebpackPlugin(),
+      new HtmlWebpackPlugin({
+        template: 'src/index.tpl.ejs',
+        inject: 'body',
+        filename: 'index.html',
+      }),
 
       new webpack.DefinePlugin({
         'process.env': {
