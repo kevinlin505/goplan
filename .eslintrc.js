@@ -98,4 +98,15 @@ module.exports = {
   ],
 
   rules: rules,
+
+  settings: {
+    'import/resolver': {
+      alias: [
+        ['@components', './src/components'],
+        ['@providers', './src/providers'],
+        ['@store', './src/store'],
+        ['@utils', './src/utils'],
+      ],
+    },
+  },
 };
