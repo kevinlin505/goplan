@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const PATHS = {
   dist: path.join(__dirname, 'dist'),
@@ -57,7 +57,8 @@ module.exports = function returnConfig(env) {
     mode: env.environment,
     output: {
       path: PATHS.dist,
-      filename: env.environment === 'development' ? 'bundle.js' : 'bundle.min.js',
+      filename:
+        env.environment === 'development' ? 'bundle.js' : 'bundle.min.js',
     },
     plugins: [
       // flips webpack server to hot mode
@@ -98,6 +99,6 @@ module.exports = function returnConfig(env) {
         version: false,
         hash: false,
       },
-    }
+    },
   };
 };
