@@ -41,7 +41,18 @@ module.exports = function returnConfig(env) {
     },
     devtool: 'inline-source-map',
     entry: {
-      app: PATHS.index
+      app: [
+        'whatwg-fetch',
+        'core-js/fn/promise',
+        'core-js/fn/object/assign',
+        'core-js/fn/array/from',
+        'core-js/es6/string',
+        'core-js/es7/array',
+        'react-hot-loader/patch', // active HMR for react
+        'webpack-dev-server/client?http://localhost:3000', // local dev server host and port
+        'webpack/hot/only-dev-server', // only reloads on successful builds
+        PATHS.index,
+      ],
     },
     mode: env.environment,
     output: {
