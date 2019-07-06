@@ -103,6 +103,7 @@ module.exports = {
     'import/resolver': {
       alias: [
         ['@components', './src/components'],
+        ['@models', './src/models'],
         ['@providers', './src/providers'],
         ['@store', './src/store'],
         ['@utils', './src/utils'],

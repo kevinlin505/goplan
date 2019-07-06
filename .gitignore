@@ -11,6 +11,9 @@
 
 /dist
 
+# creds
+keys.js
+
 # misc
 .DS_Store
 .env
