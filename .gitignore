@@ -12,7 +12,7 @@
 /dist
 
 # creds
-keys.js
+/constants/Keys.js
 
 # misc
 .DS_Store
