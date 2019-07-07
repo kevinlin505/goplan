@@ -2,16 +2,15 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import Keys from '@constants/Keys';
 
-const initializeFireBase = async () => {
+const initializeFireBase = () => {
   // Initialize firebase connection
   firebase.initializeApp(Keys.FIREBASE);
 
   // State will be persisted even when the activity is destroyed.
-  const response = await firebase
-    .auth()
-    .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  const db = firebase.firestore();
+  db.enablePersistence();
 
-  return response;
+  return db;
 };
 
 export default initializeFireBase;

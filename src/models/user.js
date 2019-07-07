@@ -1,47 +1,57 @@
 import firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/database';
-
-const authUserProfile = currentUser => {
-  return {
-    displayName: currentUser.displayName,
-    email: currentUser.email,
-    emailVerified: currentUser.emailVerified,
-    isAnonymous: currentUser.isAnonymous,
-    creationTime: currentUser.metadata.creationTime,
-    lastSignInTime: currentUser.metadata.lastSignInTime,
-    phoneNumber: currentUser.phoneNumber,
-    photoURL: currentUser.photoURL,
-    accessToken: currentUser.accessToken,
-    refreshToken: currentUser.refreshToken,
-  };
-};
+import 'firebase/firestore';
 
 export default function user() {
   return {
-    checkUserProfile: currentUser => {
-      console.log(currentUser);
+    checkUserProfile: () => {
+      const db = firebase.firestore();
+      const { currentUser } = firebase.auth();
+
+      return db
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
     },
 
     createUserProfile: () => {
+      const db = firebase.firestore();
       const { currentUser } = firebase.auth();
-      const profile = authUserProfile(currentUser);
 
-      firebase
-        .database()
-        .ref(`users/${currentUser.uid}`)
-        .set(profile);
-    },
-
-    updateUserProfile: (newProfile = {}) => {
-      const { currentUser } = firebase.auth();
-      const profile = {
-        ...authUserProfile(currentUser),
-        ...newProfile,
+      const profileDefault = {
+        creation_time: currentUser.metadata.creationTime,
+        email: currentUser.email,
+        email_verified: currentUser.emailVerified,
+        last_sign_in_time: currentUser.metadata.lastSignInTime,
+        name: currentUser.displayName,
+        phone_number: currentUser.phoneNumber,
+        profile_url: currentUser.photoURL,
+        quickpay: '',
+        spendings: {
+          document: 0,
+          equiment: 0,
+          food: 0,
+          ticket: 0,
+          transportation: 0,
+        },
+        trips: [],
+        venmo: '',
       };
 
-      firebase
-        .database()
-        .ref(`users/${currentUser.uid}`)
+      return db
+        .collection('users')
+        .doc(currentUser.uid)
+        .set(profileDefault);
+    },
+
+    updateUserProfile: (profile = {}) => {
+      const db = firebase.firestore();
+      const { currentUser } = firebase.auth();
+
+      return db
+        .collection('users')
+        .doc(currentUser.uid)
         .update(profile);
     },
   };
