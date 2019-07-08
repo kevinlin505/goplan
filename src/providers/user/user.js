@@ -1,5 +1,7 @@
+import user from '@data/user';
+
 export const types = {
-  GET_USER_DETAILS: 'GET_USER_DETAILS',
+  GET_USER_DETAILS: 'USER/GET_USER_DETAILS',
 };
 
 const initialState = {};
@@ -17,10 +19,14 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-export const actions = {
-  getUserDetails: () => (dispatch, getState) => {
+export const userActions = {
+  getUserDetails: () => dispatch => {
     return dispatch({
       type: types.GET_USER_DETAILS,
     });
+  },
+
+  updateProfile: profile => {
+    user().updateUserProfile(profile);
   },
 };

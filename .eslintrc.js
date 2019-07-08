@@ -5,19 +5,6 @@ const rules = {
   'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
   'import/no-named-as-default': 'off', // issue with default export of connected components
   'import/no-unresolved': 'error',
-  'lines-around-comment': [
-    'error',
-    {
-      beforeBlockComment: true,
-      beforeLineComment: true,
-      allowBlockStart: true,
-      allowBlockEnd: true,
-      allowObjectStart: true,
-      allowObjectEnd: true,
-      allowArrayStart: true,
-      allowArrayEnd: true,
-    },
-  ],
   'no-mixed-operators': 'off',
   'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
   'no-return-assign': 'warn',
@@ -28,7 +15,7 @@ const rules = {
 
   // React-specific
   'react/destructuring-assignment': 'warn',
-  'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.tsx'] }],
+  'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
   'react/jsx-sort-props': [
     1,
     {
@@ -103,8 +90,11 @@ module.exports = {
     'import/resolver': {
       alias: [
         ['@components', './src/components'],
+        ['@constants', './src/constants'],
+        ['@data', './src/data'],
         ['@providers', './src/providers'],
         ['@store', './src/store'],
+        ['@styles', './src/styles'],
         ['@utils', './src/utils'],
       ],
     },
