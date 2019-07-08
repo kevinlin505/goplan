@@ -6,6 +6,8 @@ export default function auth() {
     // register/login with google auth
     signInWithGoogleAuthAsync: () => {
       const provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope('profile');
+      provider.addScope('email');
 
       return firebase.auth().signInWithPopup(provider);
     },

@@ -1,6 +1,6 @@
-import initializeFireBase from '@models/_db';
-import auth from '@models/auth';
-import user from '@models/user';
+import initializeFireBase from '@data/_db';
+import auth from '@data/auth';
+import user from '@data/user';
 
 export const types = {
   AUTHENTICATION_ERROR: 'AUTH/AUTHENTICATION_ERROR',

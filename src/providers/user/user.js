@@ -1,4 +1,4 @@
-import user from '@models/user';
+import user from '@data/user';
 
 export const types = {
   GET_USER_DETAILS: 'USER/GET_USER_DETAILS',

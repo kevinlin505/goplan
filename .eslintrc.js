@@ -91,9 +91,10 @@ module.exports = {
       alias: [
         ['@components', './src/components'],
         ['@constants', './src/constants'],
-        ['@models', './src/models'],
+        ['@data', './src/data'],
         ['@providers', './src/providers'],
         ['@store', './src/store'],
+        ['@styles', './src/styles'],
         ['@utils', './src/utils'],
       ],
     },
