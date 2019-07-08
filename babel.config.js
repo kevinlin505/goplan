@@ -14,9 +14,6 @@ module.exports = api => {
       // object rest/spread support
       '@babel/plugin-proposal-object-rest-spread',
 
-      // enable async await
-      '@babel/plugin-transform-async-to-generator',
-
       [
         '@babel/plugin-transform-runtime',
         {
