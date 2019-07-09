@@ -1,6 +1,6 @@
-##GoPlan
+## GoPlan
 
-####To Start:
+#### To Start:
 
 - first time run `$ yarn && yarn start` or `$ npm && npm start` in commnad line. Otherwise just run `yarn start` or `npm start` to start the app.
 - The app is running on a `webpack-dev-server` on `localhost:3000`
