@@ -3,9 +3,10 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 export default function user() {
+  const db = firebase.firestore();
+
   return {
     createTrip: tripDetails => {
-      const db = firebase.firestore();
       const batch = db.batch();
       const { currentUser } = firebase.auth();
 
@@ -20,6 +21,17 @@ export default function user() {
       });
 
       return batch.commit();
+    },
+
+    getTrip: tripDoc => {
+      if (typeof tripDoc === 'string') {
+        return db
+          .collection('trips')
+          .doc(tripDoc)
+          .get();
+      }
+
+      return tripDoc.get();
     },
   };
 }

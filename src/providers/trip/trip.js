@@ -4,15 +4,25 @@ import trip from '@data/trip';
 
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
+  SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
 };
 
-const initialState = {};
+const initialState = {
+  selectedTrip: null,
+};
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case types.CREATE_TRIP: {
       return {
         ...state,
+      };
+    }
+
+    case types.SET_SELECTED_TRIP: {
+      return {
+        ...state,
+        selectedTrip: action.selectedTrip,
       };
     }
 
@@ -51,6 +61,17 @@ export const tripActions = {
       })
       .catch(err => {
         console.log(err);
+      });
+  },
+
+  getTrip: tripDoc => dispatch => {
+    trip()
+      .getTrip(tripDoc)
+      .then(tripDetails => {
+        dispatch({
+          type: types.SET_SELECTED_TRIP,
+          selectedTrip: tripDetails.data(),
+        });
       });
   },
 };
