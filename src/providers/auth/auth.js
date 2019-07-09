@@ -10,8 +10,9 @@ export const types = {
 };
 
 const initialState = {
-  isAuthenticated: false,
   authenticationError: null,
+  isAuthenticated: false,
+  profile: null,
 };
 
 export default function reducer(state = initialState, action) {
@@ -26,16 +27,17 @@ export default function reducer(state = initialState, action) {
     case types.SIGN_IN: {
       return {
         ...state,
-        isAuthenticated: true,
         authenticationError: null,
+        isAuthenticated: true,
+        profile: action.profile,
       };
     }
 
     case types.SIGN_OUT: {
       return {
         ...state,
-        isAuthenticated: false,
         authenticationError: null,
+        isAuthenticated: false,
       };
     }
 
@@ -50,42 +52,31 @@ export const authActions = {
 
     auth().onStateChanged(currentUser => {
       if (currentUser && currentUser.uid) {
-        return dispatch({
-          type: types.SIGN_IN,
-        });
+        user()
+          .checkUserProfile()
+          .then(profile => {
+            return dispatch({
+              type: types.SIGN_IN,
+              profile: profile.data(),
+            });
+          });
       }
     });
   },
 
-  signInWithGoogleAuth:() => dispatch => {
+  signInWithGoogleAuth: () => dispatch => {
     auth()
       .signInWithGoogleAuthAsync()
       .then(signInSuccessCallback(dispatch))
       .catch(signInErrorCallback(dispatch));
   },
 
-  signInWithFacebookAuth:() => dispatch => {
-    auth()
-      .signInWithFacebookAuthAsync()
-      .then(signInSuccessCallback(dispatch))
-      .catch(err => {
-        if (err.code = 'auth/account-exists-with-different-credential'){
-          const pendingCred = err.credential;
-          const email = err.email;
-          firebase.auth().fetchSignInMethodsForEmail(email)
-            .then(methods => {
-              if(methods[0] === 'google.com'){
-                auth()
-                  .signInWithGoogleAuthAsync()
-                  .then(user => {
-                    user.user.linkWithCredential(pendingCred);
-                  })
-                  .then(signInSuccessCallback(dispatch))
-                  .catch(signInErrorCallback(dispatch));
-                }
-              })
-          } 
-      });
+  // login with facebook auth
+  signInWithFacebookAuthAsync: () => {
+    const provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('email');
+
+    return firebase.auth().signInWithPopup(provider);
   },
 
   signOut: () => dispatch => {
@@ -100,29 +91,26 @@ export const authActions = {
 };
 
 const signInSuccessCallback = dispatch => {
-  return (
-    () => {
-      user()
-        .checkUserProfile()
-        .then(profile => {
-          if (!profile.exists) {
-            user().createUserProfile();
-          }
+  return () => {
+    user()
+      .checkUserProfile()
+      .then(profile => {
+        if (!profile.exists) {
+          user().createUserProfile();
+        }
 
-          return dispatch({
-            type: types.SIGN_IN,
-          });
+        return dispatch({
+          type: types.SIGN_IN,
         });
-    })
-}
+      });
+  };
+};
 
 const signInErrorCallback = dispatch => {
-  return (
-    err => {
-      return dispatch({
-        type: types.AUTHENTICATION_ERROR,
-        err,
-      });
-    }
-  )
-}
+  return err => {
+    return dispatch({
+      type: types.AUTHENTICATION_ERROR,
+      err,
+    });
+  };
+};
