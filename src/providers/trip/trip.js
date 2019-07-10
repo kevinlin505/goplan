@@ -4,11 +4,13 @@ import trip from '@data/trip';
 
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
+  RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
 };
 
 const initialState = {
   selectedTrip: null,
+  trips: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -16,6 +18,13 @@ export default function reducer(state = initialState, action) {
     case types.CREATE_TRIP: {
       return {
         ...state,
+      };
+    }
+
+    case types.RETRIEVE_ALL_TRIPS: {
+      return {
+        ...state,
+        trips: [...state.trips, ...action.trips],
       };
     }
 
@@ -64,13 +73,28 @@ export const tripActions = {
       });
   },
 
-  getTrip: tripDoc => dispatch => {
+  getTrip: tripRef => dispatch => {
     trip()
-      .getTrip(tripDoc)
+      .getTrip(tripRef)
       .then(tripDetails => {
         dispatch({
           type: types.SET_SELECTED_TRIP,
           selectedTrip: tripDetails.data(),
+        });
+      });
+  },
+
+  getAllTrips: tripRefs => dispatch => {
+    trip()
+      .getAllTrips(tripRefs)
+      .then(docs => {
+        const trips = docs.map(doc => {
+          return doc.data();
+        });
+
+        dispatch({
+          type: types.RETRIEVE_ALL_TRIPS,
+          trips,
         });
       });
   },
