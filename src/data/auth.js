@@ -15,9 +15,8 @@ export default function auth() {
     // login with facebook auth
     signInWithFacebookAuthAsync: () => {
       const provider = new firebase.auth.FacebookAuthProvider();
-      provider.addScope('email');
 
-      return firebase.auth().signInWithRedirect(provider);
+      return firebase.auth().signInWithPopup(provider);
     },
 
     // Logout current user

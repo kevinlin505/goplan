@@ -56,21 +56,17 @@ export const authActions = {
     });
   },
 
-  signInGoogle:() => dispatch => {
-    debugger
+  signInGoogle: () => dispatch => {
     auth()
       .signInWithGoogleAuthAsync()
       .then(() => {
-        debugger
         user()
           .checkUserProfile()
           .then(profile => {
-            console.log(profile);
-            debugger
             if (!profile.exists) {
               user().createUserProfile();
             }
-            
+
             return dispatch({
               type: types.SIGN_IN,
             });
@@ -84,21 +80,17 @@ export const authActions = {
       });
   },
 
-  signInFacebook:() => dispatch => {
-    debugger
+  signInFacebook: () => dispatch => {
     auth()
       .signInWithFacebookAuthAsync()
-      .then((result) => {
-        debugger
+      .then(() => {
         user()
           .checkUserProfile()
           .then(profile => {
-            console.log(profile);
-            debugger
             if (!profile.exists) {
               user().createUserProfile();
             }
-            
+
             return dispatch({
               type: types.SIGN_IN,
             });
