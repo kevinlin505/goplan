@@ -14,15 +14,15 @@ const SignIn = ({ actions, auth }) => {
   return (
     <div>
       <h2>GoPlan</h2>
-      {/* {auth.isAuthenticated ? (     */}
+      {auth.isAuthenticated ? (    
         <button onClick={actions.auth.signOut}>Sign Out</button>
-      {/* ) : ( */}
+      ) : (
         <div>
           <GoogleAuthButton handleSignIn={actions.auth.signInGoogle} />
           <br/>
           <FacebookAuthButton handleSignIn={actions.auth.signInFacebook} />
         </div>
-      {/* )} */}
+      )}
     </div>
   );
 };

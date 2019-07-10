@@ -1,6 +1,7 @@
 import initializeFireBase from '@data/_db';
 import auth from '@data/auth';
 import user from '@data/user';
+import firebase from 'firebase/app';
 
 export const types = {
   AUTHENTICATION_ERROR: 'AUTH/AUTHENTICATION_ERROR',
@@ -57,58 +58,33 @@ export const authActions = {
   },
 
   signInGoogle:() => dispatch => {
-    debugger
     auth()
       .signInWithGoogleAuthAsync()
-      .then(() => {
-        debugger
-        user()
-          .checkUserProfile()
-          .then(profile => {
-            console.log(profile);
-            debugger
-            if (!profile.exists) {
-              user().createUserProfile();
-            }
-            
-            return dispatch({
-              type: types.SIGN_IN,
-            });
-          });
-      })
-      .catch(err => {
-        return dispatch({
-          type: types.AUTHENTICATION_ERROR,
-          err,
-        });
-      });
+      .then(signInSuccessCallback(dispatch))
+      .catch(signInErrorCallback(dispatch));
   },
 
   signInFacebook:() => dispatch => {
-    debugger
     auth()
       .signInWithFacebookAuthAsync()
-      .then((result) => {
-        debugger
-        user()
-          .checkUserProfile()
-          .then(profile => {
-            console.log(profile);
-            debugger
-            if (!profile.exists) {
-              user().createUserProfile();
-            }
-            
-            return dispatch({
-              type: types.SIGN_IN,
-            });
-          });
-      })
+      .then(signInSuccessCallback(dispatch))
       .catch(err => {
-        return dispatch({
-          type: types.AUTHENTICATION_ERROR,
-          err,
-        });
+        if (err.code = 'auth/account-exists-with-different-credential'){
+          const pendingCred = err.credential;
+          const email = err.email;
+          firebase.auth().fetchSignInMethodsForEmail(email)
+            .then(methods => {
+              if(methods[0] === 'google.com'){
+                auth()
+                  .signInWithGoogleAuthAsync()
+                  .then(user => {
+                    user.user.linkWithCredential(pendingCred);
+                  })
+                  .then(signInSuccessCallback(dispatch))
+                  .catch(signInErrorCallback(dispatch));
+                }
+              })
+          } 
       });
   },
 
@@ -122,3 +98,31 @@ export const authActions = {
       });
   },
 };
+
+const signInSuccessCallback = dispatch => {
+  return (
+    () => {
+      user()
+        .checkUserProfile()
+        .then(profile => {
+          if (!profile.exists) {
+            user().createUserProfile();
+          }
+
+          return dispatch({
+            type: types.SIGN_IN,
+          });
+        });
+    })
+}
+
+const signInErrorCallback = dispatch => {
+  return (
+    err => {
+      return dispatch({
+        type: types.AUTHENTICATION_ERROR,
+        err,
+      });
+    }
+  )
+}
