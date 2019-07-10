@@ -56,17 +56,49 @@ export const authActions = {
     });
   },
 
-  signIn: () => dispatch => {
+  signInGoogle:() => dispatch => {
+    debugger
     auth()
       .signInWithGoogleAuthAsync()
       .then(() => {
+        debugger
         user()
           .checkUserProfile()
           .then(profile => {
+            console.log(profile);
+            debugger
             if (!profile.exists) {
               user().createUserProfile();
             }
+            
+            return dispatch({
+              type: types.SIGN_IN,
+            });
+          });
+      })
+      .catch(err => {
+        return dispatch({
+          type: types.AUTHENTICATION_ERROR,
+          err,
+        });
+      });
+  },
 
+  signInFacebook:() => dispatch => {
+    debugger
+    auth()
+      .signInWithFacebookAuthAsync()
+      .then((result) => {
+        debugger
+        user()
+          .checkUserProfile()
+          .then(profile => {
+            console.log(profile);
+            debugger
+            if (!profile.exists) {
+              user().createUserProfile();
+            }
+            
             return dispatch({
               type: types.SIGN_IN,
             });

@@ -4,7 +4,7 @@ import Button from '@styles/Button';
 
 export const GoogleAuthButton = ({ handleSignIn }) => {
   return (
-    <Button onClick={handleSignIn}>
+    <Button onClick={() => handleSignIn("google")}>
       <svg
         height="46"
         viewBox="0 0 252 46"

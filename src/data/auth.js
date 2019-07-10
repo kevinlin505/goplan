@@ -12,6 +12,14 @@ export default function auth() {
       return firebase.auth().signInWithPopup(provider);
     },
 
+    // login with facebook auth
+    signInWithFacebookAuthAsync: () => {
+      const provider = new firebase.auth.FacebookAuthProvider();
+      provider.addScope('email');
+
+      return firebase.auth().signInWithRedirect(provider);
+    },
+
     // Logout current user
     signOut: () => firebase.auth().signOut(),
 

@@ -18,7 +18,7 @@ export default function user() {
     createUserProfile: () => {
       const db = firebase.firestore();
       const { currentUser } = firebase.auth();
-
+      debugger
       const profileDefault = {
         creation_time: currentUser.metadata.creationTime,
         email: currentUser.email,
