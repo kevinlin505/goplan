@@ -4,11 +4,11 @@ import 'firebase/firestore';
 
 export default function user() {
   const db = firebase.firestore();
+  const { currentUser } = firebase.auth();
 
   return {
     createTrip: tripDetails => {
       const batch = db.batch();
-      const { currentUser } = firebase.auth();
 
       // Create a trip with the provided details
       const userRef = db.collection('users').doc(currentUser.uid);
@@ -23,15 +23,23 @@ export default function user() {
       return batch.commit();
     },
 
-    getTrip: tripDoc => {
-      if (typeof tripDoc === 'string') {
+    getTrip: tripRef => {
+      if (typeof tripRef === 'string') {
         return db
           .collection('trips')
-          .doc(tripDoc)
+          .doc(tripRef)
           .get();
       }
 
-      return tripDoc.get();
+      return tripRef.get();
+    },
+
+    getAllTrips: tripRefs => {
+      return Promise.all(
+        tripRefs.map(tripRef => {
+          return tripRef.get();
+        }),
+      );
     },
   };
 }
