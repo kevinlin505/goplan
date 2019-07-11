@@ -10,9 +10,8 @@ const TripCard = ({ tripDetails }) => {
     <Container>
       <Name>{tripDetails.name}</Name>
       <TravelDate>
-        {`Travel Date: ${startDate.getMonth()}/${startDate.getDate()}/${startDate.getFullYear()}`}{' '}
-        -{' '}
-        {`${endDate.getMonth()}/${endDate.getDate()}/${endDate.getFullYear()}`}
+        {`Travel Date: ${startDate.toLocaleDateString()}`} -{' '}
+        {`${endDate.toLocaleDateString()}`}
       </TravelDate>
       <div>Name: {tripDetails.destinations[0].name}</div>
       <div>Country: {tripDetails.destinations[0].country}</div>
