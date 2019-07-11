@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '@styles/Button';
 import PropTypes from 'prop-types';
+import Button from '@styles/Button';
 
 const FacebookAuthButton = ({handleSignIn}) => {
   return (

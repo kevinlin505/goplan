@@ -1,7 +1,7 @@
+import firebase from 'firebase/app';
 import initializeFireBase from '@data/_db';
 import auth from '@data/auth';
 import user from '@data/user';
-import firebase from 'firebase/app';
 
 export const types = {
   AUTHENTICATION_ERROR: 'AUTH/AUTHENTICATION_ERROR',
@@ -57,14 +57,14 @@ export const authActions = {
     });
   },
 
-  signInGoogle:() => dispatch => {
+  signInWithGoogleAuth:() => dispatch => {
     auth()
       .signInWithGoogleAuthAsync()
       .then(signInSuccessCallback(dispatch))
       .catch(signInErrorCallback(dispatch));
   },
 
-  signInFacebook:() => dispatch => {
+  signInWithFacebookAuth:() => dispatch => {
     auth()
       .signInWithFacebookAuthAsync()
       .then(signInSuccessCallback(dispatch))
