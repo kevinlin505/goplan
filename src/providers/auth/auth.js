@@ -69,6 +69,7 @@ export const authActions = {
             });
           });
 
+        // Listen to user profile update and update the local profile if changes are made to server
         user().subscribeToProfileChange(profile => {
           if (!profile.metadata.hasPendingWrites) {
             dispatch({
