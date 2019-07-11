@@ -1,8 +1,20 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/functions';
 
 export default function auth() {
   return {
+    sendInviteEmail: email => {
+      const addMessage = firebase
+        .functions()
+        .httpsCallable('sendInvitationEmail');
+
+      return addMessage({
+        email,
+        displayName: 'leo display name test',
+      });
+    },
+
     // register/login with google auth
     signInWithGoogleAuthAsync: () => {
       const provider = new firebase.auth.GoogleAuthProvider();

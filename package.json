@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "start": "webpack --env.environment development && webpack-dev-server --env.environment development --watch",
-    "build": "",
+    "build": "webpack --env.environment production",
     "lint": "eslint . --ext .js,.ts --cache",
     "lint:check": "eslint --print-config . | eslint-config-prettier-check"
   },
