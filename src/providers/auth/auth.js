@@ -7,6 +7,7 @@ export const types = {
   AUTHENTICATION_ERROR: 'AUTH/AUTHENTICATION_ERROR',
   SIGN_IN: 'AUTH/SIGN_IN',
   SIGN_OUT: 'AUTH/SIGN_OUT',
+  UPDATE_PROFILE: 'AUTH/UPDATE_PROFILE',
 };
 
 const initialState = {
@@ -41,6 +42,13 @@ export default function reducer(state = initialState, action) {
       };
     }
 
+    case types.UPDATE_PROFILE: {
+      return {
+        ...state,
+        profile: action.profile,
+      };
+    }
+
     default:
       return state;
   }
@@ -60,6 +68,17 @@ export const authActions = {
               profile: profile.data(),
             });
           });
+
+        user().subscribeToProfileChange(profile => {
+          if (!profile.metadata.hasPendingWrites) {
+            dispatch({
+              type: types.UPDATE_PROFILE,
+              profile: profile.data(),
+            });
+          }
+        });
+      } else {
+        user().unsubscribeToProfileChange();
       }
     });
   },
