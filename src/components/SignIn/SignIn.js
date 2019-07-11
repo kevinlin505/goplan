@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
-import GoogleAuthButton from '@components/SignIn/GoogleAuthButton/GoogleAuthButton';
+import GoogleAuthButton from '@components/SignIn/AuthButton/GoogleAuthButton';
+import FacebookAuthButton from '@components/SignIn/AuthButton/FacebookAuthButton';
 
 const SignIn = ({ actions, auth }) => {
   useEffect(() => {
@@ -14,9 +15,12 @@ const SignIn = ({ actions, auth }) => {
     <div>
       <h2>GoPlan</h2>
       {auth.isAuthenticated ? (
-        <button onClick={actions.auth.signOut}>Sign Out with Gmail</button>
+        <button onClick={actions.auth.signOut}>Sign Out</button>
       ) : (
-        <GoogleAuthButton handleSignIn={actions.auth.signIn} />
+        <div>
+          <GoogleAuthButton handleSignIn={actions.auth.signInWithGoogleAuth} />
+          <FacebookAuthButton handleSignIn={actions.auth.signInWithFacebookAuth} />
+        </div>
       )}
     </div>
   );
