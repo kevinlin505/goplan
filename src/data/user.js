@@ -4,11 +4,13 @@ import 'firebase/database';
 import 'firebase/firestore';
 
 export default function user() {
+  const db = firebase.firestore();
+  const { currentUser } = firebase.auth();
+
+  let unsubscribe = null;
+
   return {
     checkUserProfile: () => {
-      const db = firebase.firestore();
-      const { currentUser } = firebase.auth();
-
       return db
         .collection('users')
         .doc(currentUser.uid)
@@ -16,8 +18,6 @@ export default function user() {
     },
 
     createUserProfile: () => {
-      const db = firebase.firestore();
-      const { currentUser } = firebase.auth();
       const profileDefault = {
         creation_time: currentUser.metadata.creationTime,
         email: currentUser.email,
@@ -45,13 +45,30 @@ export default function user() {
     },
 
     updateUserProfile: (profile = {}) => {
-      const db = firebase.firestore();
-      const { currentUser } = firebase.auth();
-
       return db
         .collection('users')
         .doc(currentUser.uid)
         .update(profile);
+    },
+
+    subscribeToProfileChange: callback => {
+      if (!unsubscribe && callback) {
+        unsubscribe = db
+          .collection('users')
+          .doc(currentUser.uid)
+          .onSnapshot(
+            {
+              includeMetadataChanges: true,
+            },
+            callback,
+          );
+      }
+    },
+
+    unsubscribeToProfileChange: () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
     },
   };
 }
