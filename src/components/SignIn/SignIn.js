@@ -18,7 +18,9 @@ const SignIn = ({ actions, auth }) => {
       ) : (
         <div>
           <GoogleAuthButton handleSignIn={actions.auth.signInWithGoogleAuth} />
-          <FacebookAuthButton handleSignIn={actions.auth.signInWithFacebookAuth} />
+          <FacebookAuthButton
+            handleSignIn={actions.auth.signInWithFacebookAuth}
+          />
         </div>
       )}
     </div>

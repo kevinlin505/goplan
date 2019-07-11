@@ -87,8 +87,12 @@ export const authActions = {
   signInWithGoogleAuth: () => dispatch => {
     auth()
       .signInWithGoogleAuthAsync()
-      .then(signInSuccessCallback(dispatch))
-      .catch(signInErrorCallback(dispatch));
+      .then(() => {
+        dispatch(authActions.signInSuccess());
+      })
+      .catch(() => {
+        dispatch(authActions.signInError());
+      });
   },
 
   // login with facebook auth
@@ -108,11 +112,9 @@ export const authActions = {
         });
       });
   },
-};
 
-const signInSuccessCallback = dispatch => {
-  return () => {
-    user()
+  signInSuccess: () => dispatch => {
+    return user()
       .checkUserProfile()
       .then(profile => {
         if (!profile.exists) {
@@ -123,14 +125,14 @@ const signInSuccessCallback = dispatch => {
           type: types.SIGN_IN,
         });
       });
-  };
-};
+  },
 
-const signInErrorCallback = dispatch => {
-  return err => {
-    return dispatch({
-      type: types.AUTHENTICATION_ERROR,
-      err,
-    });
-  };
+  signInError: () => dispatch => {
+    return err => {
+      return dispatch({
+        type: types.AUTHENTICATION_ERROR,
+        err,
+      });
+    };
+  },
 };
