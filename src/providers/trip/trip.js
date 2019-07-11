@@ -69,15 +69,10 @@ export const tripActions = {
         });
 
         Promise.all(
-          ['kevinlin505@gmail.com'].map(attendee => {
+          formDetails.attendees.map(attendee => {
             return auth().sendInviteEmail(attendee);
           }),
-        ).then(results => {
-          results.forEach(result => {
-            // var sanitizedMessage = result.data.text;
-            console.log(result);
-          });
-        });
+        );
       })
       .catch(err => {
         console.log(err);
