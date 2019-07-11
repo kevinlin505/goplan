@@ -34,7 +34,7 @@ const UserPage = ({ actions, auth, trip }) => {
 
   return (
     <div>
-      <button onClick={actions.auth.signOut}>Sign Out with Gmail</button>
+      <button onClick={actions.auth.signOut}>Sign Out</button>
       <button onClick={handleCreateTrip}>Create Trip</button>
 
       <TripList>{tripList}</TripList>

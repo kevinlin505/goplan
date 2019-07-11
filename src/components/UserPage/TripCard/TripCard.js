@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import {Link} from 'react-router-dom';
 
 const TripCard = ({ tripDetails }) => {
   const startDate = new Date(tripDetails.start_date);
@@ -8,14 +9,16 @@ const TripCard = ({ tripDetails }) => {
 
   return (
     <Container>
-      <Name>{tripDetails.name}</Name>
-      <TravelDate>
-        {`Travel Date: ${startDate.toLocaleDateString()}`} -{' '}
-        {`${endDate.toLocaleDateString()}`}
-      </TravelDate>
-      <div>Name: {tripDetails.destinations[0].name}</div>
-      <div>Country: {tripDetails.destinations[0].country}</div>
-      <div>Spending: {tripDetails.spending}</div>
+      <Link to={`/trip/${tripDetails.id}`}>
+        <Name>{tripDetails.name}</Name>
+        <TravelDate>
+          {`Travel Date: ${startDate.toLocaleDateString()}`} -{' '}
+          {`${endDate.toLocaleDateString()}`}
+        </TravelDate>
+        <div>Name: {tripDetails.destinations[0].name}</div>
+        <div>Country: {tripDetails.destinations[0].country}</div>
+        <div>Spending: {tripDetails.spending}</div>
+      </Link>
     </Container>
   );
 };

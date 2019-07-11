@@ -18,7 +18,7 @@ module.exports = function returnConfig(env) {
     resolve: {
       modules: [path.join(__dirname, 'node_modules'), PATHS.index, PATHS.src],
       alias: webpackAliases,
-      extensions: ['.js', '.json'],
+      extensions: ['.js', '.json', '.jsx'],
       symlinks: false,
     },
     module: {

@@ -95,7 +95,9 @@ export const tripActions = {
       .getAllTrips(tripRefs)
       .then(docs => {
         const trips = docs.map(doc => {
-          return doc.data();
+          const data = doc.data();
+          data.id = doc.id;
+          return data;
         });
 
         dispatch({
