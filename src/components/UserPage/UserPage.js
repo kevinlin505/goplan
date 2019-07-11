@@ -6,13 +6,15 @@ import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
 import TripCard from '@components/UserPage/TripCard/TripCard';
+import CreateTrip from '@components/UserPage/CreateTrip/CreateTrip';
 
 const UserPage = ({ actions, auth, trip }) => {
-  const handleCreateTrip = () => {
-    actions.trip.createTrip({});
-  };
-
   const [tripList, setTripList] = useState(null);
+  const [isCreateTripModalOpen, setCreateTripModalOpen] = useState(false);
+
+  const toggleCreateTripModal = () => {
+    setCreateTripModalOpen(!isCreateTripModalOpen);
+  };
 
   useEffect(() => {
     const tripRefs = auth.profile.trips;
@@ -35,7 +37,11 @@ const UserPage = ({ actions, auth, trip }) => {
   return (
     <div>
       <button onClick={actions.auth.signOut}>Sign Out</button>
-      <button onClick={handleCreateTrip}>Create Trip</button>
+      <button onClick={toggleCreateTripModal}>Create Trip</button>
+
+      {isCreateTripModalOpen && (
+        <CreateTrip toggleCreateTripModal={toggleCreateTripModal} />
+      )}
 
       <TripList>{tripList}</TripList>
     </div>

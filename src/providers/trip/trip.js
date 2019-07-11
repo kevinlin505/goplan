@@ -44,7 +44,6 @@ export default function reducer(state = initialState, action) {
 export const tripActions = {
   createTrip: formDetails => dispatch => {
     const tripDetails = {
-      ...formDetails,
       destinations: [
         {
           country: 'Peru',
@@ -59,6 +58,7 @@ export const tripActions = {
       notes: 'Backpacking trip to Machu Picchu.',
       spending: 0,
       start_date: new Date(2019, 7, 31).getTime(),
+      ...formDetails,
     };
 
     trip()
