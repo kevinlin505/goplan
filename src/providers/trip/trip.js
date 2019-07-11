@@ -24,7 +24,7 @@ export default function reducer(state = initialState, action) {
     case types.RETRIEVE_ALL_TRIPS: {
       return {
         ...state,
-        trips: [...state.trips, ...action.trips],
+        trips: action.trips,
       };
     }
 

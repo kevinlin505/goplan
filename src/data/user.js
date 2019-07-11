@@ -7,6 +7,8 @@ export default function user() {
   const db = firebase.firestore();
   const { currentUser } = firebase.auth();
 
+  let unsubscribe = null;
+
   return {
     checkUserProfile: () => {
       return db
@@ -47,6 +49,26 @@ export default function user() {
         .collection('users')
         .doc(currentUser.uid)
         .update(profile);
+    },
+
+    subscribeToProfileChange: callback => {
+      if (!unsubscribe && callback) {
+        unsubscribe = db
+          .collection('users')
+          .doc(currentUser.uid)
+          .onSnapshot(
+            {
+              includeMetadataChanges: true,
+            },
+            callback,
+          );
+      }
+    },
+
+    unsubscribeToProfileChange: () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
     },
   };
 }
