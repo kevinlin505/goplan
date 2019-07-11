@@ -63,7 +63,6 @@ export const tripActions = {
     trip()
       .createTrip(tripDetails)
       .then(() => {
-        console.log('trip created');
         dispatch({
           type: types.CREATE_TRIP,
         });

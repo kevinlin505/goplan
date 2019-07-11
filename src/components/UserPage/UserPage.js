@@ -12,11 +12,6 @@ const UserPage = ({ actions, auth, trip }) => {
     actions.trip.createTrip({});
   };
 
-  const handleDisplayTrip = () => {
-    const tripRef = auth.profile.trips[0];
-    actions.trip.getTrip(tripRef);
-  };
-
   const [tripList, setTripList] = useState(null);
 
   useEffect(() => {
@@ -41,7 +36,6 @@ const UserPage = ({ actions, auth, trip }) => {
     <div>
       <button onClick={actions.auth.signOut}>Sign Out with Gmail</button>
       <button onClick={handleCreateTrip}>Create Trip</button>
-      <button onClick={handleDisplayTrip}>Display Trip</button>
 
       <TripList>{tripList}</TripList>
     </div>
