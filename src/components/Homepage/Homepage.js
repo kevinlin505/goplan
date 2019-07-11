@@ -8,7 +8,7 @@ const Homepage = ({ auth }) => {
   return (
     <div>
       <h2>GoPlan</h2>
-      {auth.isAuthenticated ? <UserPage /> : <SignIn />}
+      {auth.isAuthenticated && auth.profile ? <UserPage /> : <SignIn />}
     </div>
   );
 };

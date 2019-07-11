@@ -96,11 +96,38 @@ export const authActions = {
   },
 
   // login with facebook auth
-  signInWithFacebookAuthAsync: () => {
-    const provider = new firebase.auth.FacebookAuthProvider();
-    provider.addScope('email');
+  signInWithFacebookAuth: () => dispatch => {
+    auth()
+      .signInWithFacebookAuthAsync()
+      .then(() => {
+        dispatch(authActions.signInSuccess());
+      })
+      .catch(err => {
+        if (err.code === 'auth/account-exists-with-different-credential') {
+          const pendingCred = err.credential;
+          const { email } = err;
+          return firebase
+            .auth()
+            .fetchSignInMethodsForEmail(email)
+            .then(methods => {
+              if (methods[0] === 'google.com') {
+                auth()
+                  .signInWithGoogleAuthAsync()
+                  .then(profile => {
+                    profile.user.linkWithCredential(pendingCred);
+                  })
+                  .then(() => {
+                    dispatch(authActions.signInSuccess());
+                  })
+                  .catch(() => {
+                    dispatch(authActions.signInError());
+                  });
+              }
+            });
+        }
 
-    return firebase.auth().signInWithPopup(provider);
+        return dispatch(authActions.signInError());
+      });
   },
 
   signOut: () => dispatch => {
