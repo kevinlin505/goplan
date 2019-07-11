@@ -1,0 +1,27 @@
+[debug] [2019-07-11T23:33:16.266Z] ----------------------------------------------------------------------
+[debug] [2019-07-11T23:33:16.268Z] Command:       /usr/local/Cellar/node/12.4.0/bin/node /usr/local/bin/firebase experimental:functions:shell
+[debug] [2019-07-11T23:33:16.268Z] CLI Version:   7.0.2
+[debug] [2019-07-11T23:33:16.268Z] Platform:      darwin
+[debug] [2019-07-11T23:33:16.268Z] Node Version:  v12.4.0
+[debug] [2019-07-11T23:33:16.269Z] Time:          Thu Jul 11 2019 19:33:16 GMT-0400 (Eastern Daylight Time)
+[debug] [2019-07-11T23:33:16.269Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-07-11T23:33:16.275Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-07-11T23:33:16.276Z] > authorizing via signed-in user
+[debug] [2019-07-11T23:33:16.276Z] [iam] checking project goplan-3b4b1 for permissions ["firebase.projects.get"]
+[debug] [2019-07-11T23:33:16.277Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/goplan-3b4b1:testIamPermissions  
+
+[debug] [2019-07-11T23:33:16.630Z] <<< HTTP RESPONSE 200
+[warn] ⚠  Your requested "node" version "8" doesn't match your global version "12"
+[debug] [2019-07-11T23:33:16.643Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/goplan-3b4b1  
+ 
+[debug] [2019-07-11T23:33:16.935Z] <<< HTTP RESPONSE 200
+[debug] [2019-07-11T23:33:16.936Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/839670954557:getServerAppConfig  
+ 
+[debug] [2019-07-11T23:33:17.347Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: Emulator started at http://localhost:5001
+[debug] [2019-07-11T23:33:17.353Z] [functions] Watching "/Users/wojunfeng/Development/projects/goplan/functions" for Cloud Functions...
+[debug] [2019-07-11T23:33:17.542Z] DEBUG: Functions runtime initialized.
+[debug] [2019-07-11T23:33:17.542Z] DEBUG: Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"protect_env":true,"admin_stubs":true}
+[warn] ⚠  The Cloud Functions emulator requires the module "firebase-admin" to be version >8.0.0 so your version is too old. You can probably fix this by running "npm install firebase-admin@latest" in your functions directory.
+[debug] [2019-07-11T23:33:17.544Z] [functions] Your functions could not be parsed due to an issue with your node_modules (see above)
