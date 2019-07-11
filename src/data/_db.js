@@ -8,7 +8,8 @@ const initializeFireBase = () => {
 
   // State will be persisted even when the activity is destroyed.
   const db = firebase.firestore();
-  db.enablePersistence();
+  db.enablePersistence({synchronizeTabs: true});
+  
 
   return db;
 };

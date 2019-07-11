@@ -1,3 +1,4 @@
+import firebase from 'firebase/app';
 import initializeFireBase from '@data/_db';
 import auth from '@data/auth';
 import user from '@data/user';
@@ -56,27 +57,34 @@ export const authActions = {
     });
   },
 
-  signIn: () => dispatch => {
+  signInWithGoogleAuth:() => dispatch => {
     auth()
       .signInWithGoogleAuthAsync()
-      .then(() => {
-        user()
-          .checkUserProfile()
-          .then(profile => {
-            if (!profile.exists) {
-              user().createUserProfile();
-            }
+      .then(signInSuccessCallback(dispatch))
+      .catch(signInErrorCallback(dispatch));
+  },
 
-            return dispatch({
-              type: types.SIGN_IN,
-            });
-          });
-      })
+  signInWithFacebookAuth:() => dispatch => {
+    auth()
+      .signInWithFacebookAuthAsync()
+      .then(signInSuccessCallback(dispatch))
       .catch(err => {
-        return dispatch({
-          type: types.AUTHENTICATION_ERROR,
-          err,
-        });
+        if (err.code = 'auth/account-exists-with-different-credential'){
+          const pendingCred = err.credential;
+          const email = err.email;
+          firebase.auth().fetchSignInMethodsForEmail(email)
+            .then(methods => {
+              if(methods[0] === 'google.com'){
+                auth()
+                  .signInWithGoogleAuthAsync()
+                  .then(user => {
+                    user.user.linkWithCredential(pendingCred);
+                  })
+                  .then(signInSuccessCallback(dispatch))
+                  .catch(signInErrorCallback(dispatch));
+                }
+              })
+          } 
       });
   },
 
@@ -90,3 +98,31 @@ export const authActions = {
       });
   },
 };
+
+const signInSuccessCallback = dispatch => {
+  return (
+    () => {
+      user()
+        .checkUserProfile()
+        .then(profile => {
+          if (!profile.exists) {
+            user().createUserProfile();
+          }
+
+          return dispatch({
+            type: types.SIGN_IN,
+          });
+        });
+    })
+}
+
+const signInErrorCallback = dispatch => {
+  return (
+    err => {
+      return dispatch({
+        type: types.AUTHENTICATION_ERROR,
+        err,
+      });
+    }
+  )
+}
