@@ -13,16 +13,9 @@ const SignIn = ({ actions, auth }) => {
 
   return (
     <div>
-      {auth.isAuthenticated ? (
-        <button onClick={actions.auth.signOut}>Sign Out</button>
-      ) : (
-        <div>
-          <GoogleAuthButton handleSignIn={actions.auth.signInWithGoogleAuth} />
-          <FacebookAuthButton
-            handleSignIn={actions.auth.signInWithFacebookAuth}
-          />
-        </div>
-      )}
+      <h2>GoPlan</h2>
+      <GoogleAuthButton handleSignIn={actions.auth.signInWithGoogleAuth} />
+      <FacebookAuthButton handleSignIn={actions.auth.signInWithFacebookAuth} />
     </div>
   );
 };
