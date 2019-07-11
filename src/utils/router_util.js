@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect, withRouter } from 'react-router-dom';
 
-const msp = state => {
-  return { auth: Boolean(state.auth.isAuthenticated && state.auth.profile) };
+const mapStateToProps = state => {
+  return { auth: !!(state.auth.isAuthenticated && state.auth.profile) };
 }
 
 const Auth = ({ component: Component, exact, path, auth }) => {
@@ -26,6 +26,6 @@ const Protected = ({ component: Component, exact, path, auth }) => {
   )
 }
 
-export const AuthRoute = withRouter(connect(msp, null)(Auth));
+export const AuthRoute = withRouter(connect(mapStateToProps, null)(Auth));
 
-export const ProtectedRoute = withRouter(connect(msp, null)(Protected));
+export const ProtectedRoute = withRouter(connect(mapStateToProps, null)(Protected));

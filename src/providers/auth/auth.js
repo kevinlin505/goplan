@@ -56,7 +56,7 @@ export default function reducer(state = initialState, action) {
 
 export const authActions = {
   checkAuth: () => dispatch => {
-    if(!firebase.apps.length) initializeFireBase();
+    initializeFireBase();
 
     auth().onStateChanged(currentUser => {
       if (currentUser && currentUser.uid) {

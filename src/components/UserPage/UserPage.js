@@ -20,7 +20,9 @@ const UserPage = ({ actions, auth, trip }) => {
   }, [auth.profile.trips.length]);
 
   useEffect(() => {
+    debugger;
     const trips = trip.trips.map((tripDetails, index) => {
+      debugger;
       return (
         <TripCard
           key={`${tripDetails.name}-${index}`}
