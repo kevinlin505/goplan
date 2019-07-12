@@ -89,6 +89,7 @@ module.exports = {
   settings: {
     'import/resolver': {
       alias: [
+        ['@assets', './src/assets'],
         ['@components', './src/components'],
         ['@constants', './src/constants'],
         ['@data', './src/data'],

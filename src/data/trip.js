@@ -19,7 +19,9 @@ export default function user() {
         trips: firebase.firestore.FieldValue.arrayUnion(tripRef),
       });
 
-      return batch.commit();
+      return batch.commit().then(() => {
+        return Promise.resolve(tripRef.id);
+      });
     },
 
     getTrip: tripRef => {

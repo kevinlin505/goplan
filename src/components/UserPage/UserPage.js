@@ -8,6 +8,22 @@ import { tripActions } from '@providers/trip/trip';
 import TripCard from '@components/UserPage/TripCard/TripCard';
 import CreateTrip from '@components/UserPage/CreateTrip/CreateTrip';
 
+const mapStateToProps = state => {
+  return {
+    auth: state.auth,
+    trip: state.trip,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: {
+      auth: bindActionCreators(authActions, dispatch),
+      trip: bindActionCreators(tripActions, dispatch),
+    },
+  };
+};
+
 const UserPage = ({ actions, auth, trip }) => {
   const [tripList, setTripList] = useState(null);
   const [isCreateTripModalOpen, setCreateTripModalOpen] = useState(false);
@@ -60,18 +76,6 @@ const TripList = styled.div`
 `;
 
 export default connect(
-  state => {
-    return {
-      auth: state.auth,
-      trip: state.trip,
-    };
-  },
-  dispatch => {
-    return {
-      actions: {
-        auth: bindActionCreators(authActions, dispatch),
-        trip: bindActionCreators(tripActions, dispatch),
-      },
-    };
-  },
+  mapStateToProps,
+  mapDispatchToProps,
 )(UserPage);

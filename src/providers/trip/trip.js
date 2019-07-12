@@ -52,7 +52,6 @@ export const tripActions = {
         },
       ],
       end_date: new Date(2019, 8, 20).getTime(),
-      estimate_budget_per_person: 2000,
       expenses: [],
       name: 'Trip to Peru',
       notes: 'Backpacking trip to Machu Picchu.',
@@ -61,18 +60,18 @@ export const tripActions = {
       ...formDetails,
     };
 
-    trip()
+    return trip()
       .createTrip(tripDetails)
-      .then(() => {
-        dispatch({
-          type: types.CREATE_TRIP,
-        });
-
+      .then(tripId => {
         Promise.all(
           formDetails.attendees.map(attendee => {
-            return auth().sendInviteEmail(attendee);
+            return auth().sendInviteEmail(attendee, tripId);
           }),
         );
+
+        return dispatch({
+          type: types.CREATE_TRIP,
+        });
       })
       .catch(err => {
         console.log(err);
