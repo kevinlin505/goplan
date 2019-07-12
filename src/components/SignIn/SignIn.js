@@ -7,6 +7,7 @@ import { authActions } from '@providers/auth/auth';
 import GoogleAuthButton from '@components/SignIn/AuthButton/GoogleAuthButton';
 import FacebookAuthButton from '@components/SignIn/AuthButton/FacebookAuthButton';
 import backgroundImg from '@assets/images/background.jpg';
+import GoPlan from '@assets/images/GoPlan.svg';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -24,7 +25,20 @@ const SignIn = ({ actions }) => {
   return (
     <Background>
       <ContentContainer>
-        <Header>GoPlan</Header>
+        <Logo>
+          <svg height="68" viewBox="0 0 281 68" width="281">
+            <text
+              fill="#E86060"
+              fillRule="evenodd"
+              fontFamily="JCfg, PilGi"
+              fontSize="100"
+            >
+              <tspan x="-3.871" y="67">
+                GoPlan
+              </tspan>
+            </text>
+          </svg>
+        </Logo>
         <LoginButtonContainer>
           <GoogleAuthButton handleSignIn={actions.auth.signInWithGoogleAuth} />
         </LoginButtonContainer>
@@ -70,11 +84,13 @@ const LoginButtonContainer = styled.div`
   margin: 5px auto;
 `;
 
-const Header = styled.div`
-  margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: 600;
-  text-align: center;
+const Logo = styled.div`
+  width: 150px;
+  margin: 0 auto;
+
+  svg {
+    width: 100%;
+  }
 `;
 
 export default connect(
