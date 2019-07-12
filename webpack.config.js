@@ -37,12 +37,16 @@ module.exports = function returnConfig(env) {
             },
           },
         },
+        {
+          test: /\.(png|svg|jpg|gif)$/,
+          include: [path.resolve(__dirname, 'src')],
+          use: ['file-loader'],
+        },
       ],
     },
     devtool: 'inline-source-map',
     entry: {
       app: [
-        'whatwg-fetch',
         'core-js/fn/promise',
         'core-js/fn/object/assign',
         'core-js/fn/array/from',
