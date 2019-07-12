@@ -14,6 +14,27 @@ const PATHS = {
 module.exports = function returnConfig(env) {
   const webpackAliases = require(`${PATHS.webpackConfig}/webpackAlias`)(PATHS);
 
+  const app =
+    env.environment === 'development'
+      ? [
+          'core-js/fn/promise',
+          'core-js/fn/object/assign',
+          'core-js/fn/array/from',
+          'core-js/es6/string',
+          'core-js/es7/array',
+          'react-hot-loader/patch', // active HMR for react
+          'webpack-dev-server/client?http://localhost:3000', // local dev server host and port
+          'webpack/hot/only-dev-server', // only reloads on successful builds
+          PATHS.index,
+        ]
+      : [
+          'core-js/fn/promise',
+          'core-js/fn/object/assign',
+          'core-js/fn/array/from',
+          'core-js/es6/string',
+          'core-js/es7/array',
+        ];
+
   return {
     resolve: {
       modules: [path.join(__dirname, 'node_modules'), PATHS.index, PATHS.src],
@@ -46,17 +67,7 @@ module.exports = function returnConfig(env) {
     },
     devtool: 'inline-source-map',
     entry: {
-      app: [
-        'core-js/fn/promise',
-        'core-js/fn/object/assign',
-        'core-js/fn/array/from',
-        'core-js/es6/string',
-        'core-js/es7/array',
-        'react-hot-loader/patch', // active HMR for react
-        'webpack-dev-server/client?http://localhost:3000', // local dev server host and port
-        'webpack/hot/only-dev-server', // only reloads on successful builds
-        PATHS.index,
-      ],
+      app,
     },
     mode: env.environment,
     output: {
