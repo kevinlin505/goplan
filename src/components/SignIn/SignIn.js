@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
 import GoogleAuthButton from '@components/SignIn/AuthButton/GoogleAuthButton';
 import FacebookAuthButton from '@components/SignIn/AuthButton/FacebookAuthButton';
-import styled from 'styled-components';
+
 
 const SignIn = ({ actions, auth }) => {
   useEffect(() => {
