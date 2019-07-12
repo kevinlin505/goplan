@@ -33,6 +33,7 @@ module.exports = function returnConfig(env) {
           'core-js/fn/array/from',
           'core-js/es6/string',
           'core-js/es7/array',
+          PATHS.index,
         ];
 
   return {
