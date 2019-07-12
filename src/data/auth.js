@@ -4,14 +4,14 @@ import 'firebase/functions';
 
 export default function auth() {
   return {
-    sendInviteEmail: email => {
+    sendInviteEmail: (email, tripId) => {
       const addMessage = firebase
         .functions()
         .httpsCallable('sendInvitationEmail');
 
       return addMessage({
         email,
-        invitationLink: 'HTTPS://something-link',
+        invitationLink: `https://goplan-3b4b1.web.app/#/trip/${tripId}`,
       });
     },
 

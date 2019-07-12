@@ -38,11 +38,6 @@ module.exports = function returnConfig(env) {
           },
         },
         {
-          test: /\.css$/,
-          include: [path.resolve(__dirname, 'src')],
-          use: ['style-loader', 'css-loader'],
-        },
-        {
           test: /\.(png|svg|jpg|gif)$/,
           include: [path.resolve(__dirname, 'src')],
           use: ['file-loader'],
@@ -52,7 +47,6 @@ module.exports = function returnConfig(env) {
     devtool: 'inline-source-map',
     entry: {
       app: [
-        'whatwg-fetch',
         'core-js/fn/promise',
         'core-js/fn/object/assign',
         'core-js/fn/array/from',

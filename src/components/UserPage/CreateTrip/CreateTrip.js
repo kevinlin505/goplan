@@ -1,23 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
+import FaceIcon from '@material-ui/icons/Face';
+import CancelIcon from '@material-ui/icons/Cancel';
+import CloseIcon from '@material-ui/icons/Close';
+import { tripActions } from '@providers/trip/trip';
 import validateEmail from '@utils/validateEmail';
-import Button from '@styles/Button';
 import Overlay from '@styles/Overlay';
+import dockPng from '@assets/images/dock.jpg';
 
-export const CreateTrip = ({ toggleCreateTripModal }) => {
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: {
+      trip: bindActionCreators(tripActions, dispatch),
+    },
+  };
+};
+
+export const CreateTrip = ({ actions, toggleCreateTripModal }) => {
+  const [invite, setInvite] = useState('');
+  const [inviteList, setInviteList] = useState(null);
+  const [formError, setFormError] = useState('');
   const [form, setValues] = useState({
     end_date: '',
-    estimate_budget_per_person: 2000,
-    name: '',
+    trip_name: '',
     notes: '',
     start_date: '',
     attendees: [],
   });
-
-  const [invite, setInvite] = useState('');
 
   const updateField = event => {
     setValues({
@@ -41,11 +57,40 @@ export const CreateTrip = ({ toggleCreateTripModal }) => {
     }
   };
 
-  const [inviteList, setInviteList] = useState(null);
+  const handleCreateTrip = () => {
+    actions.trip
+      .createTrip(form)
+      .then(() => {
+        toggleCreateTripModal();
+      })
+      .catch(error => {
+        // TODO: Display error on the form.
+        setFormError(error.message);
+      });
+  };
 
   useEffect(() => {
-    const chips = form.attendees.map(attendee => {
-      return <InviteChip key={attendee} color="primary" label={attendee} />;
+    const handleDelete = index => {
+      setValues({
+        ...form,
+        attendees: [
+          ...form.attendees.slice(0, index),
+          ...form.attendees.slice(index + 1),
+        ],
+      });
+    };
+
+    const chips = form.attendees.map((attendee, index) => {
+      return (
+        <InviteChip
+          key={attendee}
+          color="primary"
+          deleteIcon={<CancelIcon />}
+          icon={<FaceIcon />}
+          label={attendee}
+          onDelete={() => handleDelete(index)}
+        />
+      );
     });
 
     setInviteList(chips);
@@ -56,32 +101,20 @@ export const CreateTrip = ({ toggleCreateTripModal }) => {
       <Container>
         <FormHeader>
           <CloseButton onClick={toggleCreateTripModal}>
-            <svg
-              height="18"
-              viewBox="0 0 18 18"
-              width="18"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g
-                fill="none"
-                fillRule="evenodd"
-                strokeWidth="2"
-                transform="translate(1 1)"
-              >
-                <path d="M15.6.4L.4 15.6M15.6 15.6L.4.4" />
-              </g>
-            </svg>
+            <CloseIcon />
           </CloseButton>
           <Header>Create trip</Header>
         </FormHeader>
         <CreateTripForm>
           <FieldWrapper>
             <FullWidthField
-              label="Name"
-              name="name"
+              isRequired
+              label="Trip Name"
+              name="trip_name"
               onChange={updateField}
+              placeholder="Enter a name for this trip"
               type="text"
-              value={form.name}
+              value={form.trip_name}
             />
             <FullWidthField
               label="Notes"
@@ -89,6 +122,7 @@ export const CreateTrip = ({ toggleCreateTripModal }) => {
               multiline
               name="notes"
               onChange={updateField}
+              placeholder="Enter any notes to share to attendees"
               rowsMax={5}
               type="text"
               value={form.notes}
@@ -99,6 +133,7 @@ export const CreateTrip = ({ toggleCreateTripModal }) => {
               InputLabelProps={{
                 shrink: true,
               }}
+              isRequired
               label="Start Date"
               name="start_date"
               onChange={updateField}
@@ -109,6 +144,7 @@ export const CreateTrip = ({ toggleCreateTripModal }) => {
               InputLabelProps={{
                 shrink: true,
               }}
+              isRequired
               label="End Date"
               name="end_date"
               onChange={updateField}
@@ -118,16 +154,26 @@ export const CreateTrip = ({ toggleCreateTripModal }) => {
           </FieldWrapper>
           <FieldWrapper>
             <FullWidthField
-              label="Notes"
-              margin="normal"
-              name="notes"
+              label="Attendees"
+              name="attendee"
               onChange={updateInviteField}
               onKeyPress={updateInviteField}
+              placeholder="Enter email address to invite"
               type="text"
               value={invite}
             />
             <InviteListWrapper>{inviteList}</InviteListWrapper>
           </FieldWrapper>
+          <FormError>{formError}</FormError>
+          <ButtonWrapper>
+            <Button
+              color="primary"
+              onClick={handleCreateTrip}
+              variant="contained"
+            >
+              Create
+            </Button>
+          </ButtonWrapper>
         </CreateTripForm>
       </Container>
     </Overlay>
@@ -135,6 +181,7 @@ export const CreateTrip = ({ toggleCreateTripModal }) => {
 };
 
 CreateTrip.propTypes = {
+  actions: PropTypes.object.isRequired,
   toggleCreateTripModal: PropTypes.func.isRequired,
 };
 
@@ -151,18 +198,21 @@ const FormHeader = styled.div`
   position: relative;
   width: 100%;
   height: 100px;
-  background: url('https://files.slack.com/files-pri/TG0UF1N3B-FLBRUDH1B/12009257525732651878.jpg');
+  background: url(${dockPng});
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 `;
 
-const CloseButton = styled(Button)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1px;
-  stroke: #ffffff;
+const CloseButton = styled(IconButton)`
+  && {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 5px;
+    color: #ffffff;
+    z-index: 1px;
+  }
 `;
 
 const Header = styled.h2`
@@ -195,11 +245,27 @@ const HalfWidthField = styled(TextField)`
 
 const InviteListWrapper = styled.div`
   display: flex;
+  flex-flow: row wrap;
   justify-content: flex-start;
 `;
 
 const InviteChip = styled(Chip)`
-  margin: 0 10px;
+  && {
+    margin: 10px 5px;
+  }
 `;
 
-export default CreateTrip;
+const FormError = styled.div`
+  color: red;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+`;
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(CreateTrip);
