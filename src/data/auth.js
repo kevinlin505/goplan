@@ -11,7 +11,7 @@ export default function auth() {
 
       return addMessage({
         email,
-        displayName: 'leo display name test',
+        invitationLink: 'HTTPS://something-link',
       });
     },
 
