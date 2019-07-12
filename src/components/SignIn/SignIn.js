@@ -57,7 +57,8 @@ const Background = styled.div`
 const ContentContainer = styled.div`
   position: relative;
   padding: 40px;
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   background: rgba(255, 255, 255, 0.75);
   box-shadow: rgba(198, 208, 235, 0.5) 0px 20px 40px;
   box-sizing: border-box;
