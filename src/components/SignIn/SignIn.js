@@ -7,7 +7,6 @@ import { authActions } from '@providers/auth/auth';
 import GoogleAuthButton from '@components/SignIn/AuthButton/GoogleAuthButton';
 import FacebookAuthButton from '@components/SignIn/AuthButton/FacebookAuthButton';
 import backgroundImg from '@assets/images/background.jpg';
-import GoPlan from '@assets/images/GoPlan.svg';
 
 const mapDispatchToProps = dispatch => {
   return {
