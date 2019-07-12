@@ -5,6 +5,7 @@ module.exports = function returnWebpackAliases(PATHS) {
     '@app': PATHS.root,
 
     // sub-directories under src
+    '@assets': path.resolve(PATHS.src, 'assets'),
     '@components': path.resolve(PATHS.src, 'components'),
     '@constants': path.resolve(PATHS.src, 'constants'),
     '@data': path.resolve(PATHS.src, 'data'),
