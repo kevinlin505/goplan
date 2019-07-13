@@ -5,11 +5,14 @@ import trip from '@data/trip';
 
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
+  JOIN_TRIP: 'TRIP/JOIN_TRIP',
   RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
+  UPDATE_INVITE_TRIP_ID: 'TRIP/UPDATE_INVITE_TRIP_ID',
 };
 
 const initialState = {
+  inviteTripId: null,
   selectedTrip: null,
   trips: [],
 };
@@ -19,6 +22,13 @@ export default function reducer(state = initialState, action) {
     case types.CREATE_TRIP: {
       return {
         ...state,
+      };
+    }
+
+    case types.UPDATE_INVITE_TRIP_ID: {
+      return {
+        ...state,
+        inviteTripId: action.inviteTripId,
       };
     }
 
@@ -102,6 +112,23 @@ export const tripActions = {
         dispatch({
           type: types.RETRIEVE_ALL_TRIPS,
           trips,
+        });
+      });
+  },
+
+  updateInviteTripId: tripId => dispatch => {
+    dispatch({
+      type: types.UPDATE_INVITE_TRIP_ID,
+      inviteTripId: tripId,
+    });
+  },
+
+  updateTrip: tripDetail => dispatch => {
+    trip()
+      .updateTrip(tripDetail)
+      .then(() => {
+        dispatch({
+          type: types.JOIN_TRIP,
         });
       });
   },

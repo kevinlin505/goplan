@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const TripDetail = props => {
   return (
@@ -10,4 +11,8 @@ const TripDetail = props => {
   );
 };
 
-export default TripDetail;
+TripDetail.propTypes = {
+  props: PropTypes.object.isRequired,
+};
+
+export default withRouter(TripDetail);

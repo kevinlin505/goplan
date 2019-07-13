@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -31,6 +31,12 @@ const UserPage = ({ actions, auth, trip }) => {
   const toggleCreateTripModal = () => {
     setCreateTripModalOpen(!isCreateTripModalOpen);
   };
+
+  useEffect(() => {
+    if (trip.inviteTripId) {
+      actions.trip.updateTrip({ tripId: trip.inviteTripId });
+    }
+  }, []);
 
   useEffect(() => {
     const tripRefs = auth.profile.trips;

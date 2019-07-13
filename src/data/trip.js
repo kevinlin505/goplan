@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 
-export default function user() {
+export default function trip() {
   const db = firebase.firestore();
   const { currentUser } = firebase.auth();
 
@@ -41,6 +41,16 @@ export default function user() {
           return tripRef.get();
         }),
       );
+    },
+
+    updateTrip: tripDetails => {
+      const userRef = db.collection('users').doc(currentUser.uid);
+      return db
+        .collection('trips')
+        .doc(tripDetails.tripId)
+        .update({
+          attendees: firebase.firestore.FieldValue.arrayUnion(userRef),
+        });
     },
   };
 }
