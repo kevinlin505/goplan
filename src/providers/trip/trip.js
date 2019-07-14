@@ -42,29 +42,20 @@ export default function reducer(state = initialState, action) {
 }
 
 export const tripActions = {
-  createTrip: formDetails => dispatch => {
-    const tripDetails = {
-      destinations: [
-        {
-          country: 'Peru',
-          geo: new firebase.firestore.GeoPoint(-72.5471516, -13.1631412),
-          name: 'Machu Picchu',
-        },
-      ],
-      end_date: new Date(2019, 8, 20).getTime(),
-      expenses: [],
-      name: 'Trip to Peru',
-      notes: 'Backpacking trip to Machu Picchu.',
-      spending: 0,
-      start_date: new Date(2019, 7, 31).getTime(),
-      ...formDetails,
+  createTrip: formDetail => dispatch => {
+    const inviteList = formDetail.attendees;
+    const tripDetail = {
+      ...formDetail,
+      attendees: [],
+      end_date: formDetail.end_date,
+      start_date: formDetail.start_date,
     };
 
     return trip()
-      .createTrip(tripDetails)
+      .createTrip(tripDetail)
       .then(tripId => {
         Promise.all(
-          formDetails.attendees.map(attendee => {
+          inviteList.map(attendee => {
             return auth().sendInviteEmail(attendee, tripId);
           }),
         );

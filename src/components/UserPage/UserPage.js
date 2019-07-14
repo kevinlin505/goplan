@@ -54,11 +54,9 @@ const UserPage = ({ actions, auth, trip }) => {
     <div>
       <button onClick={actions.auth.signOut}>Sign Out</button>
       <button onClick={toggleCreateTripModal}>Create Trip</button>
-
       {isCreateTripModalOpen && (
         <CreateTrip toggleCreateTripModal={toggleCreateTripModal} />
       )}
-
       <TripList>{tripList}</TripList>
     </div>
   );
