@@ -47,7 +47,7 @@ export default function trip() {
       const userRef = db.collection('users').doc(currentUser.uid);
       return db
         .collection('trips')
-        .doc(tripDetails.tripId)
+        .doc(tripDetails.joinTripId)
         .update({
           attendees: firebase.firestore.FieldValue.arrayUnion(userRef),
         });

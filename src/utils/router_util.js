@@ -60,7 +60,7 @@ const RenderComp = props => {
   const { match, actions, auth, component: Component } = props;
   useEffect(() => {
     if (match.params.tripId) {
-      actions.trip.updateInviteTripId(match.params.tripId);
+      actions.trip.updateJoinTripId(match.params.tripId);
     }
   }, []);
   return auth ? <Component {...props} /> : <Redirect to="/" />;

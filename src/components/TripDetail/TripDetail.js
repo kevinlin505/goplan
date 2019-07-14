@@ -1,36 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
+import getTripStatus from '@selectors/trip_selector';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  const joinTripId = ownProps.match.params;
   return {
     auth: state.auth,
+    userInTrip: getTripStatus(state, joinTripId),
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     actions: {
-      user: bindActionCreators(userActions, dispatch),
       trip: bindActionCreators(tripActions, dispatch),
+      user: bindActionCreators(userActions, dispatch),
     },
   };
 };
 
-const TripDetail = ({ auth, actions, match }) => {
+const TripDetail = ({ actions, match, userInTrip }) => {
+  const currentTripId = match.params.tripId;
+  // const [userInTrip, setUserInTrip] = useState(false);
+
+  // useEffect(() => {
+  //   auth.profile.trips.forEach(el => {
+  //     if (el.id === currentTripId) setUserInTrip(true);
+  //   });
+  // }, []);
+
   useEffect(() => {
-    const currentTripId = match.params.tripId;
-    let inTrip = false;
-    auth.profile.trips.forEach(el => {
-      if (el.id === currentTripId) inTrip = true;
-    });
-    if (!inTrip) {
+    if (userInTrip === false) {
       actions.user.updateProfile({ joinTripId: currentTripId });
-      actions.trip.updateTrip({ tripId: currentTripId });
+      actions.trip.updateTrip({ joinTripId: currentTripId });
     }
   }, []);
 
@@ -43,9 +50,10 @@ const TripDetail = ({ auth, actions, match }) => {
 };
 
 TripDetail.propTypes = {
-  auth: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
+  userInTrip: PropTypes.bool.isRequired,
 };
 
 export default connect(

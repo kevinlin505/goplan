@@ -35,15 +35,17 @@ const UserPage = ({ actions, auth, trip }) => {
   };
 
   useEffect(() => {
-    if (trip.inviteTripId) {
+    const { joinTripId } = trip;
+
+    if (joinTripId) {
       let inTrip = false;
 
       auth.profile.trips.forEach(el => {
-        if (el.id === trip.inviteTripId) inTrip = true;
+        if (el.id === joinTripId) inTrip = true;
       });
       if (!inTrip) {
-        actions.user.updateProfile({ joinTripId: trip.inviteTripId });
-        actions.trip.updateTrip({ tripId: trip.inviteTripId });
+        actions.user.updateProfile({ joinTripId });
+        actions.trip.updateTrip({ joinTripId });
       }
     }
   }, []);

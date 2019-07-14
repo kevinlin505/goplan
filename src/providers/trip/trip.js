@@ -12,7 +12,7 @@ export const types = {
 };
 
 const initialState = {
-  inviteTripId: null,
+  joinTripId: null,
   selectedTrip: null,
   trips: [],
 };
@@ -28,7 +28,7 @@ export default function reducer(state = initialState, action) {
     case types.UPDATE_INVITE_TRIP_ID: {
       return {
         ...state,
-        inviteTripId: action.inviteTripId,
+        joinTripId: action.joinTripId,
       };
     }
 
@@ -116,10 +116,10 @@ export const tripActions = {
       });
   },
 
-  updateInviteTripId: tripId => dispatch => {
+  updateJoinTripId: tripId => dispatch => {
     dispatch({
       type: types.UPDATE_INVITE_TRIP_ID,
-      inviteTripId: tripId,
+      joinTripId: tripId,
     });
   },
 
