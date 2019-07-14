@@ -14,6 +14,8 @@ export default function trip() {
       const userRef = db.collection('users').doc(currentUser.uid);
       const tripRef = db.collection('trips').doc();
 
+      tripDetails.attendees.push(userRef);
+
       batch.set(tripRef, { ...tripDetails, organizer: userRef });
       batch.update(userRef, {
         trips: firebase.firestore.FieldValue.arrayUnion(tripRef),
