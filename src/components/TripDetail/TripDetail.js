@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
-import getTripStatus from '@selectors/trip_selector';
+import getTripStatus from '@selectors/tripSelector';
 
-const mapStateToProps = (state, ownProps) => {
-  const joinTripId = ownProps.match.params;
+const mapStateToProps = (state, props) => {
   return {
-    auth: state.auth,
-    userInTrip: getTripStatus(state, joinTripId),
+    tripId: props.match.params.tripId,
+    userInTrip: getTripStatus(state, state),
   };
 };
 
@@ -24,20 +23,11 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TripDetail = ({ actions, match, userInTrip }) => {
-  const currentTripId = match.params.tripId;
-  // const [userInTrip, setUserInTrip] = useState(false);
-
-  // useEffect(() => {
-  //   auth.profile.trips.forEach(el => {
-  //     if (el.id === currentTripId) setUserInTrip(true);
-  //   });
-  // }, []);
-
+const TripDetail = ({ actions, tripId, userInTrip }) => {
   useEffect(() => {
-    if (userInTrip === false) {
-      actions.user.updateProfile({ joinTripId: currentTripId });
-      actions.trip.updateTrip({ joinTripId: currentTripId });
+    if (!userInTrip) {
+      actions.user.updateProfile({ joinTripId: tripId });
+      actions.trip.updateTrip({ joinTripId: tripId });
     }
   }, []);
 
@@ -51,8 +41,7 @@ const TripDetail = ({ actions, match, userInTrip }) => {
 
 TripDetail.propTypes = {
   actions: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
+  tripId: PropTypes.string.isRequired,
   userInTrip: PropTypes.bool.isRequired,
 };
 

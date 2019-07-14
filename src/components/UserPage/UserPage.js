@@ -8,11 +8,13 @@ import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
 import TripCard from '@components/UserPage/TripCard/TripCard';
 import CreateTrip from '@components/UserPage/CreateTrip/CreateTrip';
+import getTripStatus from '@selectors/tripSelector';
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
     trip: state.trip,
+    userInTrip: getTripStatus(state, state),
   };
 };
 
@@ -26,7 +28,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const UserPage = ({ actions, auth, trip }) => {
+const UserPage = ({ actions, auth, trip, userInTrip }) => {
   const [tripList, setTripList] = useState(null);
   const [isCreateTripModalOpen, setCreateTripModalOpen] = useState(false);
 
@@ -37,16 +39,9 @@ const UserPage = ({ actions, auth, trip }) => {
   useEffect(() => {
     const { joinTripId } = trip;
 
-    if (joinTripId) {
-      let inTrip = false;
-
-      auth.profile.trips.forEach(el => {
-        if (el.id === joinTripId) inTrip = true;
-      });
-      if (!inTrip) {
-        actions.user.updateProfile({ joinTripId });
-        actions.trip.updateTrip({ joinTripId });
-      }
+    if (joinTripId && !userInTrip) {
+      actions.user.updateProfile({ joinTripId });
+      actions.trip.updateTrip({ joinTripId });
     }
   }, []);
 
@@ -86,6 +81,7 @@ UserPage.propTypes = {
   actions: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   trip: PropTypes.object.isRequired,
+  userInTrip: PropTypes.bool.isRequired,
 };
 
 const TripList = styled.div`
