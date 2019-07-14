@@ -89,9 +89,7 @@ const mapDispatchToProps = dispatch => {
 
 export const AuthRoute = connect(mapStateToProps)(withRouter(Auth));
 
-export const ProtectedRoute = withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(Protected),
-);
+export const ProtectedRoute = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withRouter(Protected));

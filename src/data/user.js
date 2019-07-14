@@ -45,10 +45,16 @@ export default function user() {
     },
 
     updateUserProfile: (profile = {}) => {
+      const newProfile = profile;
+      if (newProfile.joinTripId) {
+        const tripRef = db.collection('trips').doc(newProfile.joinTripId);
+        newProfile.trips = firebase.firestore.FieldValue.arrayUnion(tripRef);
+        delete newProfile.joinTripId;
+      }
       return db
         .collection('users')
         .doc(currentUser.uid)
-        .update(profile);
+        .update(newProfile);
     },
 
     subscribeToProfileChange: callback => {

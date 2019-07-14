@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
+import { userActions } from '@providers/user/user';
 import TripCard from '@components/UserPage/TripCard/TripCard';
 import CreateTrip from '@components/UserPage/CreateTrip/CreateTrip';
 
@@ -20,6 +21,7 @@ const mapDispatchToProps = dispatch => {
     actions: {
       auth: bindActionCreators(authActions, dispatch),
       trip: bindActionCreators(tripActions, dispatch),
+      user: bindActionCreators(userActions, dispatch),
     },
   };
 };
@@ -34,7 +36,15 @@ const UserPage = ({ actions, auth, trip }) => {
 
   useEffect(() => {
     if (trip.inviteTripId) {
-      actions.trip.updateTrip({ tripId: trip.inviteTripId });
+      let inTrip = false;
+
+      auth.profile.trips.forEach(el => {
+        if (el.id === trip.inviteTripId) inTrip = true;
+      });
+      if (!inTrip) {
+        actions.user.updateProfile({ joinTripId: trip.inviteTripId });
+        actions.trip.updateTrip({ tripId: trip.inviteTripId });
+      }
     }
   }, []);
 
