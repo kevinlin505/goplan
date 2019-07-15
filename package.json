@@ -6,9 +6,11 @@
     "dist"
   ],
   "scripts": {
-    "start": "webpack --env.environment development && webpack-dev-server --env.environment development --watch",
-    "build": "webpack --env.environment production",
-    "lint": "eslint . --ext .js,.ts --cache",
+    "start": "nodemon --watch webpack.config.js --watch webpack-config* --exec \"webpack-dev-server --env.environment development\"",
+    "build": "NODE_ENV=production webpack --env.environment production --progress",
+    "deploy": "firebase deploy --only hosting",
+    "deploy:function": "firebase deploy --only functions",
+    "lint": "eslint . --ext .js,.jsx --cache",
     "lint:check": "eslint --print-config . | eslint-config-prettier-check"
   },
   "dependencies": {
@@ -59,6 +61,7 @@
     "webpack": "4.35.2",
     "webpack-bundle-analyzer": "3.3.2",
     "webpack-cli": "3.3.5",
-    "webpack-dev-server": "3.7.2"
+    "webpack-dev-server": "3.7.2",
+    "webpack-merge": "4.2.1"
   }
 }
