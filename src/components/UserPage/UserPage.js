@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
+import { userActions } from '@providers/user/user';
 import TripCard from '@components/UserPage/TripCard/TripCard';
 import CreateTrip from '@components/UserPage/CreateTrip/CreateTrip';
+import getTripStatus from '@selectors/tripSelector';
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
     trip: state.trip,
+    userInTrip: getTripStatus(state, state),
   };
 };
 
@@ -20,17 +23,27 @@ const mapDispatchToProps = dispatch => {
     actions: {
       auth: bindActionCreators(authActions, dispatch),
       trip: bindActionCreators(tripActions, dispatch),
+      user: bindActionCreators(userActions, dispatch),
     },
   };
 };
 
-const UserPage = ({ actions, auth, trip }) => {
+const UserPage = ({ actions, auth, trip, userInTrip }) => {
   const [tripList, setTripList] = useState(null);
   const [isCreateTripModalOpen, setCreateTripModalOpen] = useState(false);
 
   const toggleCreateTripModal = () => {
     setCreateTripModalOpen(!isCreateTripModalOpen);
   };
+
+  useEffect(() => {
+    const { joinTripId } = trip;
+
+    if (joinTripId && !userInTrip) {
+      actions.user.updateProfile({ joinTripId });
+      actions.trip.updateTrip({ joinTripId });
+    }
+  }, []);
 
   useEffect(() => {
     const tripRefs = auth.profile.trips;
@@ -68,6 +81,7 @@ UserPage.propTypes = {
   actions: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   trip: PropTypes.object.isRequired,
+  userInTrip: PropTypes.bool.isRequired,
 };
 
 const TripList = styled.div`

@@ -10,6 +10,7 @@ module.exports = function returnWebpackAliases(PATHS) {
     '@constants': path.resolve(PATHS.src, 'constants'),
     '@data': path.resolve(PATHS.src, 'data'),
     '@providers': path.resolve(PATHS.src, 'providers'),
+    '@selectors': path.resolve(PATHS.src, 'selectors'),
     '@store': path.resolve(PATHS.src, 'store'),
     '@styles': path.resolve(PATHS.src, 'styles'),
     '@utils': path.resolve(PATHS.src, 'utils'),
