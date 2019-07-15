@@ -40,8 +40,7 @@ const UserPage = ({ actions, auth, trip, userInTrip }) => {
     const { joinTripId } = trip;
 
     if (joinTripId && !userInTrip) {
-      actions.user.updateProfile({ joinTripId });
-      actions.trip.updateTrip({ joinTripId });
+      actions.trip.joinTrip(joinTripId);
     }
   }, []);
 

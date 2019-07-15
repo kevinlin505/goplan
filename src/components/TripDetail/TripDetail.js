@@ -26,8 +26,7 @@ const mapDispatchToProps = dispatch => {
 const TripDetail = ({ actions, tripId, userInTrip }) => {
   useEffect(() => {
     if (!userInTrip) {
-      actions.user.updateProfile({ joinTripId: tripId });
-      actions.trip.updateTrip({ joinTripId: tripId });
+      actions.trip.joinTrip(tripId);
     }
   }, []);
 

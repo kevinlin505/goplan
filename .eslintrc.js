@@ -96,6 +96,7 @@ module.exports = {
         ['@data', './src/data'],
         ['@hooks', './src/hooks'],
         ['@providers', './src/providers'],
+        ['@selectors', './src/selectors'],
         ['@store', './src/store'],
         ['@styles', './src/styles'],
         ['@utils', './src/utils'],
