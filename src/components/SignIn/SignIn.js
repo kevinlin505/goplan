@@ -53,7 +53,6 @@ const SignIn = ({ actions }) => {
 
 SignIn.propTypes = {
   actions: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
 };
 
 const Background = styled.div`
