@@ -45,6 +45,11 @@ export default function user() {
     },
 
     updateUserProfile: (profile = {}) => {
+      if (profile.joinTripId) {
+        const tripRef = db.collection('trips').doc(profile.joinTripId);
+        profile.trips = firebase.firestore.FieldValue.arrayUnion(tripRef);
+        delete profile.joinTripId;
+      }
       return db
         .collection('users')
         .doc(currentUser.uid)
