@@ -57,8 +57,8 @@ export const tripActions = {
     const tripDetail = {
       ...formDetail,
       attendees: [],
-      end_date: formDetail.end_date,
-      start_date: formDetail.start_date,
+      end_date: new Date(formDetail.end_date),
+      start_date: new Date(formDetail.start_date),
     };
 
     return trip()
