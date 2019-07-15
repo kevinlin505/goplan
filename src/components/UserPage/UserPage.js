@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Button from '@material-ui/core/Button';
 import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
@@ -36,6 +37,17 @@ const UserPage = ({ actions, auth, trip, userInTrip }) => {
     setCreateTripModalOpen(!isCreateTripModalOpen);
   };
 
+  const [file, setFile] = useState(null);
+
+  const handleFileUpload = event => {
+    const fileReader = new FileReader();
+
+    fileReader.readAsDataURL(event.target.files[0]);
+    setFile(event.target.files[0]);
+  };
+
+  const handlePushToAWS = () => {};
+
   useEffect(() => {
     const { joinTripId } = trip;
 
@@ -66,6 +78,24 @@ const UserPage = ({ actions, auth, trip, userInTrip }) => {
     <div>
       <button onClick={actions.auth.signOut}>Sign Out</button>
       <button onClick={toggleCreateTripModal}>Create Trip</button>
+
+      <FileInput
+        accept="image/*"
+        id="contained-button-file"
+        multiple
+        onChange={handleFileUpload}
+        type="file"
+      />
+      <label htmlFor="contained-button-file">
+        <Button component="span" variant="contained">
+          Upload
+        </Button>
+      </label>
+
+      <Button onClick={handlePushToAWS} variant="contained">
+        Push to S3
+      </Button>
+
       {isCreateTripModalOpen && (
         <CreateTrip toggleCreateTripModal={toggleCreateTripModal} />
       )}
@@ -80,6 +110,10 @@ UserPage.propTypes = {
   trip: PropTypes.object.isRequired,
   userInTrip: PropTypes.bool.isRequired,
 };
+
+const FileInput = styled.input`
+  display: none;
+`;
 
 const TripList = styled.div`
   display: flex;
