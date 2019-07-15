@@ -26,6 +26,14 @@ export default function trip() {
       });
     },
 
+    getAllTrips: tripRefs => {
+      return Promise.all(
+        tripRefs.map(tripRef => {
+          return tripRef.get();
+        }),
+      );
+    },
+
     getTrip: tripRef => {
       if (typeof tripRef === 'string') {
         return db
@@ -37,22 +45,26 @@ export default function trip() {
       return tripRef.get();
     },
 
-    getAllTrips: tripRefs => {
-      return Promise.all(
-        tripRefs.map(tripRef => {
-          return tripRef.get();
-        }),
-      );
+    joinTrip: tripId => {
+      const batch = db.batch();
+      const userRef = db.collection('users').doc(currentUser.uid);
+      const tripRef = db.collection('trips').doc(tripId);
+
+      batch.update(tripRef, {
+        attendees: firebase.firestore.FieldValue.arrayUnion(userRef),
+      });
+      batch.update(userRef, {
+        trips: firebase.firestore.FieldValue.arrayUnion(tripRef),
+      });
+
+      return batch.commit();
     },
 
-    updateTrip: tripDetails => {
-      const userRef = db.collection('users').doc(currentUser.uid);
+    updateTrip: (tripId, tripDetail) => {
       return db
         .collection('trips')
-        .doc(tripDetails.joinTripId)
-        .update({
-          attendees: firebase.firestore.FieldValue.arrayUnion(userRef),
-        });
+        .doc(tripId)
+        .update(tripDetail);
     },
   };
 }

@@ -1,5 +1,3 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
 import auth from '@data/auth';
 import trip from '@data/trip';
 
@@ -9,6 +7,7 @@ export const types = {
   RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
   UPDATE_INVITE_TRIP_ID: 'TRIP/UPDATE_INVITE_TRIP_ID',
+  UPDATE_TRIP: 'TRIP/UPDATE_TRIP',
 };
 
 const initialState = {
@@ -79,17 +78,6 @@ export const tripActions = {
       });
   },
 
-  getTrip: tripRef => dispatch => {
-    trip()
-      .getTrip(tripRef)
-      .then(tripDetails => {
-        dispatch({
-          type: types.SET_SELECTED_TRIP,
-          selectedTrip: tripDetails.data(),
-        });
-      });
-  },
-
   getAllTrips: tripRefs => dispatch => {
     trip()
       .getAllTrips(tripRefs)
@@ -107,6 +95,27 @@ export const tripActions = {
       });
   },
 
+  getTrip: tripRef => dispatch => {
+    trip()
+      .getTrip(tripRef)
+      .then(tripDetails => {
+        dispatch({
+          type: types.SET_SELECTED_TRIP,
+          selectedTrip: tripDetails.data(),
+        });
+      });
+  },
+
+  joinTrip: tripId => dispatch => {
+    trip()
+      .joinTrip(tripId)
+      .then(() => {
+        dispatch({
+          type: types.JOIN_TRIP,
+        });
+      });
+  },
+
   updateJoinTripId: tripId => dispatch => {
     dispatch({
       type: types.UPDATE_INVITE_TRIP_ID,
@@ -114,12 +123,12 @@ export const tripActions = {
     });
   },
 
-  updateTrip: tripDetail => dispatch => {
+  updateTrip: (tripId, tripDetail) => dispatch => {
     trip()
-      .updateTrip(tripDetail)
+      .updateTrip(tripId, tripDetail)
       .then(() => {
         dispatch({
-          type: types.JOIN_TRIP,
+          type: types.UPDATE_TRIP,
         });
       });
   },
