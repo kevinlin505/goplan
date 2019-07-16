@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { Route, HashRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import configureStore from '@store/store';
-import { AuthRoute, ProtectedRoute } from '@utils/routerUtil';
+import { AuthRoute, ProtectedRoute } from '@components/RouterUtils/RouterUtils';
 import SignIn from '@components/SignIn/SignIn';
 import UserPage from '@components/UserPage/UserPage';
 import TripDetail from '@components/TripDetail/TripDetail';

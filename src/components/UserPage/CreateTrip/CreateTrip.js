@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
@@ -12,8 +14,16 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import CloseIcon from '@material-ui/icons/Close';
 import { tripActions } from '@providers/trip/trip';
 import validateEmail from '@utils/validateEmail';
-import Overlay from '@styles/Overlay';
+import useDestinationsHandler from '@hooks/useDestinationsHandler';
 import dockPng from '@assets/images/dock.jpg';
+import Overlay from '@styles/Overlay';
+
+const mapStateToProps = state => {
+  return {
+    auth: state.auth,
+    trip: state.trip,
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -23,9 +33,11 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export const CreateTrip = ({ actions, toggleCreateTripModal }) => {
+export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
+  const [destinationInputValue, setDestinationInputValue] = useState('');
   const [invite, setInvite] = useState('');
   const [inviteList, setInviteList] = useState(null);
+  const [destinationList, setDestinationList] = useState(null);
   const [formError, setFormError] = useState('');
   const [form, setValues] = useState({
     end_date: '',
@@ -33,6 +45,15 @@ export const CreateTrip = ({ actions, toggleCreateTripModal }) => {
     notes: '',
     start_date: '',
     attendees: [],
+    destinations: [],
+  });
+  const destinationInputRef = useRef(null);
+  const mapRef = useRef(null);
+
+  const { placeServices } = useDestinationsHandler({
+    auth,
+    destinationInputRef: destinationInputRef.current,
+    mapRef: mapRef.current,
   });
 
   const updateField = event => {
@@ -42,10 +63,59 @@ export const CreateTrip = ({ actions, toggleCreateTripModal }) => {
     });
   };
 
+  const searchDestination = query => {
+    if (query) {
+      placeServices.textSearch({ query }, data => {
+        const destinationDetail = {};
+
+        if (data[0]) {
+          destinationDetail.photos = data[0].photos.map(photo => {
+            return {
+              url: photo.getUrl(),
+              height: photo.height,
+              width: photo.width,
+            };
+          });
+          destinationDetail.name = data[0].name;
+          destinationDetail.geo = new firebase.firestore.GeoPoint(
+            data[0].geometry.location.lat(),
+            data[0].geometry.location.lng(),
+          );
+          destinationDetail.place_id = data[0].place_id;
+          destinationDetail.types = data[0].types;
+          destinationDetail.formatted_address = data[0].formatted_address;
+        }
+
+        setValues({
+          ...form,
+          destinations: [...form.destinations, destinationDetail],
+        });
+
+        setDestinationInputValue('');
+      });
+    }
+  };
+
+  const updateDestinationField = event => {
+    if (event.type === 'change') {
+      setDestinationInputValue(event.target.value);
+    } else if (
+      event.type === 'blur' ||
+      event.keyCode === 13 ||
+      event.key === 'Enter'
+    ) {
+      searchDestination(event.target.value);
+    }
+  };
+
   const updateInviteField = event => {
     if (event.type === 'change') {
       setInvite(event.target.value);
-    } else if (event.keyCode === 13 || event.key === 'Enter') {
+    } else if (
+      event.type === 'blur' ||
+      event.keyCode === 13 ||
+      event.key === 'Enter'
+    ) {
       if (validateEmail(event.target.value)) {
         setValues({
           ...form,
@@ -96,6 +166,32 @@ export const CreateTrip = ({ actions, toggleCreateTripModal }) => {
     setInviteList(chips);
   }, [form.attendees.length]);
 
+  useEffect(() => {
+    const handleDelete = index => {
+      setValues({
+        ...form,
+        destinations: [
+          ...form.destinations.slice(0, index),
+          ...form.destinations.slice(index + 1),
+        ],
+      });
+    };
+
+    const chips = form.destinations.map((location, index) => {
+      return (
+        <InviteChip
+          key={location.name}
+          color="primary"
+          deleteIcon={<CancelIcon />}
+          label={location.name}
+          onDelete={() => handleDelete(index)}
+        />
+      );
+    });
+
+    setDestinationList(chips);
+  }, [form.destinations.length]);
+
   return (
     <Overlay>
       <Container>
@@ -127,6 +223,16 @@ export const CreateTrip = ({ actions, toggleCreateTripModal }) => {
               type="text"
               value={form.notes}
             />
+            <FullWidthField
+              inputRef={destinationInputRef}
+              label="Destination"
+              onBlur={updateDestinationField}
+              onChange={updateDestinationField}
+              onKeyPress={updateDestinationField}
+              value={destinationInputValue}
+            />
+            <ChipWrapper>{destinationList}</ChipWrapper>
+            <div ref={mapRef}></div>
           </FieldWrapper>
           <FieldWrapper>
             <HalfWidthField
@@ -156,13 +262,14 @@ export const CreateTrip = ({ actions, toggleCreateTripModal }) => {
             <FullWidthField
               label="Attendees"
               name="attendee"
+              onBlur={updateInviteField}
               onChange={updateInviteField}
               onKeyPress={updateInviteField}
               placeholder="Enter email address to invite"
               type="text"
               value={invite}
             />
-            <InviteListWrapper>{inviteList}</InviteListWrapper>
+            <ChipWrapper>{inviteList}</ChipWrapper>
           </FieldWrapper>
           <FormError>{formError}</FormError>
           <ButtonWrapper>
@@ -182,7 +289,9 @@ export const CreateTrip = ({ actions, toggleCreateTripModal }) => {
 
 CreateTrip.propTypes = {
   actions: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
   toggleCreateTripModal: PropTypes.func.isRequired,
+  trip: PropTypes.object.isRequired,
 };
 
 const Container = styled.div`
@@ -243,7 +352,7 @@ const HalfWidthField = styled(TextField)`
   width: 45%;
 `;
 
-const InviteListWrapper = styled.div`
+const ChipWrapper = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
@@ -266,6 +375,6 @@ const ButtonWrapper = styled.div`
 `;
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(CreateTrip);
