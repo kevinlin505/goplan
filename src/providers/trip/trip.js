@@ -1,5 +1,3 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
 import auth from '@data/auth';
 import trip from '@data/trip';
 
@@ -9,6 +7,7 @@ export const types = {
   RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
   UPDATE_INVITE_TRIP_ID: 'TRIP/UPDATE_INVITE_TRIP_ID',
+  UPDATE_TRIP: 'TRIP/UPDATE_TRIP',
 };
 
 const initialState = {
@@ -52,29 +51,20 @@ export default function reducer(state = initialState, action) {
 }
 
 export const tripActions = {
-  createTrip: formDetails => dispatch => {
-    const tripDetails = {
-      destinations: [
-        {
-          country: 'Peru',
-          geo: new firebase.firestore.GeoPoint(-72.5471516, -13.1631412),
-          name: 'Machu Picchu',
-        },
-      ],
-      end_date: new Date(2019, 8, 20).getTime(),
-      expenses: [],
-      name: 'Trip to Peru',
-      notes: 'Backpacking trip to Machu Picchu.',
-      spending: 0,
-      start_date: new Date(2019, 7, 31).getTime(),
-      ...formDetails,
+  createTrip: formDetail => dispatch => {
+    const inviteList = formDetail.attendees;
+    const tripDetail = {
+      ...formDetail,
+      attendees: [],
+      end_date: new Date(formDetail.end_date),
+      start_date: new Date(formDetail.start_date),
     };
 
     return trip()
-      .createTrip(tripDetails)
+      .createTrip(tripDetail)
       .then(tripId => {
         Promise.all(
-          formDetails.attendees.map(attendee => {
+          inviteList.map(attendee => {
             return auth().sendInviteEmail(attendee, tripId);
           }),
         );
@@ -85,17 +75,6 @@ export const tripActions = {
       })
       .catch(err => {
         console.log(err);
-      });
-  },
-
-  getTrip: tripRef => dispatch => {
-    trip()
-      .getTrip(tripRef)
-      .then(tripDetails => {
-        dispatch({
-          type: types.SET_SELECTED_TRIP,
-          selectedTrip: tripDetails.data(),
-        });
       });
   },
 
@@ -116,6 +95,27 @@ export const tripActions = {
       });
   },
 
+  getTrip: tripRef => dispatch => {
+    trip()
+      .getTrip(tripRef)
+      .then(tripDetails => {
+        dispatch({
+          type: types.SET_SELECTED_TRIP,
+          selectedTrip: tripDetails.data(),
+        });
+      });
+  },
+
+  joinTrip: tripId => dispatch => {
+    trip()
+      .joinTrip(tripId)
+      .then(() => {
+        dispatch({
+          type: types.JOIN_TRIP,
+        });
+      });
+  },
+
   updateJoinTripId: tripId => dispatch => {
     dispatch({
       type: types.UPDATE_INVITE_TRIP_ID,
@@ -123,12 +123,12 @@ export const tripActions = {
     });
   },
 
-  updateTrip: tripDetail => dispatch => {
+  updateTrip: (tripId, tripDetail) => dispatch => {
     trip()
-      .updateTrip(tripDetail)
+      .updateTrip(tripId, tripDetail)
       .then(() => {
         dispatch({
-          type: types.JOIN_TRIP,
+          type: types.UPDATE_TRIP,
         });
       });
   },

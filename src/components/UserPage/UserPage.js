@@ -40,8 +40,7 @@ const UserPage = ({ actions, auth, trip, userInTrip }) => {
     const { joinTripId } = trip;
 
     if (joinTripId && !userInTrip) {
-      actions.user.updateProfile({ joinTripId });
-      actions.trip.updateTrip({ joinTripId });
+      actions.trip.joinTrip(joinTripId);
     }
   }, []);
 
@@ -67,11 +66,9 @@ const UserPage = ({ actions, auth, trip, userInTrip }) => {
     <div>
       <button onClick={actions.auth.signOut}>Sign Out</button>
       <button onClick={toggleCreateTripModal}>Create Trip</button>
-
       {isCreateTripModalOpen && (
         <CreateTrip toggleCreateTripModal={toggleCreateTripModal} />
       )}
-
       <TripList>{tripList}</TripList>
     </div>
   );

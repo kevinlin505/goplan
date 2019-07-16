@@ -31,6 +31,7 @@ export default function reducer(state = initialState, action) {
         authenticationError: null,
         isAuthenticated: true,
         profile: action.profile,
+        userId: action.uid,
       };
     }
 
@@ -39,6 +40,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         authenticationError: null,
         isAuthenticated: false,
+        profile: null,
+        userId: null,
       };
     }
 
@@ -60,14 +63,7 @@ export const authActions = {
 
     auth().onStateChanged(currentUser => {
       if (currentUser && currentUser.uid) {
-        user()
-          .checkUserProfile()
-          .then(profile => {
-            return dispatch({
-              type: types.SIGN_IN,
-              profile: profile.data(),
-            });
-          });
+        dispatch(authActions.signInSuccess(currentUser.uid));
 
         // Listen to user profile update and update the local profile if changes are made to server
         user().subscribeToProfileChange(profile => {
@@ -87,8 +83,8 @@ export const authActions = {
   signInWithGoogleAuth: () => dispatch => {
     auth()
       .signInWithGoogleAuthAsync()
-      .then(() => {
-        dispatch(authActions.signInSuccess());
+      .then(authData => {
+        dispatch(authActions.signInSuccess(authData.uid));
       })
       .catch(() => {
         dispatch(authActions.signInError());
@@ -99,8 +95,8 @@ export const authActions = {
   signInWithFacebookAuth: () => dispatch => {
     auth()
       .signInWithFacebookAuthAsync()
-      .then(() => {
-        dispatch(authActions.signInSuccess());
+      .then(authData => {
+        dispatch(authActions.signInSuccess(authData.uid));
       })
       .catch(err => {
         if (err.code === 'auth/account-exists-with-different-credential') {
@@ -140,7 +136,7 @@ export const authActions = {
       });
   },
 
-  signInSuccess: () => dispatch => {
+  signInSuccess: uid => dispatch => {
     return user()
       .checkUserProfile()
       .then(profile => {
@@ -150,6 +146,8 @@ export const authActions = {
 
         return dispatch({
           type: types.SIGN_IN,
+          profile: profile.data(),
+          uid,
         });
       });
   },

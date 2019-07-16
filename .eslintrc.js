@@ -6,6 +6,7 @@ const rules = {
   'import/no-named-as-default': 'off', // issue with default export of connected components
   'import/no-unresolved': 'error',
   'no-mixed-operators': 'off',
+  'no-param-reassign': 'off',
   'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
   'no-return-assign': 'warn',
   'no-var': 'off',
@@ -93,7 +94,9 @@ module.exports = {
         ['@components', './src/components'],
         ['@constants', './src/constants'],
         ['@data', './src/data'],
+        ['@hooks', './src/hooks'],
         ['@providers', './src/providers'],
+        ['@selectors', './src/selectors'],
         ['@store', './src/store'],
         ['@styles', './src/styles'],
         ['@utils', './src/utils'],
