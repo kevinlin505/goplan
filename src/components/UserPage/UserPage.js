@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -66,6 +66,7 @@ const UserPage = ({ actions, auth, trip, userInTrip }) => {
     <div>
       <button onClick={actions.auth.signOut}>Sign Out</button>
       <button onClick={toggleCreateTripModal}>Create Trip</button>
+
       {isCreateTripModalOpen && (
         <CreateTrip toggleCreateTripModal={toggleCreateTripModal} />
       )}
