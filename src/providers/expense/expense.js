@@ -20,8 +20,10 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-export const userActions = {
-  uploadReceipts: file => dispatch => {
+export const expenseActions = {
+  uploadReceipts: file => (dispatch, getState) => {
+    const { selectedTrip } = getState().trip;
+
     AWS.config.region = Keys.AWS.region;
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
       IdentityPoolId: Keys.AWS.IdentityPoolId,
@@ -29,17 +31,17 @@ export const userActions = {
 
     const bucket = new S3();
     const params = {
-      Bucket: Keys.AWS.bucketName,
+      Bucket: `${Keys.AWS.bucketName}/expense/${selectedTrip.id}`,
       Key: file.name,
       ContentType: file.type,
       Body: file,
     };
 
-    bucket.putObject(params, err => {
+    return bucket.putObject(params, err => {
       if (err) {
         console.log(err);
       } else {
-        return dispatch({
+        dispatch({
           type: types.UPLOAD_RECEIPT,
         });
       }

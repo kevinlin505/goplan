@@ -21,6 +21,7 @@ export default function user() {
         creation_time: currentUser.metadata.creationTime,
         email: currentUser.email,
         email_verified: currentUser.emailVerified,
+        id: currentUser.uid,
         last_sign_in_time: currentUser.metadata.lastSignInTime,
         name: currentUser.displayName,
         phone_number: currentUser.phoneNumber,
