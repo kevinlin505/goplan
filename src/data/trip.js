@@ -15,6 +15,7 @@ export default function trip() {
       const tripRef = db.collection('trips').doc();
 
       tripDetails.attendees.push(userRef);
+      tripDetails.id = tripRef.id;
 
       batch.set(tripRef, { ...tripDetails, organizer: userRef });
       batch.update(userRef, {
