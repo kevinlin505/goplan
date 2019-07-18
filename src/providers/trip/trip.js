@@ -1,5 +1,6 @@
 import auth from '@data/auth';
 import trip from '@data/trip';
+import { types as authTypes } from '@providers/auth/auth';
 
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
@@ -18,6 +19,15 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case authTypes.SIGN_OUT: {
+      return {
+        ...state,
+        joinTripId: null,
+        selectedTrip: null,
+        trips: [],
+      };
+    }
+
     case types.CREATE_TRIP: {
       return {
         ...state,
