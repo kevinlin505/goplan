@@ -46,13 +46,14 @@ export default function trip() {
       return tripRef.get();
     },
 
-    joinTrip: tripId => {
+    joinTrip: (tripId, { name, id, email }) => {
       const batch = db.batch();
       const userRef = db.collection('users').doc(currentUser.uid);
       const tripRef = db.collection('trips').doc(tripId);
+      const attendeeObject = { name, id, email };
 
       batch.update(tripRef, {
-        attendees: firebase.firestore.FieldValue.arrayUnion(userRef),
+        attendees: firebase.firestore.FieldValue.arrayUnion(attendeeObject),
       });
       batch.update(userRef, {
         trips: firebase.firestore.FieldValue.arrayUnion(tripRef),
