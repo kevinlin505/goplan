@@ -26,9 +26,10 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: Roboto, sans-serif;
+    font-family: ${({ theme }) => theme.fonts.primary};
     margin: 0;
     padding: 0;
+    background-color: ${({ theme }) => theme.colors.background};
   }
 `;
 
