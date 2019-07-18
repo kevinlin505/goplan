@@ -116,9 +116,10 @@ export const tripActions = {
       });
   },
 
-  joinTrip: (tripId, userProfile) => dispatch => {
+  joinTrip: tripId => (dispatch, getState) => {
+    const { profile } = getState().auth;
     trip()
-      .joinTrip(tripId, userProfile)
+      .joinTrip(tripId, profile)
       .then(() => {
         dispatch({
           type: types.JOIN_TRIP,

@@ -28,9 +28,9 @@ export default function reducer(state = initialState, action) {
 
 export const userActions = {
   // fetch all attendee of a trip and dispatch it to the store
-  getAllAttendees: attendeeRefs => dispatch => {
+  getAllAttendees: attendeeObjects => dispatch => {
     user()
-      .getAllAttendees(attendeeRefs)
+      .getAllAttendees(attendeeObjects)
       .then(docs => {
         const attendees = docs.map(doc => {
           const data = doc.data();

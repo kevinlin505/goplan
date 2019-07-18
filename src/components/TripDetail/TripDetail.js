@@ -12,7 +12,6 @@ import getTripStatus from '@selectors/tripSelector';
 
 const mapStateToProps = (state, props) => {
   return {
-    auth: state.auth,
     selectedTrip: state.trip.selectedTrip,
     tripId: props.match.params.tripId,
     userInTrip: getTripStatus(state, state),
@@ -29,7 +28,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TripDetail = ({ actions, auth, selectedTrip, tripId, userInTrip }) => {
+const TripDetail = ({ actions, selectedTrip, tripId, userInTrip }) => {
   const [file, setFile] = useState(null);
   const [previewImageSrc, setPreviewImageSrc] = useState(null);
 
@@ -55,7 +54,7 @@ const TripDetail = ({ actions, auth, selectedTrip, tripId, userInTrip }) => {
     actions.trip.getTrip(tripId);
 
     if (!userInTrip) {
-      actions.trip.joinTrip(tripId, auth.profile);
+      actions.trip.joinTrip(tripId);
     }
   }, []);
 
@@ -97,7 +96,6 @@ const TripDetail = ({ actions, auth, selectedTrip, tripId, userInTrip }) => {
 
 TripDetail.propTypes = {
   actions: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
   selectedTrip: PropTypes.object,
   tripId: PropTypes.string.isRequired,
   userInTrip: PropTypes.bool.isRequired,

@@ -10,6 +10,7 @@ const TripCard = ({ tripDetails }) => {
   const attendeeNames = tripDetails.attendees.map(attendee => {
     return <li key={`attendee-${attendee.email}`}>{attendee.name}</li>;
   });
+
   return (
     <Container
       backgroundImageUrl={
