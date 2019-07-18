@@ -101,7 +101,7 @@ export const tripActions = {
       .then(tripDetails => {
         dispatch({
           type: types.SET_SELECTED_TRIP,
-          selectedTrip: tripDetails.data(),
+          selectedTrip: { ...tripDetails.data(), id: tripDetails.id },
         });
       });
   },
