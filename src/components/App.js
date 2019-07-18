@@ -1,24 +1,28 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
 import configureStore from '@store/store';
 import { AuthRoute, ProtectedRoute } from '@components/RouterUtils/RouterUtils';
 import SignIn from '@components/SignIn/SignIn';
 import UserPage from '@components/UserPage/UserPage';
 import TripDetail from '@components/TripDetail/TripDetail';
+import theme from '@styles/theme/theme';
 import GlobalStyle from '@styles/GlobalStyle';
 
 class App extends Component {
   render() {
     return (
-      <Provider store={configureStore()}>
-        <GlobalStyle />
-        <HashRouter>
-          <AuthRoute component={SignIn} exact path="/" />
-          <ProtectedRoute component={UserPage} path="/home" />
-          <ProtectedRoute component={TripDetail} path="/trip/:tripId" />
-        </HashRouter>
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <Provider store={configureStore()}>
+          <GlobalStyle />
+          <HashRouter>
+            <AuthRoute component={SignIn} exact path="/" />
+            <ProtectedRoute component={UserPage} path="/home" />
+            <ProtectedRoute component={TripDetail} path="/trip/:tripId" />
+          </HashRouter>
+        </Provider>
+      </ThemeProvider>
     );
   }
 }
