@@ -204,11 +204,11 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
         <CreateTripForm>
           <FieldWrapper>
             <FullWidthField
-              isRequired
               label="Trip Name"
               name="trip_name"
               onChange={updateField}
               placeholder="Enter a name for this trip"
+              required
               type="text"
               value={form.trip_name}
             />
@@ -229,6 +229,7 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
               onBlur={updateDestinationField}
               onChange={updateDestinationField}
               onKeyPress={updateDestinationField}
+              type="search"
               value={destinationInputValue}
             />
             <ChipWrapper>{destinationList}</ChipWrapper>
@@ -239,10 +240,10 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
               InputLabelProps={{
                 shrink: true,
               }}
-              isRequired
               label="Start Date"
               name="start_date"
               onChange={updateField}
+              required
               type="date"
               value={form.start_date}
             />
@@ -250,10 +251,10 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
               InputLabelProps={{
                 shrink: true,
               }}
-              isRequired
               label="End Date"
               name="end_date"
               onChange={updateField}
+              required
               type="date"
               value={form.end_date}
             />
