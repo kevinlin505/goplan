@@ -106,9 +106,9 @@ export const tripActions = {
       });
   },
 
-  joinTrip: tripId => dispatch => {
+  joinTrip: (tripId, userProfile) => dispatch => {
     trip()
-      .joinTrip(tripId)
+      .joinTrip(tripId, userProfile)
       .then(() => {
         dispatch({
           type: types.JOIN_TRIP,

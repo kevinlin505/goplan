@@ -44,6 +44,15 @@ export default function user() {
         .set(profileDefault);
     },
 
+    // fetch all attendee from an array of userRef and return user objects
+    getAllAttendees: attendeeRefs => {
+      return Promise.all(
+        attendeeRefs.map(attendeeRef => {
+          return attendeeRef.get();
+        }),
+      );
+    },
+
     updateUserProfile: (profile = {}) => {
       return db
         .collection('users')
