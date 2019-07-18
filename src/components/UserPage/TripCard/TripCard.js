@@ -6,21 +6,16 @@ import { Link } from 'react-router-dom';
 const TripCard = ({ tripDetails }) => {
   const startDate = new Date(tripDetails.start_date.toDate());
   const endDate = new Date(tripDetails.end_date.toDate());
-  const { destinations } = tripDetails;
+  const destination = tripDetails.destinations.length > 0 ? tripDetails.destinations[0] : null;
   const attendeeNames = tripDetails.attendees.map(attendee => {
     return <li key={`attendee-${attendee.email}`}>{attendee.name}</li>;
   });
 
   return (
-    <Container
-      backgroundImageUrl={
-        destinations[0].photos ? destinations[0].photos[0].url : null
-      }
-    >
+    <Container backgroundImageUrl={destination ? destination.photos[0].url : null}>
       <TripCardGradient>
         <TextContainer>
-          <LocationName>{destinations[0].formatted_address}</LocationName>
-
+          <LocationName>{destination ? destination.formatted_address : null}</LocationName>
           <TripCardDetail to={`/trip/${tripDetails.id}`}>
             <Name>{tripDetails.trip_name}</Name>
             <TravelDate>
@@ -34,7 +29,6 @@ const TripCard = ({ tripDetails }) => {
             <div>Spending: {tripDetails.spending}</div>
           </TripCardDetail>
         </TextContainer>
-        
       </TripCardGradient>
     </Container>
   );
@@ -60,7 +54,7 @@ const Container = styled.div`
   border: none;
   border-radius: ${sharedStyle.borderRadius};
   box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
-  margin: 0px auto;
+  margin: 10px auto;
   padding: 0px;
   width: 50%;
   min-height: 300px;
