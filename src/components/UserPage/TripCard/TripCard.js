@@ -17,19 +17,25 @@ const TripCard = ({ tripDetails }) => {
         destinations[0].photos ? destinations[0].photos[0].url : null
       }
     >
-      <LocationName>{destinations[0].formatted_address}</LocationName>
-      <TripCardDetail to={`/trip/${tripDetails.id}`}>
-        <Name>{tripDetails.trip_name}</Name>
-        <TravelDate>
-          {`Travel Date: ${startDate.toLocaleDateString()}`} -{' '}
-          {`${endDate.toLocaleDateString()}`}
-        </TravelDate>
-        <AttendeeList>
-          Attendee(s):
-          {attendeeNames}
-        </AttendeeList>
-        <div>Spending: {tripDetails.spending}</div>
-      </TripCardDetail>
+      <TripCardGradient>
+        <TextContainer>
+          <LocationName>{destinations[0].formatted_address}</LocationName>
+
+          <TripCardDetail to={`/trip/${tripDetails.id}`}>
+            <Name>{tripDetails.trip_name}</Name>
+            <TravelDate>
+              {`Travel Date: ${startDate.toLocaleDateString()}`} -{' '}
+              {`${endDate.toLocaleDateString()}`}
+            </TravelDate>
+            <AttendeeList>
+              Attendee(s):
+              {attendeeNames}
+            </AttendeeList>
+            <div>Spending: {tripDetails.spending}</div>
+          </TripCardDetail>
+        </TextContainer>
+        
+      </TripCardGradient>
     </Container>
   );
 };
@@ -37,6 +43,10 @@ const TripCard = ({ tripDetails }) => {
 TripCard.propTypes = {
   tripDetails: PropTypes.object.isRequired,
 };
+
+const sharedStyle = {
+  borderRadius: `20px`
+}
 
 const AttendeeList = styled.ul`
   list-style: none;
@@ -48,7 +58,7 @@ const Container = styled.div`
   background-size: cover;
   color: black;
   border: none;
-  border-radius: 5px;
+  border-radius: ${sharedStyle.borderRadius};
   box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
   margin: 0px auto;
   padding: 0px;
@@ -59,25 +69,37 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
+const TextContainer = styled.div`
+  padding: 20px
+`
+
+const TripCardGradient = styled.div`
+  background: rgb(255,255,255);
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 100%);
+  min-height: 300px;
+  border-radius: ${sharedStyle.borderRadius};
+`
+
 const TripCardDetail = styled(Link)`
-  background: white;
   color: rgba(0, 0, 0, 0.7);
   border-radius: 0 0 5px 5px;
   padding: 20px;
   height: 40%;
   text-decoration: none;
+  color: white;
 `;
 
 const Name = styled.div`
   font-size: 20px;
   padding-bottom: 20px;
   text-decoration: underline;
+  color: white;
 `;
 
-const LocationName = styled.h2`
-  background: rgba(255, 255, 255, 0.5);
+const LocationName = styled.h1`
   border-radius: 5px;
   padding: 10px;
+  color: white;
 `;
 
 const TravelDate = styled.div``;
