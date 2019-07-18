@@ -11,6 +11,8 @@ const theme = {
     background: '#eeeeee',
     white: '#ffffff',
     black: '#000000',
+    error: '#d32f2f',
+    success: '#4caf50',
   },
 
   // Fonts
