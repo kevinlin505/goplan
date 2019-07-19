@@ -7,7 +7,7 @@ import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
 import TripCard from '@components/UserPage/TripCard/TripCard';
-import CreateTrip from '@components/UserPage/CreateTrip/CreateTrip';
+import NavigationBar from  '@components/Navigation/NavigationBar'
 import getTripStatus from '@selectors/tripSelector';
 
 const mapStateToProps = state => {
@@ -30,11 +30,6 @@ const mapDispatchToProps = dispatch => {
 
 const UserPage = ({ actions, auth, trip, userInTrip }) => {
   const [tripList, setTripList] = useState(null);
-  const [isCreateTripModalOpen, setCreateTripModalOpen] = useState(false);
-
-  const toggleCreateTripModal = () => {
-    setCreateTripModalOpen(!isCreateTripModalOpen);
-  };
 
   useEffect(() => {
     const { joinTripId } = trip;
@@ -64,13 +59,10 @@ const UserPage = ({ actions, auth, trip, userInTrip }) => {
 
   return (
     <div>
-      <button onClick={actions.auth.signOut}>Sign Out</button>
-      <button onClick={toggleCreateTripModal}>Create Trip</button>
-
-      {isCreateTripModalOpen && (
-        <CreateTrip toggleCreateTripModal={toggleCreateTripModal} />
-      )}
-      <TripList>{tripList}</TripList>
+      <NavigationBar signOut={actions.auth.signOut} />
+      <Container>
+        <TripList>{tripList}</TripList>
+      </Container>
     </div>
   );
 };
@@ -81,6 +73,10 @@ UserPage.propTypes = {
   trip: PropTypes.object.isRequired,
   userInTrip: PropTypes.bool.isRequired,
 };
+
+const Container = styled.div`
+  padding-top: 70px;
+`
 
 const TripList = styled.div`
   display: flex;
