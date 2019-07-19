@@ -14,6 +14,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import Expense from '@constants/Expense';
 import { expenseActions } from '@providers/expense/expense';
 import Overlay from '@styles/Overlay';
 
@@ -32,36 +33,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const CreateExpense = ({ actions, attendees, toggleCreateExpenseModal }) => {
-  const categoies = [
-    {
-      value: 'document',
-      label: 'Document',
-    },
-    {
-      value: 'equipment',
-      label: 'Equipment',
-    },
-    {
-      value: 'meals',
-      label: 'Meals',
-    },
-    {
-      value: 'accommodation',
-      label: 'Accommodation',
-    },
-    {
-      value: 'ticket',
-      label: 'Ticket',
-    },
-    {
-      value: 'transportation',
-      label: 'Transportation',
-    },
-    {
-      value: 'other',
-      label: 'Other',
-    },
-  ];
   const [files, setFiles] = useState([]);
   const [previewImageSrcs, setPreviewImageSrcs] = useState([]);
   const [form, setValues] = useState({
@@ -161,7 +132,7 @@ const CreateExpense = ({ actions, attendees, toggleCreateExpenseModal }) => {
               select
               value={form.category}
             >
-              {categoies.map(option => (
+              {Expense.CATEGORIES.map(option => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
