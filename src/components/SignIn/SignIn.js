@@ -76,6 +76,7 @@ const ContentContainer = styled.div`
   box-sizing: border-box;
   text-align: center;
   overflow: auto;
+  border-radius: ${props => props.theme.sizes.smallCornerRadius};
 `;
 
 const LoginButtonContainer = styled.div`
