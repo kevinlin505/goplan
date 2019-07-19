@@ -38,10 +38,6 @@ TripCard.propTypes = {
   tripDetails: PropTypes.object.isRequired,
 };
 
-const sharedStyle = {
-  borderRadius: `20px`
-}
-
 const AttendeeList = styled.ul`
   list-style: none;
   padding: 0;
@@ -52,7 +48,7 @@ const Container = styled.div`
   background-size: cover;
   color: black;
   border: none;
-  border-radius: ${sharedStyle.borderRadius};
+  border-radius: ${props => props.theme.sizes.cornerRadius};
   box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
   margin: 10px auto;
   padding: 0px;
@@ -64,19 +60,18 @@ const Container = styled.div`
 `;
 
 const TextContainer = styled.div`
-  padding: 20px
+  padding: ${props => props.theme.sizes.padding};
 `
 
 const TripCardGradient = styled.div`
   background: rgb(255,255,255);
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 100%);
   min-height: 300px;
-  border-radius: ${sharedStyle.borderRadius};
+  border-radius: ${props => props.theme.sizes.cornerRadius};
 `
 
 const TripCardDetail = styled(Link)`
   color: rgba(0, 0, 0, 0.7);
-  border-radius: 0 0 5px 5px;
   padding: 20px;
   height: 40%;
   text-decoration: none;
@@ -91,7 +86,6 @@ const Name = styled.div`
 `;
 
 const LocationName = styled.h1`
-  border-radius: 5px;
   padding: 10px;
   color: white;
 `;

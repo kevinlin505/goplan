@@ -38,7 +38,7 @@ const Button = styled.button`
     color: white;
     text-rendering: optimizelegibility;
     padding: 8px 20px;
-    border-radius: 10px;
+    border-radius: ${props => props.theme.sizes.smallCornerRadius};
     background: none;
     transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1.2) 0s;
 `
@@ -60,6 +60,5 @@ const Grid = styled.div`
     margin: 0px auto;
     gap: 5px 5px;
 `
-
 
 export default NavigationBar;
