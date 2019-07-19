@@ -19,6 +19,13 @@ const theme = {
   fonts: {
     primary: 'Roboto, sans-serif',
   },
+
+  sizes: {
+    smallCornerRadius: '10px',
+    cornerRadius: '20px',
+    margin: '20px',
+    padding: '20px'
+  }  
 };
 
 export default theme;
