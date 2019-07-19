@@ -1,17 +1,14 @@
 import firebase from 'firebase/app';
-import 'firebase/auth';
+import 'firebase/firestore';
 import Keys from '@constants/Keys';
 
 const initializeFireBase = () => {
-  // Initialize firebase connection
-  if (!firebase.apps.length) {
-    firebase.initializeApp(Keys.FIREBASE);
+  firebase.initializeApp(Keys.FIREBASE);
 
-    // State will be persisted even when the activity is destroyed.
-    return firebase.firestore().enablePersistence({ synchronizeTabs: true });
-  }
+  // State will be persisted even when the activity is destroyed.
+  firebase.firestore().enablePersistence({ synchronizeTabs: true });
 
-  return firebase.app();
+  return firebase;
 };
 
-export default initializeFireBase;
+export default !firebase.apps.length ? initializeFireBase() : firebase;
