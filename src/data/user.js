@@ -1,7 +1,7 @@
-import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/firestore';
+import firebase from '@data/_db';
 
 export default function user() {
   const db = firebase.firestore();

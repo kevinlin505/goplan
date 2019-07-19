@@ -1,9 +1,13 @@
-import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/functions';
+import firebase from '@data/_db';
 
 export default function auth() {
   return {
+    fetchSignInMethod: email => {
+      return firebase.auth().fetchSignInMethodsForEmail(email);
+    },
+
     sendInviteEmail: (email, tripId) => {
       const addMessage = firebase
         .functions()

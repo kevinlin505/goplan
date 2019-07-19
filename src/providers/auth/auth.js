@@ -1,5 +1,3 @@
-import firebase from 'firebase/app';
-import initializeFireBase from '@data/_db';
 import auth from '@data/auth';
 import user from '@data/user';
 
@@ -58,9 +56,7 @@ export default function reducer(state = initialState, action) {
 }
 
 export const authActions = {
-  checkAuth: () => dispatch => {
-    initializeFireBase();
-
+  checkAuth: () => (dispatch, getState) => {
     auth().onStateChanged(currentUser => {
       if (currentUser && currentUser.uid) {
         dispatch(authActions.signInSuccess(currentUser.uid));
@@ -102,9 +98,9 @@ export const authActions = {
         if (err.code === 'auth/account-exists-with-different-credential') {
           const pendingCred = err.credential;
           const { email } = err;
-          return firebase
-            .auth()
-            .fetchSignInMethodsForEmail(email)
+
+          return auth()
+            .fetchSignInMethod(email)
             .then(methods => {
               if (methods[0] === 'google.com') {
                 auth()
