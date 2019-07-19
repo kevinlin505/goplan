@@ -23,6 +23,15 @@ const NavigationBar = ({ signOut }) => {
   );
 };
 
+const Background = styled.div`
+    height: 60px;
+    width: 100%;
+    position: relative;
+    background: rgb(33, 44, 79);
+    display: flex;
+    justify-content: center;
+`;
+
 const Button = styled.button`
     font-size: 20px;
     box-shadow: none;
@@ -34,15 +43,6 @@ const Button = styled.button`
     transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1.2) 0s;
 `
 
-const Grid = styled.div`
-    max-width: 400px;
-    padding-right: 25px;
-    display: grid;
-    grid-template-columns: auto auto 30px;
-    margin: 0px auto;
-    gap: 5px 5px;
-`
-
 const Container = styled.div`
     position: fixed;
     top: 0px;
@@ -52,13 +52,14 @@ const Container = styled.div`
     transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0s;
 `
 
-const Background = styled.div`
-    height: 60px;
-    width: 100%;
-    position: relative;
-    background: rgb(33, 44, 79);
-`;
-
+const Grid = styled.div`
+    max-width: 400px;
+    padding: 10px 0 10px 0;
+    display: grid;
+    grid-template-columns: auto auto 30px;
+    margin: 0px auto;
+    gap: 5px 5px;
+`
 
 
 export default NavigationBar;
