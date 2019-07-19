@@ -57,18 +57,16 @@ export default function reducer(state = initialState, action) {
 
 export const authActions = {
   checkAuth: () => (dispatch, getState) => {
-    const { profile } = getState().auth;
-
     auth().onStateChanged(currentUser => {
       if (currentUser && currentUser.uid) {
         dispatch(authActions.signInSuccess(currentUser.uid));
 
         // Listen to user profile update and update the local profile if changes are made to server
-        user().subscribeToProfileChange(updatedProfile => {
-          if (!updatedProfile.metadata.hasPendingWrites) {
+        user().subscribeToProfileChange(profile => {
+          if (!profile.metadata.hasPendingWrites) {
             dispatch({
               type: types.UPDATE_PROFILE,
-              profile: updatedProfile.data(),
+              profile: profile.data(),
             });
           }
         });
