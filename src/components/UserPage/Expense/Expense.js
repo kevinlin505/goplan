@@ -1,33 +1,97 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 const mapStateToProps = state => {
   return {
-    expenseSummary: state.user.expenseSummary,
-    expenseTotal: state.user.expenseTotal,
+    expense: state.expense,
+    trips: state.trip.trips,
   };
 };
 
-export const Expense = ({ expenseSummary, expenseTotal }) => {
+export const Expense = ({
+  expense: { expenseCategories, expenseTotal, expenseTrips },
+  trips,
+}) => {
+  const categoryList = Object.keys(expenseCategories).map((category, index) => {
+    const cost = expenseCategories[category];
+
+    return (
+      <ExpenseWrapper key={`${category}-${index}`}>
+        <Name>{category}</Name>:<Price>${cost}</Price>
+      </ExpenseWrapper>
+    );
+  });
+
+  const tripList = Object.keys(expenseTrips).map((tripId, index) => {
+    const cost = expenseTrips[tripId];
+    const name = trips[tripId] && trips[tripId].trip_name;
+
+    return (
+      <ExpenseWrapper key={`${tripId}-${cost}-${index}`}>
+        <Name>{name}</Name>:<Price>${cost}</Price>
+      </ExpenseWrapper>
+    );
+  });
+
   return (
     <Container>
-      <Categories></Categories>
-      <Trips></Trips>
+      <TotalExpense>Spending: {expenseTotal}</TotalExpense>
+      <Categories>
+        <Header>Categories:</Header>
+        {categoryList}
+      </Categories>
+      <Trips>
+        <Header>Trips:</Header>
+        {tripList}
+      </Trips>
     </Container>
   );
 };
 
 Expense.propTypes = {
-  expenseSummary: PropTypes.object.isRequired,
-  expenseTotal: PropTypes.number.isRequired,
+  expense: PropTypes.object.isRequired,
+  trips: PropTypes.object.isRequired,
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  padding: 25px;
+`;
 
-const Categories = styled.div``;
+const TotalExpense = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+`;
 
-const Trips = styled.div``;
+const Categories = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Trips = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Header = styled.div`
+  font-size: 18px;
+  margin-bottom: 5px;
+`;
+
+const ExpenseWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  padding: 5px 0;
+`;
+
+const Name = styled.div`
+  display: inline-block;
+  font-weight: 600;
+`;
+
+const Price = styled.div`
+  display: inline-block;
+  margin-left: 5px;
+`;
 
 export default connect(mapStateToProps)(Expense);

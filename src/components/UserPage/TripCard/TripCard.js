@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-const TripCard = ({ tripDetails }) => {
-  const startDate = new Date(tripDetails.start_date.toDate());
-  const endDate = new Date(tripDetails.end_date.toDate());
+const TripCard = ({ tripDetail }) => {
+  const [attendeeList, setSttendeeList] = useState(null);
+  const startDate = new Date(tripDetail.start_date.toDate());
+  const endDate = new Date(tripDetail.end_date.toDate());
   const destination =
-    tripDetails.destinations[0] > 0 ? tripDetails.destinations[0] : null;
-  const attendeeNames = tripDetails.attendees.map(attendee => {
-    return <li key={`attendee-${attendee.email}`}>{attendee.name}</li>;
-  });
+    tripDetail.destinations[0] > 0 ? tripDetail.destinations[0] : null;
+  const totalCost = Object.keys(tripDetail.costs).reduce((sum, category) => {
+    return sum + tripDetail.costs[category];
+  }, 0);
+
+  useEffect(() => {
+    setSttendeeList(
+      tripDetail.attendees.map(attendee => {
+        return <li key={`attendee-${attendee.email}`}>{attendee.name}</li>;
+      }),
+    );
+  }, [tripDetail.attendees.length]);
 
   return (
     <Container
@@ -23,17 +32,17 @@ const TripCard = ({ tripDetails }) => {
           <LocationName>
             {destination ? destination.formatted_address : null}
           </LocationName>
-          <TripCardDetail to={`/trip/${tripDetails.id}`}>
-            <Name>{tripDetails.trip_name}</Name>
+          <TripCardDetail to={`/trip/${tripDetail.id}`}>
+            <Name>{tripDetail.trip_name}</Name>
             <TravelDate>
               {`Travel Date: ${startDate.toLocaleDateString()}`} -{' '}
               {`${endDate.toLocaleDateString()}`}
             </TravelDate>
             <AttendeeList>
               Attendee(s):
-              {attendeeNames}
+              {attendeeList}
             </AttendeeList>
-            <div>Spending: {tripDetails.spending}</div>
+            <div>Spending: {totalCost}</div>
           </TripCardDetail>
         </TextContainer>
       </TripCardGradient>
@@ -42,7 +51,7 @@ const TripCard = ({ tripDetails }) => {
 };
 
 TripCard.propTypes = {
-  tripDetails: PropTypes.object.isRequired,
+  tripDetail: PropTypes.object.isRequired,
 };
 
 const AttendeeList = styled.ul`
