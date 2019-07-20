@@ -5,9 +5,7 @@ export const types = {
   UPDATE_USER_DETAILS: 'USER/UPDATE_USER_DETAILS',
 };
 
-const initialState = {
-  users: [],
-};
+const initialState = {};
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {

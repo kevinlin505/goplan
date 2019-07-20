@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 const TripCard = ({ tripDetail }) => {
-  const [attendeeList, setSttendeeList] = useState(null);
+  const [attendeeList, setAttendeeList] = useState(null);
   const startDate = new Date(tripDetail.start_date.toDate());
   const endDate = new Date(tripDetail.end_date.toDate());
   const destination =
@@ -14,7 +14,7 @@ const TripCard = ({ tripDetail }) => {
   }, 0);
 
   useEffect(() => {
-    setSttendeeList(
+    setAttendeeList(
       tripDetail.attendees.map(attendee => {
         return <li key={`attendee-${attendee.email}`}>{attendee.name}</li>;
       }),
