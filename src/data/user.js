@@ -27,13 +27,6 @@ export default function user() {
         phone_number: currentUser.phoneNumber,
         profile_url: currentUser.photoURL,
         quickpay: '',
-        spendings: {
-          document: 0,
-          equiment: 0,
-          food: 0,
-          ticket: 0,
-          transportation: 0,
-        },
         trips: [],
         venmo: '',
       };
