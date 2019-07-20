@@ -6,9 +6,9 @@ import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
-import TripCard from '@components/UserPage/TripCard/TripCard';
-import NavigationBar from  '@components/Navigation/NavigationBar'
 import getTripStatus from '@selectors/tripSelector';
+import TripCard from '@components/UserPage/TripCard/TripCard';
+import NavigationBar from '@components/Navigation/NavigationBar';
 
 const mapStateToProps = state => {
   return {
@@ -76,7 +76,7 @@ UserPage.propTypes = {
 
 const Container = styled.div`
   padding-top: 70px;
-`
+`;
 
 const TripList = styled.div`
   display: flex;
