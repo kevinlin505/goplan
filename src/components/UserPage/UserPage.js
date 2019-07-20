@@ -37,6 +37,8 @@ const UserPage = ({ actions, auth, trip, userInTrip }) => {
     if (joinTripId && !userInTrip) {
       actions.trip.joinTrip(joinTripId);
     }
+
+    actions.user.getUserExpenseReports();
   }, []);
 
   useEffect(() => {

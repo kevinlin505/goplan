@@ -6,9 +6,8 @@ import { Link } from 'react-router-dom';
 const TripCard = ({ tripDetails }) => {
   const startDate = new Date(tripDetails.start_date.toDate());
   const endDate = new Date(tripDetails.end_date.toDate());
-  const destination = tripDetails.destinations[0]
-    ? tripDetails.destinations[0]
-    : null;
+  const destination =
+    tripDetails.destinations[0] > 0 ? tripDetails.destinations[0] : null;
   const attendeeNames = tripDetails.attendees.map(attendee => {
     return <li key={`attendee-${attendee.email}`}>{attendee.name}</li>;
   });
@@ -16,9 +15,7 @@ const TripCard = ({ tripDetails }) => {
   return (
     <Container
       backgroundImageUrl={
-        destination.photos && destination.photos[0]
-          ? destination.photos[0].url
-          : null
+        destination && destination.photos[0] ? destination.photos[0].url : null
       }
     >
       <TripCardGradient>
