@@ -6,16 +6,30 @@ import { Link } from 'react-router-dom';
 const TripCard = ({ tripDetails }) => {
   const startDate = new Date(tripDetails.start_date.toDate());
   const endDate = new Date(tripDetails.end_date.toDate());
-  const destination = tripDetails.destinations.length > 0 ? tripDetails.destinations[0] : null;
+  const destination =
+    tripDetails.destinations.length > 0 ? tripDetails.destinations[0] : null;
   const attendeeNames = tripDetails.attendees.map(attendee => {
     return <li key={`attendee-${attendee.email}`}>{attendee.name}</li>;
   });
 
+  const resize = (sourceUrl, sizeParam = '&w=600&h=300') => {
+    return `${sourceUrl}${sizeParam}`;
+  };
+
+  const imageUrl = resize(
+    'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjgyNjA0fQ',
+  );
+
   return (
-    <Container backgroundImageUrl={destination ? destination.photos[0].url : null}>
+    <Container
+      backgroundImageUrl={imageUrl}
+      // {destination ? destination.photos[0].url : null}
+    >
       <TripCardGradient>
         <TextContainer>
-          <LocationName>{destination ? destination.formatted_address : null}</LocationName>
+          <LocationName>
+            {destination ? destination.formatted_address : null}
+          </LocationName>
           <TripCardDetail to={`/trip/${tripDetails.id}`}>
             <Name>{tripDetails.trip_name}</Name>
             <TravelDate>
@@ -53,6 +67,7 @@ const Container = styled.div`
   margin: 10px auto;
   padding: 0px;
   width: 50%;
+  max-width: 600px;
   min-height: 300px;
   display: flex;
   flex-direction: column;
@@ -61,14 +76,18 @@ const Container = styled.div`
 
 const TextContainer = styled.div`
   padding: ${props => props.theme.sizes.padding};
-`
+`;
 
 const TripCardGradient = styled.div`
-  background: rgb(255,255,255);
-  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 100%);
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(0, 0, 0, 1) 100%
+  );
   min-height: 300px;
   border-radius: ${props => props.theme.sizes.cornerRadius};
-`
+`;
 
 const TripCardDetail = styled(Link)`
   color: rgba(0, 0, 0, 0.7);
