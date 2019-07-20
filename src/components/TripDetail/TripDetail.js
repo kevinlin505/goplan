@@ -10,10 +10,10 @@ import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
 import getTripStatus from '@selectors/tripSelector';
+import CreateExpense from './CreateExpense/CreateExpense';
 
 const mapStateToProps = (state, props) => {
   return {
-    selectedTrip: state.trip.selectedTrip,
     tripId: props.match.params.tripId,
     userInTrip: getTripStatus(state, state),
   };
@@ -29,26 +29,11 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TripDetail = ({ actions, selectedTrip, tripId, userInTrip }) => {
-  const [file, setFile] = useState(null);
-  const [previewImageSrc, setPreviewImageSrc] = useState(null);
+const TripDetail = ({ actions, tripId, userInTrip }) => {
+  const [isExpenseModal, setExpenseModal] = useState(false);
 
-  const handleFileUpload = event => {
-    const fileReader = new FileReader();
-    const inputFile = event.target.files[0];
-
-    fileReader.readAsDataURL(inputFile);
-    fileReader.onload = loadEvent => {
-      setPreviewImageSrc(loadEvent.target.result);
-    };
-
-    setFile(inputFile);
-  };
-
-  const handlePushToAWS = () => {
-    if (file) {
-      actions.expense.uploadReceipts(file);
-    }
+  const toggleCreateExpenseModal = () => {
+    setExpenseModal(!isExpenseModal);
   };
 
   useEffect(() => {
@@ -66,31 +51,16 @@ const TripDetail = ({ actions, selectedTrip, tripId, userInTrip }) => {
       <h2>Trip Details</h2>
       <Link to="/home">Back to Home</Link>
 
-      {selectedTrip && (
-        <div>
-          <FileInput
-            accept="image/*"
-            id="contained-button-file"
-            multiple
-            onChange={handleFileUpload}
-            type="file"
-          />
-          <label htmlFor="contained-button-file">
-            <Button component="span" variant="contained">
-              Upload
-            </Button>
-          </label>
+      <Button
+        color="primary"
+        onClick={toggleCreateExpenseModal}
+        variant="contained"
+      >
+        New Expense
+      </Button>
 
-          <Button onClick={handlePushToAWS} variant="contained">
-            Push to S3
-          </Button>
-          {file && (
-            <div>
-              {file.name}
-              <img src={previewImageSrc} />
-            </div>
-          )}
-        </div>
+      {isExpenseModal && (
+        <CreateExpense toggleCreateExpenseModal={toggleCreateExpenseModal} />
       )}
     </div>
   );
@@ -106,10 +76,6 @@ TripDetail.propTypes = {
 TripDetail.defaultProps = {
   selectedTrip: null,
 };
-
-const FileInput = styled.input`
-  display: none;
-`;
 
 export default connect(
   mapStateToProps,

@@ -12,6 +12,7 @@ const initialState = {
   authenticationError: null,
   isAuthenticated: false,
   profile: null,
+  userId: null,
 };
 
 export default function reducer(state = initialState, action) {

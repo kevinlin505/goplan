@@ -5,13 +5,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import 'firebase/firestore';
 import firebase from '@data/_db';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import Chip from '@material-ui/core/Chip';
-import FaceIcon from '@material-ui/icons/Face';
+import { Button, Chip, IconButton, TextField } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CloseIcon from '@material-ui/icons/Close';
+import FaceIcon from '@material-ui/icons/Face';
 import { tripActions } from '@providers/trip/trip';
 import validateEmail from '@utils/validateEmail';
 import useDestinationsHandler from '@hooks/useDestinationsHandler';
@@ -204,11 +201,11 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
         <CreateTripForm>
           <FieldWrapper>
             <FullWidthField
-              isRequired
               label="Trip Name"
               name="trip_name"
               onChange={updateField}
               placeholder="Enter a name for this trip"
+              required
               type="text"
               value={form.trip_name}
             />
@@ -229,6 +226,7 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
               onBlur={updateDestinationField}
               onChange={updateDestinationField}
               onKeyPress={updateDestinationField}
+              type="search"
               value={destinationInputValue}
             />
             <ChipWrapper>{destinationList}</ChipWrapper>
@@ -239,10 +237,10 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
               InputLabelProps={{
                 shrink: true,
               }}
-              isRequired
               label="Start Date"
               name="start_date"
               onChange={updateField}
+              required
               type="date"
               value={form.start_date}
             />
@@ -250,10 +248,10 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
               InputLabelProps={{
                 shrink: true,
               }}
-              isRequired
               label="End Date"
               name="end_date"
               onChange={updateField}
+              required
               type="date"
               value={form.end_date}
             />
