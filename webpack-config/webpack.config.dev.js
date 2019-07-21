@@ -10,6 +10,8 @@ module.exports = function returnWebpackSettings(PATHS) {
         'core-js/fn/promise',
         'core-js/fn/object/assign',
         'core-js/fn/array/from',
+        'core-js/fn/object/entries',
+        'core-js/fn/object/values',
         'core-js/es6/string',
         'core-js/es7/array',
         'react-hot-loader/patch', // active HMR for react

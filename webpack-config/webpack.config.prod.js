@@ -5,8 +5,11 @@ module.exports = function returnWebpackSettings(PATHS) {
   return {
     devtool: false,
     entry: [
+      'core-js/fn/promise',
       'core-js/fn/object/assign',
       'core-js/fn/array/from',
+      'core-js/fn/object/entries',
+      'core-js/fn/object/values',
       'core-js/es6/string',
       'core-js/es7/array',
       PATHS.index,
