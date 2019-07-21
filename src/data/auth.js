@@ -8,6 +8,10 @@ export default function auth() {
       return firebase.auth().fetchSignInMethodsForEmail(email);
     },
 
+    getAPIKeys: () => {
+      return firebase.functions().httpsCallable('getAPIKeys')();
+    },
+
     sendInviteEmail: (email, tripId) => {
       const addMessage = firebase
         .functions()

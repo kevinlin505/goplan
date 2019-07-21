@@ -57,7 +57,7 @@ export default function reducer(state = initialState, action) {
 }
 
 export const authActions = {
-  checkAuth: () => (dispatch, getState) => {
+  checkAuth: () => dispatch => {
     auth().onStateChanged(currentUser => {
       if (currentUser && currentUser.uid) {
         dispatch(authActions.signInSuccess(currentUser.uid));
@@ -134,19 +134,31 @@ export const authActions = {
   },
 
   signInSuccess: uid => dispatch => {
-    return user()
-      .checkUserProfile()
-      .then(profile => {
-        if (!profile.exists) {
-          user().createUserProfile();
-        }
-
-        return dispatch({
-          type: types.SIGN_IN,
-          profile: profile.data(),
-          uid,
+    var profileData = null;
+    const userProfile = () => {
+      user()
+        .checkUserProfile()
+        .then(profile => {
+          if (!profile.exists) {
+            user().createUserProfile();
+          }
+          profileData = profile.data();
         });
+    };
+    const api = () => {
+      auth()
+        .getAPIKeys()
+        .then(res => {
+          console.log(res);
+        });
+    };
+    return Promise.all([userProfile(), api()]).then(() => {
+      return dispatch({
+        type: types.SIGN_IN,
+        profile: profileData,
+        uid,
       });
+    });
   },
 
   signInError: () => dispatch => {
