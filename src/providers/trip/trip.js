@@ -14,7 +14,7 @@ export const types = {
 const initialState = {
   joinTripId: null,
   selectedTrip: null,
-  trips: [],
+  trips: {},
 };
 
 export default function reducer(state = initialState, action) {
@@ -24,7 +24,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         joinTripId: null,
         selectedTrip: null,
-        trips: [],
+        trips: {},
       };
     }
 
@@ -66,6 +66,7 @@ export const tripActions = {
     const tripDetail = {
       ...formDetail,
       attendees: [],
+      costs: {},
       end_date: new Date(formDetail.end_date),
       start_date: new Date(formDetail.start_date),
     };
@@ -91,12 +92,12 @@ export const tripActions = {
   getAllTrips: tripRefs => dispatch => {
     trip()
       .getAllTrips(tripRefs)
-      .then(docs => {
-        const trips = docs.map(doc => {
-          const data = doc.data();
-          data.id = doc.id;
-          return data;
-        });
+      .then(tripDocs => {
+        const trips = tripDocs.reduce((tripMap, tripDoc) => {
+          tripMap[tripDoc.data().id] = tripDoc.data();
+
+          return tripMap;
+        }, {});
 
         dispatch({
           type: types.RETRIEVE_ALL_TRIPS,
