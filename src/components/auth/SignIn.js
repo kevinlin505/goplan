@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
-import GoogleAuthButton from '@components/SignIn/AuthButton/GoogleAuthButton';
-import FacebookAuthButton from '@components/SignIn/AuthButton/FacebookAuthButton';
+import GoogleAuthButton from '@components/auth/auth-buttons/GoogleAuthButton';
+import FacebookAuthButton from '@components/auth/auth-buttons/FacebookAuthButton';
 import backgroundImg from '@assets/images/background.jpg';
 
 const mapDispatchToProps = dispatch => {
@@ -76,7 +76,7 @@ const ContentContainer = styled.div`
   box-sizing: border-box;
   text-align: center;
   overflow: auto;
-  border-radius: ${props => props.theme.sizes.smallCornerRadius};
+  border-radius: ${props => props.theme.styles.smallCornerRadius};
 `;
 
 const LoginButtonContainer = styled.div`

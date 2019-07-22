@@ -1,69 +1,100 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import CreateTrip from '@components/UserPage/CreateTrip/CreateTrip';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { authActions } from '@providers/auth/auth';
+import Logo from '@components/icons/Logo';
+import Button from '@styles/Button';
 
-const NavigationBar = ({ signOut }) => {
-  const [isCreateTripModalOpen, setCreateTripModalOpen] = useState(false);
-  const toggleCreateTripModal = () => {
-    setCreateTripModalOpen(!isCreateTripModalOpen);
+const mapStateToProps = state => {
+  return {
+    profile: state.auth.profile,
   };
+};
 
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: {
+      auth: bindActionCreators(authActions, dispatch),
+    },
+  };
+};
+
+const NavigationBar = ({ actions, profile }) => {
   return (
     <Container>
-      <Background>
-        <Grid>
-          <Button onClick={signOut}>Sign Out</Button>
-          <Button onClick={toggleCreateTripModal}>Create Trip</Button>
-          {isCreateTripModalOpen && (
-            <CreateTrip toggleCreateTripModal={toggleCreateTripModal} />
-          )}
-        </Grid>
-      </Background>
+      <NavBar>
+        <Brand>
+          <Logo />
+        </Brand>
+        <UserProfile>
+          <ProfileAvatar>
+            <Avatar src={profile.profile_url} />
+          </ProfileAvatar>
+          <SignOutButton onClick={actions.auth.signOut}>Sign Out</SignOutButton>
+        </UserProfile>
+      </NavBar>
     </Container>
   );
 };
 
 NavigationBar.propTypes = {
-  signOut: PropTypes.func.isRequired,
+  actions: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
-const Background = styled.div`
-  height: 60px;
-  width: 100%;
-  position: relative;
-  background: rgb(33, 44, 79);
-  display: flex;
-  justify-content: center;
-`;
-
-const Button = styled.button`
-  font-size: 20px;
-  box-shadow: none;
-  color: ${({ theme }) => theme.colors.white};
-  text-rendering: optimizelegibility;
-  padding: 8px 20px;
-  border-radius: ${({ theme }) => theme.sizes.smallCornerRadius};
-  background: none;
-  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1.2) 0s;
-`;
-
 const Container = styled.div`
-  position: fixed;
-  top: 0px;
-  left: 0px;
+  position: relative;
   width: 100%;
+  height: 60px;
+  background: ${({ theme }) => theme.colors.white};
+  box-shadow: 0 0 5px ${({ theme }) => theme.colors.accent};
   z-index: 100;
-  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0s;
 `;
 
-const Grid = styled.div`
-  max-width: 400px;
-  padding: 10px 0 10px 0;
-  display: grid;
-  grid-template-columns: auto auto 30px;
-  margin: 0px auto;
-  gap: 5px 5px;
+const NavBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 20px;
 `;
 
-export default NavigationBar;
+const Brand = styled.div`
+  width: 120px;
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
+const UserProfile = styled.div`
+  display: flex;
+`;
+
+const ProfileAvatar = styled.div`
+  width: 40px;
+  height: 40px;
+  margin: 0 15px;
+  border-radius: 50%;
+  overflow: hidden;
+`;
+
+const Avatar = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
+const SignOutButton = styled(Button)`
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.textLight};
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: ${({ theme }) => theme.colors.text};
+  }
+`;
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(NavigationBar);

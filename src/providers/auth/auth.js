@@ -57,7 +57,7 @@ export default function reducer(state = initialState, action) {
 }
 
 export const authActions = {
-  checkAuth: () => (dispatch, getState) => {
+  checkAuth: () => dispatch => {
     auth().onStateChanged(currentUser => {
       if (currentUser && currentUser.uid) {
         dispatch(authActions.signInSuccess(currentUser.uid));

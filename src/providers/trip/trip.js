@@ -4,6 +4,7 @@ import { types as authTypes } from '@providers/auth/auth';
 
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
+  GET_DESTINATION_PHOTO: 'TRIP/GET_DESTINATION_PHOTO',
   JOIN_TRIP: 'TRIP/JOIN_TRIP',
   RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
@@ -113,6 +114,18 @@ export const tripActions = {
         dispatch({
           type: types.SET_SELECTED_TRIP,
           selectedTrip: { ...tripDetails.data(), id: tripDetails.id },
+        });
+      });
+  },
+
+  getUnsplashImage: query => dispatch => {
+    trip()
+      .getUnsplashImage(query)
+      .then(response => {
+        console.log(response);
+
+        return dispatch({
+          type: types.GET_DESTINATION_PHOTO,
         });
       });
   },

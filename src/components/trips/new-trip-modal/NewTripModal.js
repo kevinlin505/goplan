@@ -30,7 +30,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
+export const NewTripModal = ({ actions, auth, toggleCreateTripModal }) => {
   const [destinationInputValue, setDestinationInputValue] = useState('');
   const [invite, setInvite] = useState('');
   const [inviteList, setInviteList] = useState(null);
@@ -285,7 +285,7 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
   );
 };
 
-CreateTrip.propTypes = {
+NewTripModal.propTypes = {
   actions: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   toggleCreateTripModal: PropTypes.func.isRequired,
@@ -375,4 +375,4 @@ const ButtonWrapper = styled.div`
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(CreateTrip);
+)(NewTripModal);

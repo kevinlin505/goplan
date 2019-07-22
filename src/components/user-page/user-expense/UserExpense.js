@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import CardContainer from '@styles/card/CardContainer';
 
 const mapStateToProps = state => {
   return {
@@ -10,7 +11,7 @@ const mapStateToProps = state => {
   };
 };
 
-export const Expense = ({
+export const UserExpense = ({
   expense: { expenseCategories, expenseTotal, expenseTrips },
   trips,
 }) => {
@@ -36,7 +37,7 @@ export const Expense = ({
   });
 
   return (
-    <Container>
+    <CardContainer>
       <TotalExpense>Spending: {expenseTotal}</TotalExpense>
       <Categories>
         <Header>Categories:</Header>
@@ -46,11 +47,11 @@ export const Expense = ({
         <Header>Trips:</Header>
         {tripList}
       </Trips>
-    </Container>
+    </CardContainer>
   );
 };
 
-Expense.propTypes = {
+UserExpense.propTypes = {
   expense: PropTypes.object.isRequired,
   trips: PropTypes.object.isRequired,
 };
@@ -94,4 +95,4 @@ const Price = styled.div`
   margin-left: 5px;
 `;
 
-export default connect(mapStateToProps)(Expense);
+export default connect(mapStateToProps)(UserExpense);

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Route, Redirect, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { tripActions } from '@providers/trip/trip';
+import NavigationBar from '@components/navigation/NavigationBar';
 
 const Auth = ({ auth, component: Component, exact, path }) => {
   return (
@@ -63,7 +64,14 @@ const RenderComp = props => {
       actions.trip.updateJoinTripId(match.params.tripId);
     }
   }, []);
-  return auth ? <Component {...props} /> : <Redirect to="/" />;
+  return auth ? (
+    <React.Fragment>
+      <NavigationBar />
+      <Component {...props} />
+    </React.Fragment>
+  ) : (
+    <Redirect to="/" />
+  );
 };
 
 RenderComp.propTypes = {
