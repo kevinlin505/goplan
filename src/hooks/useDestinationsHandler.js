@@ -21,7 +21,7 @@ export default function useDestinationsHandler({
   }, []);
 
   useEffect(() => {
-    if (isGoogleApiReady && window.google) {
+    if (isGoogleApiReady && window.google && !placeServices) {
       setPlaceServices(new window.google.maps.places.PlacesService(mapRef));
       setAutoComplete(
         new window.google.maps.places.Autocomplete(destinationInputRef),

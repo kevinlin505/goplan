@@ -6,6 +6,10 @@ export default function trip() {
   const db = firebase.firestore();
 
   return {
+    getUserCategoryExpenseReports: expensesRefs => {
+      return Promise.all(expensesRefs.map(expensesRef => expensesRef.get()));
+    },
+
     submitExpense: expenseDetail => {
       // const batch = db.batch();
       const expenseRef = db.collection('expenses').doc();
@@ -19,12 +23,12 @@ export default function trip() {
 
           const data = tripDoc.data();
           const categoryCost =
-            (data.categories && data.categories[expenseDetail.category]) || 0;
+            (data.costs && data.costs[expenseDetail.category]) || 0;
 
           const tripDetail = {
             expenses: firebase.firestore.FieldValue.arrayUnion(expenseRef),
-            categories: {
-              ...data.categories,
+            costs: {
+              ...data.costs,
               [expenseDetail.category]:
                 parseFloat(categoryCost) + parseFloat(expenseDetail.amount),
             },

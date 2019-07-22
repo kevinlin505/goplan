@@ -2,7 +2,6 @@ import user from '@data/user';
 
 export const types = {
   GET_ALL_ATTENDEES: 'USER/GET_ALL_ATTENDEES',
-  GET_USER_DETAILS: 'USER/GET_USER_DETAILS',
   UPDATE_USER_DETAILS: 'USER/UPDATE_USER_DETAILS',
 };
 
@@ -16,11 +15,7 @@ export default function reducer(state = initialState, action) {
         users: action.attendees,
       };
     }
-    case types.GET_USER_DETAILS: {
-      return {
-        ...state,
-      };
-    }
+
     default:
       return state;
   }
@@ -43,12 +38,6 @@ export const userActions = {
           attendees,
         });
       });
-  },
-
-  getUsersDetails: () => dispatch => {
-    return dispatch({
-      type: types.GET_USER_DETAILS,
-    });
   },
 
   updateProfile: profile => dispatch => {

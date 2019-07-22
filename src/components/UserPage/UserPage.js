@@ -4,11 +4,13 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
+import { expenseActions } from '@providers/expense/expense';
 import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
 import TripCard from '@components/UserPage/TripCard/TripCard';
 import NavigationBar from '@components/Navigation/NavigationBar';
 import getTripStatus from '@selectors/tripSelector';
+import Expense from '@components/UserPage/Expense/Expense';
 
 const mapStateToProps = state => {
   return {
@@ -22,6 +24,7 @@ const mapDispatchToProps = dispatch => {
   return {
     actions: {
       auth: bindActionCreators(authActions, dispatch),
+      expense: bindActionCreators(expenseActions, dispatch),
       trip: bindActionCreators(tripActions, dispatch),
       user: bindActionCreators(userActions, dispatch),
     },
@@ -30,6 +33,9 @@ const mapDispatchToProps = dispatch => {
 
 const UserPage = ({ actions, auth, trip, userInTrip }) => {
   const [tripList, setTripList] = useState(null);
+  const tripCount =
+    auth.profile && auth.profile.trips && auth.profile.trips.length;
+  const tripIds = Object.keys(trip.trips);
 
   useEffect(() => {
     const { joinTripId } = trip;
@@ -37,30 +43,30 @@ const UserPage = ({ actions, auth, trip, userInTrip }) => {
     if (joinTripId && !userInTrip) {
       actions.trip.joinTrip(joinTripId);
     }
+
+    actions.expense.getUserExpenseReports();
   }, []);
 
   useEffect(() => {
     const tripRefs = auth.profile.trips;
     actions.trip.getAllTrips(tripRefs);
-  }, [auth.profile.trips.length]);
+  }, [tripCount]);
 
   useEffect(() => {
-    const trips = trip.trips.map((tripDetails, index) => {
-      return (
-        <TripCard
-          key={`${tripDetails.name}-${index}`}
-          tripDetails={tripDetails}
-        />
-      );
+    const trips = tripIds.map((tripId, index) => {
+      const tripDetail = trip.trips[tripId];
+
+      return <TripCard key={`${tripId}-${index}`} tripDetail={tripDetail} />;
     });
 
     setTripList(trips);
-  }, [trip.trips.length]);
+  }, [tripIds.length]);
 
   return (
     <div>
       <NavigationBar signOut={actions.auth.signOut} />
       <Container>
+        <Expense />
         <TripList>{tripList}</TripList>
       </Container>
     </div>
