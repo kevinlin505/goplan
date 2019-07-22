@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import unsplashHelper from '@utils/unsplashHelper';
 
 const TripCard = ({ tripDetails }) => {
   const startDate = new Date(tripDetails.start_date.toDate());
@@ -13,9 +12,7 @@ const TripCard = ({ tripDetails }) => {
   const attendeeNames = tripDetails.attendees.map(attendee => {
     return <li key={`attendee-${attendee.email}`}>{attendee.name}</li>;
   });
-  const imageUrl = unsplashHelper.imageUrl(
-    'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjgyNjA0fQ',
-  );
+  const imageUrl = '';
 
   return (
     <Container

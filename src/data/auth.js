@@ -8,8 +8,8 @@ export default function auth() {
       return firebase.auth().fetchSignInMethodsForEmail(email);
     },
 
-    getAPIKeys: () => {
-      return firebase.functions().httpsCallable('getAPIKeys')();
+    getUnsplashImage: query => {
+      return firebase.functions().httpsCallable('getUnsplashImage')(query);
     },
 
     sendInviteEmail: (email, tripId) => {
