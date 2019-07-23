@@ -32,6 +32,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 14px;
     background-color: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.text};
+    box-sizing: border-box;
   }
 `;
 

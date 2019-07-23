@@ -2,13 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import {
-  Collapse,
-  List,
-  ListItem,
-  ListItemText,
-  ListSubheader,
-} from '@material-ui/core';
+import { Collapse, List, ListItem, ListSubheader } from '@material-ui/core';
 import {
   AttachMoney,
   ExpandLess,
@@ -78,14 +72,14 @@ export const UserExpense = ({
           <ListItemIcon>
             <AttachMoney />
           </ListItemIcon>
-          <ListItemText primary="Total" />
+          <ListItemText>Total</ListItemText>
           <ItemCost>{convertNumberToCurrency(expenseTotal)}</ItemCost>
         </ListItem>
         <ListItem button onClick={toggleCategoryList}>
           <ListItemIcon>
             <ListAlt />
           </ListItemIcon>
-          <ListItemText primary="Categories" />
+          <ListItemText>Categories</ListItemText>
           {isCategoryExpand ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={isCategoryExpand} timeout="auto" unmountOnExit>
@@ -97,7 +91,7 @@ export const UserExpense = ({
           <ListItemIcon>
             <LocationOn />
           </ListItemIcon>
-          <ListItemText primary="Trips" />
+          <ListItemText>Trips</ListItemText>
           {isTripExpand ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={isTripExpand} timeout="auto" unmountOnExit>
@@ -121,11 +115,23 @@ const ListItemIcon = styled.div`
   color: ${({ theme }) => theme.colors.textLight};
 `;
 
-const NestedListItem = styled(ListItem)`
-  && {
-    padding-left: 32px;
-    font-size: 14px;
-  }
+const ListItemText = styled.div`
+  flex: 1 1 auto;
+  margin: 4px 0;
+  font-weight: 600;
+  text-transform: uppercase;
+`;
+
+const NestedListItem = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  align-items: center;
+  padding: 8px 16px 8px 32px;
+  font-size: 14px;
+  text-align: left;
+  text-decoration: none;
+  text-transform: capitalize;
 `;
 
 const NestedListItemText = styled.div`

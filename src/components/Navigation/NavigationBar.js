@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Button } from '@material-ui/core';
 import { AddPhotoAlternate } from '@material-ui/icons';
 import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
 import Logo from '@components/icons/Logo';
-import Button from '@styles/Button';
 
 const mapStateToProps = state => {
   return {
@@ -59,7 +59,6 @@ const Container = styled.div`
   height: 60px;
   background: ${({ theme }) => theme.colors.white};
   box-shadow: 0 0 5px ${({ theme }) => theme.colors.accent};
-  z-index: 100;
 `;
 
 const NavBar = styled.div`
@@ -80,17 +79,19 @@ const RightNavBarItems = styled.div`
 `;
 
 const NewTripButton = styled(Button)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 15px;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.primaryDark};
+  && {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 14px;
+    color: ${({ theme }) => theme.colors.primaryDark};
 
-  &:active,
-  &:focus,
-  &:hover {
-    color: ${({ theme }) => theme.colors.primaryLight};
+    &:active,
+    &:focus,
+    &:hover {
+      color: ${({ theme }) => theme.colors.primaryLight};
+    }
   }
 `;
 
@@ -112,17 +113,19 @@ const Avatar = styled.img`
 `;
 
 const SignOutButton = styled(Button)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-left: 15px;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.textLight};
+  && {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 15px;
+    font-size: 14px;
+    color: ${({ theme }) => theme.colors.textLight};
 
-  &:active,
-  &:focus,
-  &:hover {
-    color: ${({ theme }) => theme.colors.text};
+    &:active,
+    &:focus,
+    &:hover {
+      color: ${({ theme }) => theme.colors.text};
+    }
   }
 `;
 

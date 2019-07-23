@@ -16,7 +16,9 @@ export const ProfileCard = ({ profile }) => {
         <InfoField>{profile.email}</InfoField>
         <InfoField>{profile.phone_number}</InfoField>
         {profile.venmo && <InfoField>Venmo: {profile.venmo}</InfoField>}
-        {profile.quickpay && <InfoField>Venmo: {profile.quickpay}</InfoField>}
+        {profile.quickpay && (
+          <InfoField>Quickpay: {profile.quickpay}</InfoField>
+        )}
       </ProfileInfo>
     </Container>
   );
