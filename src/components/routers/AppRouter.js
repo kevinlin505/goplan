@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { authActions } from '@providers/auth/auth';
 import {
   AuthRoute,
@@ -32,11 +32,11 @@ const AppRouter = ({ actions, auth }) => {
   }, []);
 
   return (
-    <Router>
+    <HashRouter>
       <AuthRoute auth={auth} component={SignIn} exact path="/" />
       <ProtectedRoute component={UserPage} path="/home" />
       <ProtectedRoute component={TripDetail} path="/trip/:tripId" />
-    </Router>
+    </HashRouter>
   );
 };
 
