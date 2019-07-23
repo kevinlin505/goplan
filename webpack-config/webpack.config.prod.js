@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = function returnWebpackSettings(PATHS) {
   return {
@@ -25,6 +26,13 @@ module.exports = function returnWebpackSettings(PATHS) {
           NODE_ENV: JSON.stringify('production'),
         },
       }),
+
+      new HtmlWebpackPlugin({
+        template: 'src/index.tpl.ejs',
+        inject: 'body',
+        filename: 'index.html',
+      }),
+
       new CaseSensitivePathsPlugin(),
     ],
   };
