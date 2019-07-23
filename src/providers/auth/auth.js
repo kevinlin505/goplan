@@ -3,24 +3,24 @@ import user from '@data/user';
 
 export const types = {
   AUTHENTICATION_ERROR: 'AUTH/AUTHENTICATION_ERROR',
+  CHECK_AUTHENTICATION: 'AUTH/CHECK_AUTHENTICATION',
   SIGN_IN: 'AUTH/SIGN_IN',
   SIGN_OUT: 'AUTH/SIGN_OUT',
   UPDATE_PROFILE: 'AUTH/UPDATE_PROFILE',
 };
 
 const initialState = {
-  authenticationError: null,
-  isAuthenticated: false,
+  isAuthenticated: -1,
   profile: null,
   userId: null,
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case types.AUTHENTICATION_ERROR: {
+    case types.CHECK_AUTHENTICATION: {
       return {
         ...state,
-        authenticationError: action.err,
+        isAuthenticated: action.status,
       };
     }
 
@@ -28,7 +28,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         authenticationError: null,
-        isAuthenticated: true,
+        isAuthenticated: 1,
         profile: action.profile,
         userId: action.uid,
       };
@@ -38,7 +38,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         authenticationError: null,
-        isAuthenticated: false,
+        isAuthenticated: 0,
         profile: null,
         userId: null,
       };
@@ -57,22 +57,17 @@ export default function reducer(state = initialState, action) {
 }
 
 export const authActions = {
-  checkAuth: () => dispatch => {
-    auth().onStateChanged(currentUser => {
-      if (currentUser && currentUser.uid) {
-        dispatch(authActions.signInSuccess(currentUser.uid));
+  checkAuth: () => (dispatch, getState) => {
+    const { isAuthenticated } = getState().auth;
 
-        // Listen to user profile update and update the local profile if changes are made to server
-        user().subscribeToProfileChange(profile => {
-          if (!profile.metadata.hasPendingWrites) {
-            dispatch({
-              type: types.UPDATE_PROFILE,
-              profile: profile.data(),
-            });
-          }
-        });
+    auth().onStateChanged(currentUser => {
+      if (currentUser && !isAuthenticated) {
+        dispatch(authActions.signInSuccess());
       } else {
-        user().unsubscribeToProfileChange();
+        dispatch({
+          type: types.CHECK_AUTHENTICATION,
+          status: 0,
+        });
       }
     });
   },
@@ -80,8 +75,8 @@ export const authActions = {
   signInWithGoogleAuth: () => dispatch => {
     auth()
       .signInWithGoogleAuthAsync()
-      .then(authData => {
-        dispatch(authActions.signInSuccess(authData.uid));
+      .then(() => {
+        dispatch(authActions.signInSuccess());
       })
       .catch(() => {
         dispatch(authActions.signInError());
@@ -92,8 +87,8 @@ export const authActions = {
   signInWithFacebookAuth: () => dispatch => {
     auth()
       .signInWithFacebookAuthAsync()
-      .then(authData => {
-        dispatch(authActions.signInSuccess(authData.uid));
+      .then(() => {
+        dispatch(authActions.signInSuccess());
       })
       .catch(err => {
         if (err.code === 'auth/account-exists-with-different-credential') {
@@ -124,7 +119,7 @@ export const authActions = {
   },
 
   signOut: () => dispatch => {
-    auth()
+    return auth()
       .signOut()
       .then(() => {
         return dispatch({
@@ -133,7 +128,7 @@ export const authActions = {
       });
   },
 
-  signInSuccess: uid => dispatch => {
+  signInSuccess: () => dispatch => {
     return user()
       .checkUserProfile()
       .then(profile => {
@@ -144,7 +139,7 @@ export const authActions = {
         return dispatch({
           type: types.SIGN_IN,
           profile: profile.data(),
-          uid,
+          uid: profile.data().id,
         });
       });
   },

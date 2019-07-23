@@ -17,10 +17,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const SignIn = ({ actions }) => {
-  useEffect(() => {
-    actions.auth.checkAuth();
-  }, []);
-
   return (
     <Background>
       <ContentContainer>

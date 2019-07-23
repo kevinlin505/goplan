@@ -8,12 +8,10 @@ export const types = {
   RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
   TOGGLE_NEW_TRIP_MODAL: 'TRIP/TOGGLE_NEW_TRIP_MODAL',
-  UPDATE_INVITE_TRIP_ID: 'TRIP/UPDATE_INVITE_TRIP_ID',
   UPDATE_TRIP: 'TRIP/UPDATE_TRIP',
 };
 
 const initialState = {
-  joinTripId: null,
   selectedTrip: null,
   trips: {},
   isNewTripModalOpen: false,
@@ -38,13 +36,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         selectedTrip: action.selectedTrip,
-      };
-    }
-
-    case types.UPDATE_INVITE_TRIP_ID: {
-      return {
-        ...state,
-        joinTripId: action.joinTripId,
       };
     }
 
@@ -112,7 +103,7 @@ export const tripActions = {
       .then(tripDetails => {
         dispatch({
           type: types.SET_SELECTED_TRIP,
-          selectedTrip: { ...tripDetails.data(), id: tripDetails.id },
+          selectedTrip: tripDetails.data(),
         });
       });
   },
@@ -146,13 +137,6 @@ export const tripActions = {
     return dispatch({
       type: types.TOGGLE_NEW_TRIP_MODAL,
       isNewTripModalOpen: !isNewTripModalOpen,
-    });
-  },
-
-  updateJoinTripId: tripId => dispatch => {
-    dispatch({
-      type: types.UPDATE_INVITE_TRIP_ID,
-      joinTripId: tripId,
     });
   },
 
