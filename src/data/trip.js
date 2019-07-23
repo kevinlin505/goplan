@@ -46,6 +46,10 @@ export default function trip() {
       return tripRef.get();
     },
 
+    getUnsplashImage: query => {
+      return firebase.functions().httpsCallable('getUnsplashImage')(query);
+    },
+
     joinTrip: (tripId, { name, id, email }) => {
       const batch = db.batch();
       const userRef = db.collection('users').doc(currentUser.uid);
