@@ -35,8 +35,7 @@ const mapDispatchToProps = dispatch => {
 
 const UserPage = ({ actions, auth, profile, trip, userInTrip }) => {
   const [tripList, setTripList] = useState(null);
-  const tripCount =
-    auth.profile && auth.profile.trips && auth.profile.trips.length;
+  const tripCount = profile && profile.trips && profile.trips.length;
   const tripIds = Object.keys(trip.trips);
 
   useEffect(() => {
