@@ -4,6 +4,7 @@
 /node_modules
 /functions/node_modules
 /functions/firebase-debug.log
+/functions/constants/Keys.js
 
 # testing
 /coverage

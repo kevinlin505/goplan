@@ -43,7 +43,7 @@ const Button = styled.button`
   color: ${({ theme }) => theme.colors.white};
   text-rendering: optimizelegibility;
   padding: 8px 20px;
-  border-radius: ${props => props.theme.sizes.smallCornerRadius};
+  border-radius: ${({ theme }) => theme.sizes.smallCornerRadius};
   background: none;
   transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1.2) 0s;
 `;
