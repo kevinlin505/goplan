@@ -30,7 +30,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
+const NewTripModal = ({ actions, auth }) => {
   const [destinationInputValue, setDestinationInputValue] = useState('');
   const [invite, setInvite] = useState('');
   const [inviteList, setInviteList] = useState(null);
@@ -128,7 +128,7 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
     actions.trip
       .createTrip(form)
       .then(() => {
-        toggleCreateTripModal();
+        actions.trip.toggleNewTripModal();
       })
       .catch(error => {
         // TODO: Display error on the form.
@@ -193,7 +193,7 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
     <Overlay>
       <Container>
         <FormHeader>
-          <CloseButton onClick={toggleCreateTripModal}>
+          <CloseButton onClick={actions.trip.toggleNewTripModal}>
             <CloseIcon />
           </CloseButton>
           <Header>Create trip</Header>
@@ -285,10 +285,9 @@ export const CreateTrip = ({ actions, auth, toggleCreateTripModal }) => {
   );
 };
 
-CreateTrip.propTypes = {
+NewTripModal.propTypes = {
   actions: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  toggleCreateTripModal: PropTypes.func.isRequired,
   trip: PropTypes.object.isRequired,
 };
 
@@ -375,4 +374,4 @@ const ButtonWrapper = styled.div`
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(CreateTrip);
+)(NewTripModal);

@@ -26,10 +26,13 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: ${({ theme }) => theme.fonts.primary};
     margin: 0;
     padding: 0;
+    font-family: ${({ theme }) => theme.fonts.primary};
+    font-size: 14px;
     background-color: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.text};
+    box-sizing: border-box;
   }
 `;
 

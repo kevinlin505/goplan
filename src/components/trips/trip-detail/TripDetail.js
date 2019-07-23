@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import NavigationBar from '@components/Navigation/NavigationBar';
 import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';

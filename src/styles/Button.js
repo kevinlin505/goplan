@@ -6,6 +6,12 @@ const Button = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: ${({ theme }) => theme.colors.primaryLight};
+  }
 `;
 
 export default Button;

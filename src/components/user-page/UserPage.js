@@ -8,13 +8,15 @@ import { expenseActions } from '@providers/expense/expense';
 import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
 import getTripStatus from '@selectors/tripSelector';
-import TripCard from '@components/UserPage/TripCard/TripCard';
-import NavigationBar from '@components/Navigation/NavigationBar';
-import Expense from '@components/UserPage/Expense/Expense';
+import TripCard from '@components/user-page/trip-card/TripCard';
+import UserExpense from '@components/user-page/user-expense/UserExpense';
+import ProfileCard from '@components/user-page/profile-card/ProfileCard';
+import NewTripModal from '@components/trips/new-trip-modal/NewTripModal';
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    profile: state.auth.profile,
     trip: state.trip,
     userInTrip: getTripStatus(state, state),
   };
@@ -31,10 +33,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const UserPage = ({ actions, auth, trip, userInTrip }) => {
+const UserPage = ({ actions, auth, profile, trip, userInTrip }) => {
   const [tripList, setTripList] = useState(null);
-  const tripCount =
-    auth.profile && auth.profile.trips && auth.profile.trips.length;
+  const tripCount = profile && profile.trips && profile.trips.length;
   const tripIds = Object.keys(trip.trips);
 
   useEffect(() => {
@@ -63,25 +64,57 @@ const UserPage = ({ actions, auth, trip, userInTrip }) => {
   }, [tripIds.length]);
 
   return (
-    <div>
-      <NavigationBar signOut={actions.auth.signOut} />
-      <Container>
-        <Expense />
-        <TripList>{tripList}</TripList>
-      </Container>
-    </div>
+    <Container>
+      <Contents>
+        <LeftPanel>
+          <ProfileCard profile={profile} />
+          <UserExpense />
+        </LeftPanel>
+        <MainPanel>
+          <TripList>{tripList}</TripList>
+        </MainPanel>
+        <RightPanel>
+          <div></div>
+        </RightPanel>
+      </Contents>
+      {trip.isNewTripModalOpen && <NewTripModal />}
+    </Container>
   );
 };
 
 UserPage.propTypes = {
   actions: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
   trip: PropTypes.object.isRequired,
   userInTrip: PropTypes.bool.isRequired,
 };
 
 const Container = styled.div`
-  padding-top: 70px;
+  padding: 20px;
+`;
+
+const Contents = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: ${({ theme }) => theme.sizes.giant}px;
+  margin: 0 auto;
+`;
+
+const LeftPanel = styled.div`
+  width: 25%;
+  padding: 15px;
+`;
+
+const MainPanel = styled.div`
+  width: 50%;
+  padding: 15px;
+`;
+
+const RightPanel = styled.div`
+  width: 25%;
+  padding: 15px;
 `;
 
 const TripList = styled.div`

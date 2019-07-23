@@ -21,11 +21,18 @@ const theme = {
   },
 
   sizes: {
+    giant: 1200,
+    large: 1024,
+    medium: 768,
+    small: 325,
+  },
+
+  styles: {
     smallCornerRadius: '10px',
     cornerRadius: '20px',
     margin: '20px',
-    padding: '20px'
-  }  
+    padding: '20px',
+  },
 };
 
 export default theme;
