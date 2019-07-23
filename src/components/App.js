@@ -9,7 +9,7 @@ import {
 } from '@components/router-utils/RouterUtils';
 import SignIn from '@components/auth/SignIn';
 import UserPage from '@components/user-page/UserPage';
-import TripDetail from '@components/trip-detail/TripDetail';
+import TripDetail from '@components/trips/trip-detail/TripDetail';
 import theme from '@styles/theme/theme';
 import GlobalStyle from '@styles/GlobalStyle';
 

@@ -13,10 +13,10 @@ export const ProfileCard = ({ profile }) => {
       </Profile>
       <ProfileInfo>
         <UserName>{profile.name}</UserName>
-        <Email>{profile.email}</Email>
-        <Email>{profile.phone_number}</Email>
-        {profile.venmo && <Email>Venmo: {profile.venmo}</Email>}
-        {profile.quickpay && <Email>Venmo: {profile.quickpay}</Email>}
+        <InfoField>{profile.email}</InfoField>
+        <InfoField>{profile.phone_number}</InfoField>
+        {profile.venmo && <InfoField>Venmo: {profile.venmo}</InfoField>}
+        {profile.quickpay && <InfoField>Venmo: {profile.quickpay}</InfoField>}
       </ProfileInfo>
     </Container>
   );
@@ -66,7 +66,15 @@ const Avatar = styled.img`
   height: 100%;
 `;
 
-const UserName = styled.div``;
-const Email = styled.div``;
+const UserName = styled.div`
+  margin: 2px 0;
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+const InfoField = styled.div`
+  margin: 2px 0;
+  color: ${({ theme }) => theme.colors.textLight};
+`;
 
 export default ProfileCard;

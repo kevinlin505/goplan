@@ -1,6 +1,5 @@
 import auth from '@data/auth';
 import trip from '@data/trip';
-import { types as authTypes } from '@providers/auth/auth';
 
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
@@ -8,6 +7,7 @@ export const types = {
   JOIN_TRIP: 'TRIP/JOIN_TRIP',
   RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
+  TOGGLE_NEW_TRIP_MODAL: 'TRIP/TOGGLE_NEW_TRIP_MODAL',
   UPDATE_INVITE_TRIP_ID: 'TRIP/UPDATE_INVITE_TRIP_ID',
   UPDATE_TRIP: 'TRIP/UPDATE_TRIP',
 };
@@ -16,29 +16,14 @@ const initialState = {
   joinTripId: null,
   selectedTrip: null,
   trips: {},
+  isNewTripModalOpen: false,
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case authTypes.SIGN_OUT: {
-      return {
-        ...state,
-        joinTripId: null,
-        selectedTrip: null,
-        trips: {},
-      };
-    }
-
     case types.CREATE_TRIP: {
       return {
         ...state,
-      };
-    }
-
-    case types.UPDATE_INVITE_TRIP_ID: {
-      return {
-        ...state,
-        joinTripId: action.joinTripId,
       };
     }
 
@@ -53,6 +38,20 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         selectedTrip: action.selectedTrip,
+      };
+    }
+
+    case types.UPDATE_INVITE_TRIP_ID: {
+      return {
+        ...state,
+        joinTripId: action.joinTripId,
+      };
+    }
+
+    case types.TOGGLE_NEW_TRIP_MODAL: {
+      return {
+        ...state,
+        isNewTripModalOpen: action.isNewTripModalOpen,
       };
     }
 
@@ -139,6 +138,15 @@ export const tripActions = {
           type: types.JOIN_TRIP,
         });
       });
+  },
+
+  toggleNewTripModal: () => (dispatch, getState) => {
+    const { isNewTripModalOpen } = getState().trip;
+
+    return dispatch({
+      type: types.TOGGLE_NEW_TRIP_MODAL,
+      isNewTripModalOpen: !isNewTripModalOpen,
+    });
   },
 
   updateJoinTripId: tripId => dispatch => {

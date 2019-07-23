@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { AddPhotoAlternate } from '@material-ui/icons';
 import { authActions } from '@providers/auth/auth';
+import { tripActions } from '@providers/trip/trip';
 import Logo from '@components/icons/Logo';
 import Button from '@styles/Button';
 
@@ -17,6 +19,7 @@ const mapDispatchToProps = dispatch => {
   return {
     actions: {
       auth: bindActionCreators(authActions, dispatch),
+      trip: bindActionCreators(tripActions, dispatch),
     },
   };
 };
@@ -28,12 +31,18 @@ const NavigationBar = ({ actions, profile }) => {
         <Brand>
           <Logo />
         </Brand>
-        <UserProfile>
-          <ProfileAvatar>
-            <Avatar src={profile.profile_url} />
-          </ProfileAvatar>
-          <SignOutButton onClick={actions.auth.signOut}>Sign Out</SignOutButton>
-        </UserProfile>
+        <RightNavBarItems>
+          <NewTripButton onClick={actions.trip.toggleNewTripModal}>
+            <NewTripIcon />
+            New Trip
+          </NewTripButton>
+          <SignOutButton onClick={actions.auth.signOut}>
+            <ProfileAvatar>
+              <Avatar src={profile.profile_url} />
+            </ProfileAvatar>
+            Sign Out
+          </SignOutButton>
+        </RightNavBarItems>
       </NavBar>
     </Container>
   );
@@ -66,14 +75,33 @@ const Brand = styled.div`
   color: ${({ theme }) => theme.colors.primary};
 `;
 
-const UserProfile = styled.div`
+const RightNavBarItems = styled.div`
   display: flex;
 `;
 
+const NewTripButton = styled(Button)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 15px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.primaryDark};
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: ${({ theme }) => theme.colors.primaryLight};
+  }
+`;
+
+const NewTripIcon = styled(AddPhotoAlternate)`
+  margin-right: 3px;
+`;
+
 const ProfileAvatar = styled.div`
-  width: 40px;
-  height: 40px;
-  margin: 0 15px;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
   border-radius: 50%;
   overflow: hidden;
 `;
@@ -84,7 +112,11 @@ const Avatar = styled.img`
 `;
 
 const SignOutButton = styled(Button)`
-  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 15px;
+  font-size: 14px;
   color: ${({ theme }) => theme.colors.textLight};
 
   &:active,

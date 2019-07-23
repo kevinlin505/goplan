@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import {
+  Collapse,
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
+} from '@material-ui/core';
+import {
+  AttachMoney,
+  ExpandLess,
+  ExpandMore,
+  ListAlt,
+  LocationOn,
+} from '@material-ui/icons';
+import convertNumberToCurrency from '@utils/convertNumberToCurrency';
 import CardContainer from '@styles/card/CardContainer';
 
 const mapStateToProps = state => {
@@ -15,13 +30,24 @@ export const UserExpense = ({
   expense: { expenseCategories, expenseTotal, expenseTrips },
   trips,
 }) => {
+  const [isCategoryExpand, setCategoryExpand] = useState(true);
+  const [isTripExpand, setTripExpand] = useState(true);
+  const toggleCategoryList = () => {
+    setCategoryExpand(!isCategoryExpand);
+  };
+
+  const toggleTripList = () => {
+    setTripExpand(!isTripExpand);
+  };
+
   const categoryList = Object.keys(expenseCategories).map((category, index) => {
     const cost = expenseCategories[category];
 
     return (
-      <ExpenseWrapper key={`${category}-${index}`}>
-        <Name>{category}</Name>:<Price>${cost}</Price>
-      </ExpenseWrapper>
+      <NestedListItem key={`${category}-${index}`}>
+        <NestedListItemText>{category}</NestedListItemText>
+        <ItemCost>{convertNumberToCurrency(cost)}</ItemCost>
+      </NestedListItem>
     );
   });
 
@@ -30,23 +56,56 @@ export const UserExpense = ({
     const name = trips[tripId] && trips[tripId].trip_name;
 
     return (
-      <ExpenseWrapper key={`${tripId}-${cost}-${index}`}>
-        <Name>{name}</Name>:<Price>${cost}</Price>
-      </ExpenseWrapper>
+      <NestedListItem key={`${tripId}-${cost}-${index}`}>
+        <NestedListItemText>{name}</NestedListItemText>
+        <ItemCost>{convertNumberToCurrency(cost)}</ItemCost>
+      </NestedListItem>
     );
   });
 
   return (
     <CardContainer>
-      <TotalExpense>Spending: {expenseTotal}</TotalExpense>
-      <Categories>
-        <Header>Categories:</Header>
-        {categoryList}
-      </Categories>
-      <Trips>
-        <Header>Trips:</Header>
-        {tripList}
-      </Trips>
+      <List
+        aria-labelledby="nested-list-subheader"
+        component="nav"
+        subheader={
+          <ListSubheader component="div" id="nested-list-subheader">
+            Spending Summary
+          </ListSubheader>
+        }
+      >
+        <ListItem button>
+          <ListItemIcon>
+            <AttachMoney />
+          </ListItemIcon>
+          <ListItemText primary="Total" />
+          <ItemCost>{convertNumberToCurrency(expenseTotal)}</ItemCost>
+        </ListItem>
+        <ListItem button onClick={toggleCategoryList}>
+          <ListItemIcon>
+            <ListAlt />
+          </ListItemIcon>
+          <ListItemText primary="Categories" />
+          {isCategoryExpand ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={isCategoryExpand} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {categoryList}
+          </List>
+        </Collapse>
+        <ListItem button onClick={toggleTripList}>
+          <ListItemIcon>
+            <LocationOn />
+          </ListItemIcon>
+          <ListItemText primary="Trips" />
+          {isTripExpand ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={isTripExpand} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {tripList}
+          </List>
+        </Collapse>
+      </List>
     </CardContainer>
   );
 };
@@ -56,43 +115,26 @@ UserExpense.propTypes = {
   trips: PropTypes.object.isRequired,
 };
 
-const Container = styled.div`
-  padding: 25px;
+const ListItemIcon = styled.div`
+  display: inline-flex;
+  margin-right: 5px;
+  color: ${({ theme }) => theme.colors.textLight};
 `;
 
-const TotalExpense = styled.div`
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 20px;
+const NestedListItem = styled(ListItem)`
+  && {
+    padding-left: 32px;
+    font-size: 14px;
+  }
 `;
 
-const Categories = styled.div`
-  margin-bottom: 20px;
+const NestedListItemText = styled.div`
+  flex: 1 1 auto;
+  margin: 4px 0;
 `;
 
-const Trips = styled.div`
-  margin-bottom: 20px;
-`;
-
-const Header = styled.div`
-  font-size: 18px;
-  margin-bottom: 5px;
-`;
-
-const ExpenseWrapper = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  padding: 5px 0;
-`;
-
-const Name = styled.div`
+const ItemCost = styled.div`
   display: inline-block;
-  font-weight: 600;
-`;
-
-const Price = styled.div`
-  display: inline-block;
-  margin-left: 5px;
 `;
 
 export default connect(mapStateToProps)(UserExpense);

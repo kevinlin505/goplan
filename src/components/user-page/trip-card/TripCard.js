@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import convertNumberToCurrency from '@utils/convertNumberToCurrency';
 import CardContainer from '@styles/card/CardContainer';
 
 const TripCard = ({ tripDetail }) => {
@@ -39,7 +40,7 @@ const TripCard = ({ tripDetail }) => {
             </DesinationDetail>
             <DesinationDetail>
               <AttendeeList>{attendeeList}</AttendeeList>
-              <div>${totalCost}</div>
+              <div>{convertNumberToCurrency(totalCost)}</div>
             </DesinationDetail>
           </DetailWrapper>
         </TripCardDetail>
@@ -96,7 +97,7 @@ const DesinationDetail = styled.div`
 
 const LocationName = styled.div`
   width: 100%;
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;

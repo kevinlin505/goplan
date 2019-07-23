@@ -11,6 +11,7 @@ import getTripStatus from '@selectors/tripSelector';
 import TripCard from '@components/user-page/trip-card/TripCard';
 import UserExpense from '@components/user-page/user-expense/UserExpense';
 import ProfileCard from '@components/user-page/profile-card/ProfileCard';
+import NewTripModal from '@components/trips/new-trip-modal/NewTripModal';
 
 const mapStateToProps = state => {
   return {
@@ -68,14 +69,16 @@ const UserPage = ({ actions, auth, profile, trip, userInTrip }) => {
       <Contents>
         <LeftPanel>
           <ProfileCard profile={profile} />
+          <UserExpense />
         </LeftPanel>
         <MainPanel>
           <TripList>{tripList}</TripList>
         </MainPanel>
         <RightPanel>
-          <UserExpense />
+          <div></div>
         </RightPanel>
       </Contents>
+      {trip.isNewTripModalOpen && <NewTripModal />}
     </Container>
   );
 };
@@ -101,17 +104,17 @@ const Contents = styled.div`
 `;
 
 const LeftPanel = styled.div`
-  width: 320px;
+  width: 25%;
   padding: 15px;
 `;
 
 const MainPanel = styled.div`
-  width: calc(100% - 640px);
+  width: 50%;
   padding: 15px;
 `;
 
 const RightPanel = styled.div`
-  width: 320px;
+  width: 25%;
   padding: 15px;
 `;
 
