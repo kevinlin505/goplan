@@ -7,9 +7,9 @@ import { authActions } from '@providers/auth/auth';
 import { expenseActions } from '@providers/expense/expense';
 import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
+import getTripStatus from '@selectors/tripSelector';
 import TripCard from '@components/UserPage/TripCard/TripCard';
 import NavigationBar from '@components/Navigation/NavigationBar';
-import getTripStatus from '@selectors/tripSelector';
 import Expense from '@components/UserPage/Expense/Expense';
 
 const mapStateToProps = state => {
