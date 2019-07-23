@@ -1,8 +1,7 @@
-import Keys from '@constants/Keys';
-
 const functions = require('firebase-functions');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
+const keys = require('./constants/Keys');
 
 // Invitation Email
 const gmailEmail = functions.config().gmail.email;
@@ -62,7 +61,7 @@ async function getImage(url) {
 }
 
 exports.getUnsplashImage = functions.https.onCall(query => {
-  const url = unsplashHelper.apiUrl(Keys.UNSPLASH.accessToken, query);
+  const url = unsplashHelper.apiUrl(keys.UNSPLASH.accessToken, query);
   console.log(`url: ${url}`);
   return getImage(url);
 });
