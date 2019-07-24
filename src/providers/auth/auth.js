@@ -12,7 +12,6 @@ export const types = {
 const initialState = {
   isAuthenticated: -1,
   profile: null,
-  userId: null,
 };
 
 export default function reducer(state = initialState, action) {
@@ -30,7 +29,6 @@ export default function reducer(state = initialState, action) {
         authenticationError: null,
         isAuthenticated: 1,
         profile: action.profile,
-        userId: action.uid,
       };
     }
 
@@ -40,7 +38,6 @@ export default function reducer(state = initialState, action) {
         authenticationError: null,
         isAuthenticated: 0,
         profile: null,
-        userId: null,
       };
     }
 
@@ -61,9 +58,9 @@ export const authActions = {
     const { isAuthenticated } = getState().auth;
 
     auth().onStateChanged(currentUser => {
-      if (currentUser && !isAuthenticated) {
+      if (currentUser) {
         dispatch(authActions.signInSuccess());
-      } else {
+      } else if (isAuthenticated === -1) {
         dispatch({
           type: types.CHECK_AUTHENTICATION,
           status: 0,
@@ -73,23 +70,17 @@ export const authActions = {
   },
 
   signInWithGoogleAuth: () => dispatch => {
-    auth()
+    return auth()
       .signInWithGoogleAuthAsync()
-      .then(() => {
-        dispatch(authActions.signInSuccess());
-      })
       .catch(() => {
-        dispatch(authActions.signInError());
+        return dispatch(authActions.signInError());
       });
   },
 
   // login with facebook auth
   signInWithFacebookAuth: () => dispatch => {
-    auth()
+    return auth()
       .signInWithFacebookAuthAsync()
-      .then(() => {
-        dispatch(authActions.signInSuccess());
-      })
       .catch(err => {
         if (err.code === 'auth/account-exists-with-different-credential') {
           const pendingCred = err.credential;
@@ -102,13 +93,10 @@ export const authActions = {
                 auth()
                   .signInWithGoogleAuthAsync()
                   .then(profile => {
-                    profile.user.linkWithCredential(pendingCred);
-                  })
-                  .then(() => {
-                    dispatch(authActions.signInSuccess());
+                    return profile.user.linkWithCredential(pendingCred);
                   })
                   .catch(() => {
-                    dispatch(authActions.signInError());
+                    return dispatch(authActions.signInError());
                   });
               }
             });
