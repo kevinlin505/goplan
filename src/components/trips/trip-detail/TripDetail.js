@@ -8,13 +8,13 @@ import Button from '@material-ui/core/Button';
 import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
-import getTripStatus from '@selectors/tripSelector';
+import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
 import CreateExpense from './CreateExpense/CreateExpense';
 
 const mapStateToProps = (state, props) => {
   return {
-    tripId: props.match.params.tripId,
-    userInTrip: getTripStatus(state, state),
+    tripId: getParamTripId(state, props),
+    userInTrip: getTripStatus(state, props),
   };
 };
 
@@ -46,7 +46,6 @@ const TripDetail = ({ actions, tripId, userInTrip }) => {
   // Need to clean up this part, we should not get into this component if selectedTrip is null.
   return (
     <div>
-      <NavigationBar />
       <h2>Trip Details</h2>
       <Link to="/home">Back to Home</Link>
 

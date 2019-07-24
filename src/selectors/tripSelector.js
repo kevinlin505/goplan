@@ -1,12 +1,10 @@
 import createDeepEqualSelector from '@utils/cacheHelper';
 
-const getTripList = state => state.auth.profile.trips;
+export const getTripList = state => state.auth.profile.trips;
 
-const getJoinTripId = state => state.trip.joinTripId;
+export const getParamTripId = (state, props) => props.match.params.tripId;
 
-const getTripStatus = createDeepEqualSelector(
-  [getTripList, getJoinTripId],
-  (tripList, joinTripId) => tripList.some(el => el.id === joinTripId),
+export const getTripStatus = createDeepEqualSelector(
+  [getTripList, getParamTripId],
+  (tripList, paramTripId) => tripList.some(el => el.id === paramTripId),
 );
-
-export default getTripStatus;

@@ -22,6 +22,7 @@ module.exports = function returnWebpackSettings(PATHS) {
     },
     output: {
       filename: '[name].js',
+      publicPath: '/',
     },
     plugins: [
       // flips webpack server to hot mode
@@ -51,7 +52,7 @@ module.exports = function returnWebpackSettings(PATHS) {
     devServer: {
       port: 3000,
       hot: true,
-
+      historyApiFallback: true,
       contentBase: PATHS.dist,
 
       // It suppress error shown in console, so it has to be set to false.
