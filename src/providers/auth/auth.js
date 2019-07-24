@@ -1,5 +1,6 @@
 import auth from '@data/auth';
 import user from '@data/user';
+import AuthState from '@constants/AuthState';
 
 export const types = {
   AUTHENTICATION_ERROR: 'AUTH/AUTHENTICATION_ERROR',
@@ -10,7 +11,7 @@ export const types = {
 };
 
 const initialState = {
-  isAuthenticated: -1,
+  isAuthenticated: AuthState.UNKOWN,
   profile: null,
 };
 
@@ -27,7 +28,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         authenticationError: null,
-        isAuthenticated: 1,
+        isAuthenticated: AuthState.AUTHENTICATED,
         profile: action.profile,
       };
     }
@@ -36,7 +37,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         authenticationError: null,
-        isAuthenticated: 0,
+        isAuthenticated: AuthState.UNAUTHENTICATED,
         profile: null,
       };
     }
@@ -59,11 +60,11 @@ export const authActions = {
 
     auth().onStateChanged(currentUser => {
       if (currentUser) {
-        dispatch(authActions.signInSuccess());
-      } else if (isAuthenticated === -1) {
+        dispatch(authActions.signInSuccess(currentUser.uid));
+      } else if (isAuthenticated === AuthState.UNKOWN) {
         dispatch({
           type: types.CHECK_AUTHENTICATION,
-          status: 0,
+          status: AuthState.UNAUTHENTICATED,
         });
       }
     });
@@ -116,7 +117,7 @@ export const authActions = {
       });
   },
 
-  signInSuccess: () => dispatch => {
+  signInSuccess: uid => dispatch => {
     return user()
       .checkUserProfile()
       .then(profile => {
@@ -127,7 +128,7 @@ export const authActions = {
         return dispatch({
           type: types.SIGN_IN,
           profile: profile.data(),
-          uid: profile.data().id,
+          uid,
         });
       });
   },

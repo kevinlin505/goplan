@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import AuthState from '@constants/AuthState';
 import { tripActions } from '@providers/trip/trip';
 import NavigationBar from '@components/navigation/NavigationBar';
 import Rainy from '@components/icons/Rainy';
@@ -23,7 +24,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const Render = ({ auth, component: Component, match, ...props }) => {
-  if (auth === -1) {
+  if (auth === AuthState.UNKOWN) {
     return (
       <LoadingWrapper>
         <Rainy />
@@ -31,7 +32,7 @@ const Render = ({ auth, component: Component, match, ...props }) => {
     );
   }
 
-  return auth ? (
+  return auth === AuthState.AUTHENTICATED ? (
     <React.Fragment>
       <NavigationBar />
       <Component match={match} {...props} />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import AuthState from '@constants/AuthState';
 import AuthHandler from '@components/routers/auth-handler/AuthHandler';
 
 export const AuthRoute = ({ auth, component: Component, ...rest }) => {
@@ -8,7 +9,7 @@ export const AuthRoute = ({ auth, component: Component, ...rest }) => {
     <Route
       {...rest}
       render={({ location, ...props }) => {
-        return auth ? (
+        return auth === AuthState.AUTHENTICATED ? (
           <Redirect
             to={(location.state && location.state.originalMatchUrl) || '/home'}
           />
