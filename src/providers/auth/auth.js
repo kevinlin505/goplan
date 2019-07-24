@@ -11,7 +11,7 @@ export const types = {
 };
 
 const initialState = {
-  isAuthenticated: AuthState.UNKOWN,
+  isAuthenticated: AuthState.UNKNOWN,
   profile: null,
 };
 
@@ -61,7 +61,7 @@ export const authActions = {
     auth().onStateChanged(currentUser => {
       if (currentUser) {
         dispatch(authActions.signInSuccess(currentUser.uid));
-      } else if (isAuthenticated === AuthState.UNKOWN) {
+      } else if (isAuthenticated === AuthState.UNKNOWN) {
         dispatch({
           type: types.CHECK_AUTHENTICATION,
           status: AuthState.UNAUTHENTICATED,

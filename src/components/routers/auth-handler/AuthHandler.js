@@ -24,7 +24,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const Render = ({ auth, component: Component, match, ...props }) => {
-  if (auth === AuthState.UNKOWN) {
+  if (auth === AuthState.UNKNOWN) {
     return (
       <LoadingWrapper>
         <Rainy />
