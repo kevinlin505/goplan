@@ -55,11 +55,11 @@ const TripMap = ({ tripDetail, google }) => {
   return (
     <div style={{ width: '100%', height: '550px', position: 'relative' }}>
       <Map
-        bounds={mapBounds}
+        bounds={tripDetail.destinations.length > 1 ? mapBounds : null}
         google={google}
         initialCenter={defaultProps.center}
         style={{ width: '100%', height: '100%' }}
-        zoom={mapBounds ? null : defaultProps.zoom}
+        zoom={defaultProps.zoom}
       >
         {markerList}
 

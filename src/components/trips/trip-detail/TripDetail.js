@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -10,11 +10,12 @@ import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
 import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
 import TripCard from '@components/user-page/trip-card/TripCard';
-import TripMap from '@components/trips/trip-detail/TripMap/TripMap';
+import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
 import CreateExpense from './CreateExpense/CreateExpense';
 
 const mapStateToProps = (state, props) => {
   return {
+    trip: state.trip,
     tripId: getParamTripId(state, props),
     userInTrip: getTripStatus(state, props),
   };
@@ -30,7 +31,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TripDetail = ({ actions, trip, tripId, userInTrip }) => {
+const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
 
   const toggleCreateExpenseModal = () => {
@@ -50,11 +51,14 @@ const TripDetail = ({ actions, trip, tripId, userInTrip }) => {
     <Container>
       <Contents>
         <LeftPanel>
-          <Link to="/home">Back to Home</Link>
-          {trip.selectedTrip && <TripCard tripDetail={trip.selectedTrip} />}
+          {trip.selectedTrip && trip.selectedTrip.id === match.params.tripId ? (
+            <TripCard tripDetail={trip.selectedTrip} />
+          ) : null}
         </LeftPanel>
         <MainPanel>
-          {trip.selectedTrip && <TripMap tripDetail={trip.selectedTrip} />}
+          {trip.selectedTrip && trip.selectedTrip.id === match.params.tripId ? (
+            <TripMap tripDetail={trip.selectedTrip} />
+          ) : null}
         </MainPanel>
         <RightPanel>
           <Button
@@ -75,6 +79,7 @@ const TripDetail = ({ actions, trip, tripId, userInTrip }) => {
 
 TripDetail.propTypes = {
   actions: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
   selectedTrip: PropTypes.object,
   trip: PropTypes.object.isRequired,
   tripId: PropTypes.string.isRequired,
@@ -110,11 +115,6 @@ const MainPanel = styled.div`
 const RightPanel = styled.div`
   width: 25%;
   padding: 15px;
-`;
-
-const TripList = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
 
 export default connect(
