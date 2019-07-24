@@ -12,7 +12,7 @@ export default function useDestinationsHandler({
 
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${Keys.FIREBASE.apiKey}&libraries=places&sessiontoken=${auth.userId}`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${Keys.FIREBASE.apiKey}&libraries=places&sessiontoken=${auth.profile.id}`;
     script.onload = () => {
       setGoogleApiReady(true);
     };

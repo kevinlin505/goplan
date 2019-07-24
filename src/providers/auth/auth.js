@@ -1,26 +1,26 @@
 import auth from '@data/auth';
 import user from '@data/user';
+import AuthState from '@constants/AuthState';
 
 export const types = {
   AUTHENTICATION_ERROR: 'AUTH/AUTHENTICATION_ERROR',
+  CHECK_AUTHENTICATION: 'AUTH/CHECK_AUTHENTICATION',
   SIGN_IN: 'AUTH/SIGN_IN',
   SIGN_OUT: 'AUTH/SIGN_OUT',
   UPDATE_PROFILE: 'AUTH/UPDATE_PROFILE',
 };
 
 const initialState = {
-  authenticationError: null,
-  isAuthenticated: false,
+  isAuthenticated: AuthState.UNKNOWN,
   profile: null,
-  userId: null,
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case types.AUTHENTICATION_ERROR: {
+    case types.CHECK_AUTHENTICATION: {
       return {
         ...state,
-        authenticationError: action.err,
+        isAuthenticated: action.status,
       };
     }
 
@@ -28,9 +28,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         authenticationError: null,
-        isAuthenticated: true,
+        isAuthenticated: AuthState.AUTHENTICATED,
         profile: action.profile,
-        userId: action.uid,
       };
     }
 
@@ -38,9 +37,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         authenticationError: null,
-        isAuthenticated: false,
+        isAuthenticated: AuthState.UNAUTHENTICATED,
         profile: null,
-        userId: null,
       };
     }
 
@@ -57,44 +55,33 @@ export default function reducer(state = initialState, action) {
 }
 
 export const authActions = {
-  checkAuth: () => dispatch => {
-    auth().onStateChanged(currentUser => {
-      if (currentUser && currentUser.uid) {
-        dispatch(authActions.signInSuccess(currentUser.uid));
+  checkAuth: () => (dispatch, getState) => {
+    const { isAuthenticated } = getState().auth;
 
-        // Listen to user profile update and update the local profile if changes are made to server
-        user().subscribeToProfileChange(profile => {
-          if (!profile.metadata.hasPendingWrites) {
-            dispatch({
-              type: types.UPDATE_PROFILE,
-              profile: profile.data(),
-            });
-          }
+    auth().onStateChanged(currentUser => {
+      if (currentUser) {
+        dispatch(authActions.signInSuccess(currentUser.uid));
+      } else if (isAuthenticated === AuthState.UNKNOWN) {
+        dispatch({
+          type: types.CHECK_AUTHENTICATION,
+          status: AuthState.UNAUTHENTICATED,
         });
-      } else {
-        user().unsubscribeToProfileChange();
       }
     });
   },
 
   signInWithGoogleAuth: () => dispatch => {
-    auth()
+    return auth()
       .signInWithGoogleAuthAsync()
-      .then(authData => {
-        dispatch(authActions.signInSuccess(authData.uid));
-      })
       .catch(() => {
-        dispatch(authActions.signInError());
+        return dispatch(authActions.signInError());
       });
   },
 
   // login with facebook auth
   signInWithFacebookAuth: () => dispatch => {
-    auth()
+    return auth()
       .signInWithFacebookAuthAsync()
-      .then(authData => {
-        dispatch(authActions.signInSuccess(authData.uid));
-      })
       .catch(err => {
         if (err.code === 'auth/account-exists-with-different-credential') {
           const pendingCred = err.credential;
@@ -107,13 +94,10 @@ export const authActions = {
                 auth()
                   .signInWithGoogleAuthAsync()
                   .then(profile => {
-                    profile.user.linkWithCredential(pendingCred);
-                  })
-                  .then(() => {
-                    dispatch(authActions.signInSuccess());
+                    return profile.user.linkWithCredential(pendingCred);
                   })
                   .catch(() => {
-                    dispatch(authActions.signInError());
+                    return dispatch(authActions.signInError());
                   });
               }
             });
@@ -124,7 +108,7 @@ export const authActions = {
   },
 
   signOut: () => dispatch => {
-    auth()
+    return auth()
       .signOut()
       .then(() => {
         return dispatch({

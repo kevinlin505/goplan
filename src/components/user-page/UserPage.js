@@ -7,7 +7,6 @@ import { authActions } from '@providers/auth/auth';
 import { expenseActions } from '@providers/expense/expense';
 import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
-import getTripStatus from '@selectors/tripSelector';
 import TripCard from '@components/user-page/trip-card/TripCard';
 import UserExpense from '@components/user-page/user-expense/UserExpense';
 import ProfileCard from '@components/user-page/profile-card/ProfileCard';
@@ -18,7 +17,6 @@ const mapStateToProps = state => {
     auth: state.auth,
     profile: state.auth.profile,
     trip: state.trip,
-    userInTrip: getTripStatus(state, state),
   };
 };
 
@@ -33,24 +31,20 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const UserPage = ({ actions, auth, profile, trip, userInTrip }) => {
+const UserPage = ({ actions, auth, profile, trip }) => {
   const [tripList, setTripList] = useState(null);
   const tripCount = profile && profile.trips && profile.trips.length;
   const tripIds = Object.keys(trip.trips);
 
   useEffect(() => {
-    const { joinTripId } = trip;
-
-    if (joinTripId && !userInTrip) {
-      actions.trip.joinTrip(joinTripId);
-    }
-
     actions.expense.getUserExpenseReports();
   }, []);
 
   useEffect(() => {
-    const tripRefs = auth.profile.trips;
-    actions.trip.getAllTrips(tripRefs);
+    if (tripCount !== Object.keys(trip.trips).length) {
+      const tripRefs = auth.profile.trips;
+      actions.trip.getAllTrips(tripRefs);
+    }
   }, [tripCount]);
 
   useEffect(() => {
@@ -87,7 +81,6 @@ UserPage.propTypes = {
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
   trip: PropTypes.object.isRequired,
-  userInTrip: PropTypes.bool.isRequired,
 };
 
 const Container = styled.div`
