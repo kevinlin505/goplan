@@ -11,7 +11,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import FaceIcon from '@material-ui/icons/Face';
 import { tripActions } from '@providers/trip/trip';
 import validateEmail from '@utils/validateEmail';
-import dockPng from '@assets/images/dock.jpg';
 import Overlay from '@styles/Overlay';
 import googleMapsApi from '@utils/googleMapsApi';
 
@@ -310,10 +309,6 @@ const FormHeader = styled.div`
   position: relative;
   width: 100%;
   height: 100px;
-  background: url(${dockPng});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
 `;
 
 const CloseButton = styled(IconButton)`
