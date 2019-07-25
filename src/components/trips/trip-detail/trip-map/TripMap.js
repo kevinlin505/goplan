@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-// import Keys from '@constants/Keys';
+import styled from 'styled-components';
 import { Map, InfoWindow, Marker } from 'google-maps-react';
-// import google from '@hooks/googleMapsApi';
 
 const TripMap = ({ tripDetail, google }) => {
   const [showingInfoWindow, setShowingInfoWindow] = useState(false);
@@ -52,15 +51,13 @@ const TripMap = ({ tripDetail, google }) => {
     setMapBounds(bounds);
     setMarkerList(list);
   }, []);
-  debugger;
 
   return (
-    <div style={{ width: '100%', height: '550px', position: 'relative' }}>
+    <Container>
       <Map
         bounds={tripDetail.destinations.length > 1 ? mapBounds : null}
         google={google}
         initialCenter={defaultProps.center}
-        style={{ width: '100%', height: '100%' }}
         zoom={defaultProps.zoom}
       >
         {markerList}
@@ -71,11 +68,11 @@ const TripMap = ({ tripDetail, google }) => {
           visible={showingInfoWindow}
         >
           <div>
-            <h1>{activeMarker && activeMarker.name}</h1>
+            <h2>{activeMarker && activeMarker.name}</h2>
           </div>
         </InfoWindow>
       </Map>
-    </div>
+    </Container>
   );
 };
 
@@ -83,5 +80,11 @@ TripMap.propTypes = {
   tripDetail: PropTypes.object.isRequired,
   google: PropTypes.object.isRequired,
 };
+
+const Container = styled.div`
+  width: 100%;
+  height: 550px;
+  position: relative;
+`;
 
 export default TripMap;

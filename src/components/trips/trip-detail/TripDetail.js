@@ -11,7 +11,7 @@ import { tripActions } from '@providers/trip/trip';
 import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
 import TripCard from '@components/user-page/trip-card/TripCard';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
-import google from '@utils/googleMapsApi';
+import googleApiFunc from '@utils/googleMapsApi';
 import CreateExpense from './CreateExpense/CreateExpense';
 
 const mapStateToProps = (state, props) => {
@@ -34,7 +34,7 @@ const mapDispatchToProps = dispatch => {
 
 const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
-
+  const google = googleApiFunc();
   const toggleCreateExpenseModal = () => {
     setExpenseModal(!isExpenseModal);
   };
