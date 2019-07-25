@@ -1,7 +1,7 @@
-import uuidv3 from 'uuid/v3';
-import AWS from 'aws-sdk/global';
-import S3 from 'aws-sdk/clients/s3';
-import Keys from '@constants/Keys';
+// import uuidv3 from 'uuid/v3';
+// import AWS from 'aws-sdk/global';
+// import S3 from 'aws-sdk/clients/s3';
+// import Keys from '@constants/Keys';
 import expense from '@data/expense';
 
 export const types = {
@@ -159,30 +159,46 @@ export const expenseActions = {
 
   uploadReceipts: file => (dispatch, getState) => {
     const { selectedTrip } = getState().trip;
-
-    AWS.config.region = Keys.AWS.region;
-    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-      IdentityPoolId: Keys.AWS.IdentityPoolId,
-    });
-
-    const bucket = new S3();
-    const params = {
-      Bucket: `${Keys.AWS.bucketName}/expense/${selectedTrip.id}`,
-      Key: uuidv3(file.name, Keys.AWS.uuid),
-      ContentType: file.type,
-      Body: file,
+    const options = {
+      data: window.btoa(file),
+      type: file.type,
+      name: file.name,
+      tripId: selectedTrip.id,
     };
 
-    return bucket.putObject(params, (err, data) => {
-      if (err) {
-        throw err;
-      } else {
+    console.log(`options: ${options}`);
+    expense()
+      .uploadReceipt(options)
+      .then(() => {
+        console.log('upload receipt success');
         dispatch({
           type: types.UPLOAD_RECEIPT,
         });
+      });
 
-        return Promise.resolve(data);
-      }
-    });
+    // AWS.config.region = Keys.AWS.region;
+    // AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    //   IdentityPoolId: Keys.AWS.IdentityPoolId,
+    // });
+
+    // const bucket = new S3();
+    // const params = {
+    //   Bucket: `${Keys.AWS.bucketName}/expense/${selectedTrip.id}`,
+    //   Key: uuidv3(file.name, Keys.AWS.uuid),
+    //   ContentType: file.type,
+    //   Body: file,
+    // };
+
+    // return bucket.putObject(params, (err, data) => {
+    //   if (err) {
+    //     throw err;
+    //   } else {
+    //     dispatch({
+    //       type: types.UPLOAD_RECEIPT,
+    //     });
+
+    //     return Promise.resolve(data);
+    //   }
+    // });
   },
 };

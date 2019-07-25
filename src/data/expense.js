@@ -10,6 +10,10 @@ export default function trip() {
       return Promise.all(expensesRefs.map(expensesRef => expensesRef.get()));
     },
 
+    uploadReceipt: options => {
+      return firebase.functions().httpsCallable('uploadReceipt')(options);
+    },
+
     submitExpense: expenseDetail => {
       // const batch = db.batch();
       const expenseRef = db.collection('expenses').doc();
