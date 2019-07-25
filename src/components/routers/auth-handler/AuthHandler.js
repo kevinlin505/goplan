@@ -31,6 +31,16 @@ const Render = ({ auth, component: Component, match, ...props }) => {
       </LoadingWrapper>
     );
   }
+  if (auth === AuthState.LOGOUT) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/',
+          state: {},
+        }}
+      />
+    );
+  }
 
   return auth === AuthState.AUTHENTICATED ? (
     <React.Fragment>

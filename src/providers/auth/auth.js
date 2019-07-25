@@ -37,7 +37,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         authenticationError: null,
-        isAuthenticated: AuthState.UNAUTHENTICATED,
+        isAuthenticated: AuthState.LOGOUT,
         profile: null,
       };
     }
