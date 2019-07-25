@@ -46,8 +46,8 @@ export default function trip() {
       return tripRef.get();
     },
 
-    getUnsplashImage: query => {
-      return firebase.functions().httpsCallable('getUnsplashImage')(query);
+    getUnsplashImage: options => {
+      return firebase.functions().httpsCallable('getUnsplashImage')(options);
     },
 
     joinTrip: (tripId, { name, id, email }) => {

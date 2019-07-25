@@ -123,8 +123,11 @@ export const tripActions = {
     return expense()
       .getExpenseReports(expenseRefs)
       .then(expenseDocs => {
-        const reports = {};
-        expenseDocs.forEach(report => (reports[report.id] = report.data()));
+        const reports = expenseDocs.reduce((reportData, report) => {
+          reportData[report.id] = report.data();
+
+          return reportData;
+        }, {});
 
         dispatch({
           type: types.GET_TRIP_EXPENSE_REPORTS,
@@ -133,9 +136,9 @@ export const tripActions = {
       });
   },
 
-  getUnsplashImage: query => dispatch => {
+  getUnsplashImage: options => dispatch => {
     trip()
-      .getUnsplashImage(query)
+      .getUnsplashImage(options)
       .then(response => {
         console.log(response);
 
