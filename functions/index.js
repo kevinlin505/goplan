@@ -36,9 +36,6 @@ const unsplashHelper = {
   apiUrl: (accessToken, query) => {
     return `https://api.unsplash.com/search/photos?page=1&query=${query}&client_id=${accessToken}&orientation=landscape`;
   },
-  imageUrl: (sourceUrl, sizeParam = '&w=600&h=300') => {
-    return `${sourceUrl}${sizeParam}`;
-  },
 };
 
 async function getImage(url) {
@@ -48,9 +45,8 @@ async function getImage(url) {
       const results = response.data.results;
       if (results.length > 0) {
         const imageSourceUrl = results[0].urls.full;
-        const resizedUrl = unsplashHelper.imageUrl(imageSourceUrl);
         console.log(`data: ${resizedUrl}`);
-        return resizedUrl;
+        return imageSourceUrl;
       }
       return null;
     })
@@ -60,8 +56,8 @@ async function getImage(url) {
     });
 }
 
-exports.getUnsplashImage = functions.https.onCall(query => {
-  const url = unsplashHelper.apiUrl(keys.UNSPLASH.accessToken, query);
+exports.getUnsplashImage = functions.https.onCall(options => {
+  const url = unsplashHelper.apiUrl(keys.UNSPLASH.accessToken, options.query);
   console.log(`url: ${url}`);
   return getImage(url);
 });
