@@ -45,7 +45,7 @@ async function getImage(url) {
       const results = response.data.results;
       if (results.length > 0) {
         const imageSourceUrl = results[0].urls.full;
-        console.log(`data: ${resizedUrl}`);
+        console.log(`data: ${imageSourceUrl}`);
         return imageSourceUrl;
       }
       return null;
