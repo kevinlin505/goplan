@@ -1,6 +1,9 @@
 const functions = require('firebase-functions');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
+const uuidv3 = require('uuid/v3');
+const AWS = require('aws-sdk/global');
+const S3 = require('aws-sdk/clients/s3');
 const keys = require('./constants/Keys');
 
 // Invitation Email
@@ -60,4 +63,36 @@ exports.getUnsplashImage = functions.https.onCall(options => {
   const url = unsplashHelper.apiUrl(keys.UNSPLASH.accessToken, options.query);
   console.log(`url: ${url}`);
   return getImage(url);
+});
+
+// AWS S3
+
+async function uploadToS3(params) {
+  AWS.config.region = keys.AWS.region;
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: keys.AWS.IdentityPoolId,
+  });
+
+  const bucket = new S3();
+  return bucket.putObject(params, (err, data) => {
+    if (err) {
+      console.error(`erorr: ${err}`);
+      return null;
+    }
+    return data; // Promise.resolve(data);
+  });
+}
+
+exports.uploadReceipt = functions.https.onCall(options => {
+  console.log(options);
+
+  const buff = Buffer.from(options.data, 'base64');
+  const params = {
+    Bucket: `${keys.AWS.bucketName}/expense/${options.tripId}`,
+    Key: uuidv3(options.name, keys.AWS.uuid),
+    ContentType: options.type,
+    Body: buff,
+  };
+
+  return uploadToS3(params);
 });
