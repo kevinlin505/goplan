@@ -11,6 +11,7 @@ import { tripActions } from '@providers/trip/trip';
 import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
 import TripCard from '@components/user-page/trip-card/TripCard';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
+import google from '@utils/googleMapsApi';
 import CreateExpense from './CreateExpense/CreateExpense';
 
 const mapStateToProps = (state, props) => {
@@ -56,8 +57,10 @@ const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
           ) : null}
         </LeftPanel>
         <MainPanel>
-          {trip.selectedTrip && trip.selectedTrip.id === match.params.tripId ? (
-            <TripMap tripDetail={trip.selectedTrip} />
+          {trip.selectedTrip &&
+          google &&
+          trip.selectedTrip.id === match.params.tripId ? (
+            <TripMap google={google} tripDetail={trip.selectedTrip} />
           ) : null}
         </MainPanel>
         <RightPanel>

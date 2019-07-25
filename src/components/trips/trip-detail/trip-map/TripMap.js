@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Keys from '@constants/Keys';
-import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
+// import Keys from '@constants/Keys';
+import { Map, InfoWindow, Marker } from 'google-maps-react';
+// import google from '@hooks/googleMapsApi';
 
 const TripMap = ({ tripDetail, google }) => {
   const [showingInfoWindow, setShowingInfoWindow] = useState(false);
@@ -51,6 +52,7 @@ const TripMap = ({ tripDetail, google }) => {
     setMapBounds(bounds);
     setMarkerList(list);
   }, []);
+  debugger;
 
   return (
     <div style={{ width: '100%', height: '550px', position: 'relative' }}>
@@ -82,6 +84,4 @@ TripMap.propTypes = {
   google: PropTypes.object.isRequired,
 };
 
-export default GoogleApiWrapper({
-  apiKey: Keys.FIREBASE.apiKey,
-})(TripMap);
+export default TripMap;

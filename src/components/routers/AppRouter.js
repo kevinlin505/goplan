@@ -11,6 +11,7 @@ import {
 import SignIn from '@components/auth/SignIn';
 import UserPage from '@components/user-page/UserPage';
 import TripDetail from '@components/trips/trip-detail/TripDetail';
+import google from '@hooks/googleMapsApi';
 
 const mapStateToProps = state => {
   return {
