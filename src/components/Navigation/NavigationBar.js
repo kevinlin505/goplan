@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -29,13 +30,16 @@ const NavigationBar = ({ actions, profile }) => {
     <Container>
       <NavBar>
         <Brand>
-          <Logo />
+          <LogoLink to="/home">
+            <Logo />
+          </LogoLink>
         </Brand>
         <RightNavBarItems>
           <NewTripButton onClick={actions.trip.toggleNewTripModal}>
             <NewTripIcon />
             New Trip
           </NewTripButton>
+          <HomeLink to="/home">Home</HomeLink>
           <SignOutButton onClick={actions.auth.signOut}>
             <ProfileAvatar>
               <Avatar src={profile.profile_url} />
@@ -72,6 +76,10 @@ const NavBar = styled.div`
 const Brand = styled.div`
   width: 120px;
   color: ${({ theme }) => theme.colors.primary};
+`;
+
+const LogoLink = styled(Link)`
+  color: inherit;
 `;
 
 const RightNavBarItems = styled.div`
@@ -125,6 +133,33 @@ const SignOutButton = styled(Button)`
     &:focus,
     &:hover {
       color: ${({ theme }) => theme.colors.text};
+    }
+  }
+`;
+
+const HomeLink = styled(Link)`
+  && {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.02857em;
+    text-transform: uppercase;
+    line-height: 1.75;
+    padding: 6px 15px;
+    border-radius: 4px;
+    color: ${({ theme }) => theme.colors.textLight};
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+      box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+      border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+
+    &:active,
+    &:focus,
+    &:hover {
+      color: ${({ theme }) => theme.colors.text};
+      background-color: rgba(0, 0, 0, 0.08);
     }
   }
 `;

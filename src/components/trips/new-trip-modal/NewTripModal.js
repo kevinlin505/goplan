@@ -11,9 +11,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import FaceIcon from '@material-ui/icons/Face';
 import { tripActions } from '@providers/trip/trip';
 import validateEmail from '@utils/validateEmail';
-import useDestinationsHandler from '@hooks/useDestinationsHandler';
 import dockPng from '@assets/images/dock.jpg';
 import Overlay from '@styles/Overlay';
+import googleMapsApi from '@utils/googleMapsApi';
 
 const mapStateToProps = state => {
   return {
@@ -35,6 +35,7 @@ const NewTripModal = ({ actions, auth }) => {
   const [invite, setInvite] = useState('');
   const [inviteList, setInviteList] = useState(null);
   const [destinationList, setDestinationList] = useState(null);
+  const [placeServices, setPlaceServices] = useState(null);
   const [formError, setFormError] = useState('');
   const [form, setValues] = useState({
     end_date: '',
@@ -46,12 +47,6 @@ const NewTripModal = ({ actions, auth }) => {
   });
   const destinationInputRef = useRef(null);
   const mapRef = useRef(null);
-
-  const { placeServices } = useDestinationsHandler({
-    auth,
-    destinationInputRef: destinationInputRef.current,
-    mapRef: mapRef.current,
-  });
 
   const updateField = event => {
     setValues({
@@ -135,6 +130,17 @@ const NewTripModal = ({ actions, auth }) => {
         setFormError(error.message);
       });
   };
+
+  useEffect(() => {
+    const google = googleMapsApi();
+    const googlePlaceService = new google.maps.places.PlacesService(
+      mapRef.current,
+    );
+    const googleAutoComplete = new google.maps.places.Autocomplete(
+      destinationInputRef.current,
+    );
+    setPlaceServices(googlePlaceService);
+  }, []);
 
   useEffect(() => {
     const handleDelete = index => {
