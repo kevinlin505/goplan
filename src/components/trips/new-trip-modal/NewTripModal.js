@@ -133,12 +133,13 @@ const NewTripModal = ({ actions, auth }) => {
 
   useEffect(() => {
     const google = googleApiFunc();
-    setPlaceServices({
-      placeServices: new google.maps.places.PlacesService(mapRef.current),
-      autoComplete: new google.maps.places.Autocomplete(
-        destinationInputRef.current,
-      ),
-    });
+    const googlePlaceService = new google.maps.places.PlacesService(
+      mapRef.current,
+    );
+    const googleAutoComplete = new google.maps.places.Autocomplete(
+      destinationInputRef.current,
+    );
+    setPlaceServices(googlePlaceService);
   }, []);
 
   useEffect(() => {
