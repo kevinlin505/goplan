@@ -8,11 +8,18 @@ const TripMap = ({ tripDetail, google }) => {
   const [activeMarker, setActiveMarker] = useState(null);
   const [markerList, setMarkerList] = useState(null);
   const [mapBounds, setMapBounds] = useState(null);
-
+  const centerLat =
+    tripDetail.destinations.length > 0
+      ? tripDetail.destinations[0].geo.latitude
+      : 0;
+  const centerLng =
+    tripDetail.destinations.length > 0
+      ? tripDetail.destinations[0].geo.longitude
+      : 0;
   const defaultProps = {
     center: {
-      lat: tripDetail.destinations[0].geo.latitude,
-      lng: tripDetail.destinations[0].geo.longitude,
+      lat: centerLat,
+      lng: centerLng,
     },
     zoom: 10,
   };

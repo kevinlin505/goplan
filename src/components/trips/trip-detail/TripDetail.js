@@ -11,7 +11,7 @@ import { tripActions } from '@providers/trip/trip';
 import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
 import TripCard from '@components/user-page/trip-card/TripCard';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
-import googleApiFunc from '@utils/googleMapsApi';
+import googleMapsApi from '@utils/googleMapsApi';
 import CreateExpense from './CreateExpense/CreateExpense';
 
 const mapStateToProps = (state, props) => {
@@ -34,7 +34,10 @@ const mapDispatchToProps = dispatch => {
 
 const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
-  const google = googleApiFunc();
+  const google = googleMapsApi();
+  const showTripCard =
+    trip.selectedTrip && trip.selectedTrip.id === match.params.tripId;
+  const showTripMap = showTripCard && google;
   const toggleCreateExpenseModal = () => {
     setExpenseModal(!isExpenseModal);
   };
@@ -52,14 +55,10 @@ const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
     <Container>
       <Contents>
         <LeftPanel>
-          {trip.selectedTrip && trip.selectedTrip.id === match.params.tripId ? (
-            <TripCard tripDetail={trip.selectedTrip} />
-          ) : null}
+          {showTripCard ? <TripCard tripDetail={trip.selectedTrip} /> : null}
         </LeftPanel>
         <MainPanel>
-          {trip.selectedTrip &&
-          google &&
-          trip.selectedTrip.id === match.params.tripId ? (
+          {showTripMap ? (
             <TripMap google={google} tripDetail={trip.selectedTrip} />
           ) : null}
         </MainPanel>

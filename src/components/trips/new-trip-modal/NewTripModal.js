@@ -13,7 +13,7 @@ import { tripActions } from '@providers/trip/trip';
 import validateEmail from '@utils/validateEmail';
 import dockPng from '@assets/images/dock.jpg';
 import Overlay from '@styles/Overlay';
-import googleApiFunc from '@utils/googleMapsApi';
+import googleMapsApi from '@utils/googleMapsApi';
 
 const mapStateToProps = state => {
   return {
@@ -132,7 +132,7 @@ const NewTripModal = ({ actions, auth }) => {
   };
 
   useEffect(() => {
-    const google = googleApiFunc();
+    const google = googleMapsApi();
     const googlePlaceService = new google.maps.places.PlacesService(
       mapRef.current,
     );

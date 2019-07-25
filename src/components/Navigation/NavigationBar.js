@@ -144,7 +144,6 @@ const HomeLink = styled(Link)`
     height: 30px;
     font-size: 14px;
     font-weight: 500;
-    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
     text-decoration: none;
     letter-spacing: 0.02857em;
     text-transform: uppercase;
