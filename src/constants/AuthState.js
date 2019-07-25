@@ -1,8 +1,8 @@
 const AuthState = {
   AUTHENTICATED: 1,
-  LOGOUT: 2,
-  UNAUTHENTICATED: 0,
-  UNKNOWN: -1,
+  LOGOUT: 0,
+  UNAUTHENTICATED: -1,
+  UNKNOWN: -2,
 };
 
 export default AuthState;
