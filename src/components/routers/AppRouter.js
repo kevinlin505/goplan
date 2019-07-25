@@ -11,6 +11,7 @@ import {
 import SignIn from '@components/auth/SignIn';
 import UserPage from '@components/user-page/UserPage';
 import TripDetail from '@components/trips/trip-detail/TripDetail';
+import googleMapsApi from '@utils/googleMapsApi';
 
 const mapStateToProps = state => {
   return {
@@ -28,6 +29,7 @@ const mapDispatchToProps = dispatch => {
 
 const AppRouter = ({ actions, auth }) => {
   useEffect(() => {
+    googleMapsApi();
     actions.auth.checkAuth();
   }, []);
 
