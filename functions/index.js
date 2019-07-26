@@ -66,27 +66,22 @@ exports.getUnsplashImage = functions.https.onCall(options => {
 });
 
 // AWS S3
+const getBase64Helper = dataString => {
+  const matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+  var response = {};
 
-async function uploadToS3(params) {
-  AWS.config.region = keys.AWS.region;
-  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: keys.AWS.IdentityPoolId,
-  });
+  if (matches.length !== 3) {
+    return new Error('Invalid input string');
+  }
 
-  const bucket = new S3();
-  return bucket.putObject(params, (err, data) => {
-    if (err) {
-      console.error(`erorr: ${err}`);
-      return null;
-    }
-    return data; // Promise.resolve(data);
-  });
-}
+  response.type = matches[1];
+  response.data = new Buffer(matches[2], 'base64');
 
-exports.uploadReceipt = functions.https.onCall(options => {
-  console.log(options);
+  return response;
+};
 
-  const buff = Buffer.from(options.data, 'base64');
+async function uploadToS3(options) {
+  const buff = getBase64Helper(options.data).data;
   const params = {
     Bucket: `${keys.AWS.bucketName}/expense/${options.tripId}`,
     Key: uuidv3(options.name, keys.AWS.uuid),
@@ -94,5 +89,32 @@ exports.uploadReceipt = functions.https.onCall(options => {
     Body: buff,
   };
 
-  return uploadToS3(params);
+  AWS.config.region = keys.AWS.region;
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: keys.AWS.IdentityPoolId,
+  });
+
+  const bucket = new S3();
+  const promise = new Promise((resolve, reject) => {
+    bucket.putObject(params, (err, data) => {
+      if (err) {
+        console.error(`erorr: ${err}`);
+        reject(err);
+      }
+      console.log(data);
+      resolve(data);
+    });
+  });
+  return promise.then(res => {
+    if (res) {
+      const url = `https://${keys.AWS.bucketName}.s3.amazonaws.com/expense/${options.tripId}/${params.Key}`;
+      console.log(url);
+      return url;
+    }
+    return null;
+  });
+}
+
+exports.uploadReceipt = functions.https.onCall(options => {
+  return uploadToS3(options);
 });
