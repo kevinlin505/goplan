@@ -1,7 +1,3 @@
-// import uuidv3 from 'uuid/v3';
-// import AWS from 'aws-sdk/global';
-// import S3 from 'aws-sdk/clients/s3';
-// import Keys from '@constants/Keys';
 import expense from '@data/expense';
 
 export const types = {
