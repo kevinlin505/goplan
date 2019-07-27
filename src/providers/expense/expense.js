@@ -121,7 +121,7 @@ export const expenseActions = {
 
   submitExpense: (form, files) => (dispatch, getState) => {
     const {
-      auth: { userId },
+      auth: { profile },
       trip: { selectedTrip },
     } = getState();
 
@@ -129,7 +129,7 @@ export const expenseActions = {
       ...form,
       date: new Date(form.date),
       receipts: [],
-      payerId: userId,
+      payer: { userId: profile.id, userName: profile.name },
       tripId: selectedTrip.id,
     };
 

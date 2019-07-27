@@ -37,7 +37,7 @@ export default function trip() {
           transaction.update(tripRef, tripDetail);
 
           expenseDetail.payees.forEach(payee => {
-            const userRef = db.collection('users').doc(payee);
+            const userRef = db.collection('users').doc(payee.userId);
             transaction.update(userRef, {
               expenses: firebase.firestore.FieldValue.arrayUnion(expenseRef),
             });

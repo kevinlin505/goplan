@@ -23,19 +23,19 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
     const spiltPayment = expenseSum / Object.keys(payments).length;
 
     Object.keys(payments).forEach(key => {
-      const payerNetAmount = payments[key] - spiltPayment;
+      const payerNetAmount = payments[key][1] - spiltPayment;
 
       payerAmounts.push(
-        <AttendeePaymentListItem
-          key={`total-payment-paid-${key}`}
-        >{`${key} paid: ${convertNumberToCurrency(
-          payments[key],
+        <AttendeePaymentListItem key={`total-payment-paid-${key}`}>{`${
+          payments[key][0]
+        } paid: ${convertNumberToCurrency(
+          payments[key][1],
         )}`}</AttendeePaymentListItem>,
       );
 
       netPayerAmounts.push(
         <AttendeePaymentListItem key={`net-payment-${key}`}>
-          {`${key} ${
+          {`${payments[key][0]} ${
             payerNetAmount > 0 ? 'receives' : 'owes'
           }: ${convertNumberToCurrency(Math.abs(payerNetAmount))}`}
         </AttendeePaymentListItem>,
@@ -78,17 +78,17 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
           description,
           merchant,
           payees,
-          payerId,
+          payer,
           receipts,
         } = expense.tripExpenses[expenseId];
 
         if (Object.keys(payments).length === 0) {
           payees.forEach(payee => {
-            payments[payee] = 0;
+            payments[payee.userId] = [payee.userName, 0];
           });
         }
 
-        payments[payerId] += parseFloat(amount);
+        payments[payer.userId][1] += parseFloat(amount);
 
         list.push(
           <DetailExpenseContent key={`trip-expense-detail-${idx}`}>
@@ -107,7 +107,7 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
                 Description: {description}
               </DetailExpenseContentListItem>
               <DetailExpenseContentListItem>
-                Who paid: {payerId}
+                Who paid: {payer.userName}
               </DetailExpenseContentListItem>
               <DetailExpenseContentListItem>
                 <a href={receipts[0] ? receipts[0].url : ''} target="_blank">
