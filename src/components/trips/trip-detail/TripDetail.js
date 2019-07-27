@@ -12,6 +12,7 @@ import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
 import TripCard from '@components/user-page/trip-card/TripCard';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
 import googleMapsApi from '@utils/googleMapsApi';
+import TripExpense from '@components/trips/trip-detail/trip-expense/TripExpense';
 import CreateExpense from './CreateExpense/CreateExpense';
 
 const mapStateToProps = (state, props) => {
@@ -34,6 +35,7 @@ const mapDispatchToProps = dispatch => {
 
 const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
+  const [expenseList, setExpenseList] = useState(null);
   const google = googleMapsApi();
   const showTripCard =
     trip.selectedTrip && trip.selectedTrip.id === match.params.tripId;
@@ -50,19 +52,19 @@ const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (trip.selectedTrip) {
+      actions.expense.getTripExpenses(trip.selectedTrip.expenses);
+      setExpenseList(trip.selectedTrip.expenses.map(ele => ele.id));
+    }
+  }, [trip.selectedTrip]);
+
   // Need to clean up this part, we should not get into this component if selectedTrip is null.
   return (
     <Container>
       <Contents>
         <LeftPanel>
           {showTripCard ? <TripCard tripDetail={trip.selectedTrip} /> : null}
-        </LeftPanel>
-        <MainPanel>
-          {showTripMap ? (
-            <TripMap google={google} tripDetail={trip.selectedTrip} />
-          ) : null}
-        </MainPanel>
-        <RightPanel>
           <Button
             color="primary"
             onClick={toggleCreateExpenseModal}
@@ -70,6 +72,19 @@ const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
           >
             New Expense
           </Button>
+        </LeftPanel>
+        <MainPanel>
+          {showTripMap ? (
+            <TripMap google={google} tripDetail={trip.selectedTrip} />
+          ) : null}
+        </MainPanel>
+        <RightPanel>
+          {expenseList && (
+            <TripExpense
+              expenseList={expenseList}
+              totalExpense={trip.selectedTrip.costs}
+            />
+          )}
         </RightPanel>
       </Contents>
       {isExpenseModal && (

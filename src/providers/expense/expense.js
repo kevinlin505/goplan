@@ -1,6 +1,7 @@
 import expense from '@data/expense';
 
 export const types = {
+  GET_TRIP_EXPENSE_REPORTS: 'EXPENSE/GET_TRIP_EXPENSE_REPORTS',
   GET_USER_EXPENSE_REPORTS: 'EXPENSE/GET_USER_EXPENSE_REPORTS',
   SUBMIT_EXPENSE: 'EXPENSE/SUBMIT_EXPENSE',
   SUMMARIZE_EXPENSE_REPORT: 'EXPENSE/SUMMARIZE_EXPENSE_REPORT',
@@ -12,10 +13,18 @@ const initialState = {
   expenseCategories: [],
   expenseTotal: 0,
   expenseTrips: [],
+  tripExpenses: {},
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case types.GET_TRIP_EXPENSE_REPORTS: {
+      return {
+        ...state,
+        tripExpenses: action.reports,
+      };
+    }
+
     case types.GET_USER_EXPENSE_REPORTS: {
       return {
         ...state,
@@ -60,6 +69,20 @@ export const expenseActions = {
       })
       .catch(err => {
         console.log(err);
+      });
+  },
+
+  getTripExpenses: expenseRefs => dispatch => {
+    return expense()
+      .getUserCategoryExpenseReports(expenseRefs)
+      .then(expenseDocs => {
+        const reports = {};
+        expenseDocs.forEach(report => (reports[report.id] = report.data()));
+
+        dispatch({
+          type: types.GET_TRIP_EXPENSE_REPORTS,
+          reports,
+        });
       });
   },
 
