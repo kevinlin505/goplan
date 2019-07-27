@@ -40,7 +40,10 @@ const CreateExpense = ({ actions, attendees, toggleCreateExpenseModal }) => {
     date: '',
     merchant: '',
     amount: '',
-    payees: attendees.map(attendee => attendee.id),
+    payees: attendees.map(attendee => ({
+      userId: attendee.id,
+      userName: attendee.name,
+    })),
     description: '',
   });
 
@@ -150,9 +153,9 @@ const CreateExpense = ({ actions, attendees, toggleCreateExpenseModal }) => {
                 <div>
                   {selected.map(value => {
                     const { name } = attendees.filter(
-                      attendee => attendee.id === value,
+                      attendee => attendee.id === value.userId,
                     )[0];
-                    return <Chip key={value} label={name} />;
+                    return <Chip key={value.userId} label={name} />;
                   })}
                 </div>
               )}
