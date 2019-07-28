@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import convertNumberToCurrency from '@utils/convertNumberToCurrency';
+import { Collapse, List, ListItem, ListSubheader } from '@material-ui/core';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 const mapStateToProps = state => {
   return {
@@ -13,9 +15,24 @@ const mapStateToProps = state => {
 const TripExpense = ({ expense, expenseList, totalExpense }) => {
   const [summaryExpense, setSummaryExpense] = useState([]);
   const [expenseSum, setExpenseSum] = useState(0);
-  const [detailExpenseList, setDetailExpenseList] = useState([]);
+  const [detailExpenseList, setDetailExpenseList] = useState({});
   const [attendeePayments, setAttendeePayments] = useState([]);
   const [attendeePaymentsNet, setAttendeePaymentsNet] = useState([]);
+  const [isExpenseExpanded, setExpenseExpanded] = useState(
+    expenseList.reduce((obj, expenseId) => {
+      obj[expenseId] = false;
+
+      return obj;
+    }, {}),
+  );
+
+  function toggleExpenseDetail(expenseId) {
+    return () => {
+      const copy = isExpenseExpanded;
+      copy[expenseId] = !copy[expenseId];
+      setExpenseExpanded(copy);
+    };
+  }
 
   function calculatePayments(payments) {
     const payerAmounts = [];
@@ -67,9 +84,9 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
   }, [totalExpense]);
 
   useEffect(() => {
-    const list = [];
+    const list = {};
     const payments = {};
-    expenseList.forEach((expenseId, idx) => {
+    expenseList.forEach(expenseId => {
       if (expense.tripExpenses[expenseId]) {
         const {
           date,
@@ -90,32 +107,33 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
 
         payments[payer.userId][1] += parseFloat(amount);
 
-        list.push(
-          <DetailExpenseContent key={`trip-expense-detail-${idx}`}>
-            Expense #{idx + 1}
-            <DetailExpenseContentList>
-              <DetailExpenseContentListItem>
-                Date: {date.toDate().toLocaleDateString()}
-              </DetailExpenseContentListItem>
-              <DetailExpenseContentListItem>
-                Amount: {convertNumberToCurrency(parseFloat(amount))}
-              </DetailExpenseContentListItem>
-              <DetailExpenseContentListItem>
-                Merchant: {merchant}
-              </DetailExpenseContentListItem>
-              <DetailExpenseContentListItem>
-                Description: {description}
-              </DetailExpenseContentListItem>
-              <DetailExpenseContentListItem>
-                Who paid: {payer.userName}
-              </DetailExpenseContentListItem>
-              <DetailExpenseContentListItem>
-                <a href={receipts[0] ? receipts[0].url : ''} target="_blank">
-                  Receipt
-                </a>
-              </DetailExpenseContentListItem>
-            </DetailExpenseContentList>
-          </DetailExpenseContent>,
+        list[expenseId] = (
+          // <DetailExpenseContent
+          //   key={`trip-expense-detail-${idx}`}
+          //   onClick={toggleExpenseDetail(expenseId)}
+          // >
+          //   Expense #{idx + 1}
+          //   <Collapse
+          //     in={isExpenseExpanded[expenseId]}
+          //     timeout="auto"
+          //     unmountOnExit
+          //   >
+          <List component="div" disablePadding>
+            <ListItem>Date: {date.toDate().toLocaleDateString()}</ListItem>
+            <ListItem>
+              Amount: {convertNumberToCurrency(parseFloat(amount))}
+            </ListItem>
+            <ListItem>Merchant: {merchant}</ListItem>
+            <ListItem>Description: {description}</ListItem>
+            <ListItem>Who paid: {payer.userName}</ListItem>
+            <ListItem>
+              <a href={receipts[0] ? receipts[0].url : ''} target="_blank">
+                Receipt
+              </a>
+            </ListItem>
+          </List>
+          //   </Collapse>
+          // </DetailExpenseContent>,
         );
       }
     });
@@ -123,7 +141,29 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
     calculatePayments(payments);
 
     setDetailExpenseList(list);
-  }, [expense.tripExpenses]);
+  }, [Object.keys(expense.tripExpenses).length]);
+
+  const renderExpenseList = expenseList.map((expenseId, idx) => {
+    if (!detailExpenseList[expenseId]) {
+      return null;
+    }
+
+    return (
+      <DetailExpenseContent
+        key={`trip-expense-detail-${idx}`}
+        onClick={toggleExpenseDetail(expenseId)}
+      >
+        Expense #{idx + 1}
+        <Collapse
+          in={isExpenseExpanded[expenseId]}
+          timeout="auto"
+          unmountOnExit
+        >
+          {detailExpenseList[expenseId]}
+        </Collapse>
+      </DetailExpenseContent>
+    );
+  });
 
   return (
     <Container>
@@ -139,7 +179,7 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
           {attendeePaymentsNet}
         </AttendeePaymentList>
       </SummaryContent>
-      {detailExpenseList}
+      {renderExpenseList}
     </Container>
   );
 };
@@ -168,6 +208,7 @@ const ExpenseSummary = styled.ul`
   margin: 0;
   padding: 5px;
   font-size: 14px;
+  text-transform: capitalize;
 `;
 
 const ExpenseListItem = styled.li`
