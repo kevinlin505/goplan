@@ -15,7 +15,6 @@ import CardContainer from '@styles/card/CardContainer';
 
 const mapStateToProps = state => {
   return {
-    expense: state.expense,
     trips: state.trip.trips,
     userExpenses: state.user.userExpenses,
   };
@@ -106,7 +105,6 @@ export const UserExpense = ({
 };
 
 UserExpense.propTypes = {
-  expense: PropTypes.object.isRequired,
   trips: PropTypes.object.isRequired,
   userExpenses: PropTypes.object.isRequired,
 };
