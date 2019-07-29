@@ -58,6 +58,7 @@ export const tripActions = {
       ...formDetail,
       attendees: [],
       costs: {},
+      expenses: [],
       end_date: new Date(formDetail.end_date),
       start_date: new Date(formDetail.start_date),
     };

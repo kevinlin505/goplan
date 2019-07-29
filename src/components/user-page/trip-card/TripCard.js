@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import convertNumberToCurrency from '@utils/convertNumberToCurrency';
 import CardContainer from '@styles/card/CardContainer';
 
-const TripCard = ({ tripDetail }) => {
+const TripCard = ({ tripDetail, homePage }) => {
   const [attendeeList, setAttendeeList] = useState(null);
   const startDate = new Date(tripDetail.start_date.toDate());
   const endDate = new Date(tripDetail.end_date.toDate());
@@ -38,10 +38,12 @@ const TripCard = ({ tripDetail }) => {
                 {`${endDate.toLocaleDateString()}`}
               </TravelDate>
             </DesinationDetail>
-            <DesinationDetail>
+            <AttendeeDetail>
               <AttendeeList>{attendeeList}</AttendeeList>
-              <div>{convertNumberToCurrency(totalCost)}</div>
-            </DesinationDetail>
+              {homePage ? (
+                <div>{convertNumberToCurrency(totalCost)}</div>
+              ) : null}
+            </AttendeeDetail>
           </DetailWrapper>
         </TripCardDetail>
       </TripCardGradient>
@@ -95,6 +97,12 @@ const DesinationDetail = styled.div`
   padding: 20px;
 `;
 
+const AttendeeDetail = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+`;
+
 const LocationName = styled.div`
   width: 100%;
   font-size: 30px;
@@ -104,10 +112,12 @@ const LocationName = styled.div`
   text-overflow: ellipsis;
 `;
 
-const TravelDate = styled.div``;
+const TravelDate = styled.div`
+  font-size: 16px;
+`;
 
 const AttendeeList = styled.div`
-  width: calc(100% - 80px);
+  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
