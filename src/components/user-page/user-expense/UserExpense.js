@@ -14,7 +14,6 @@ import convertNumberToCurrency from '@utils/convertNumberToCurrency';
 import CardContainer from '@styles/card/CardContainer';
 
 const mapStateToProps = state => {
-  debugger;
   return {
     expense: state.expense,
     trips: state.trip.trips,
@@ -35,7 +34,7 @@ export const UserExpense = ({
   const toggleTripList = () => {
     setTripExpand(!isTripExpand);
   };
-  debugger;
+
   const categoryList = Object.keys(expenseCategories).map((category, index) => {
     const cost = expenseCategories[category];
 

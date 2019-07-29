@@ -196,7 +196,7 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
 TripExpense.propTypes = {
   expenseList: PropTypes.array.isRequired,
   totalExpense: PropTypes.object.isRequired,
-  tripExpense: PropTypes.object,
+  tripExpenses: PropTypes.object,
 };
 
 const Container = styled.div`
