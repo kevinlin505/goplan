@@ -37,7 +37,7 @@ const UserPage = ({ actions, auth, profile, trip }) => {
   const tripIds = Object.keys(trip.trips);
 
   useEffect(() => {
-    actions.expense.getUserExpenseReports();
+    actions.user.getUserExpenseReports();
   }, []);
 
   useEffect(() => {
@@ -51,7 +51,13 @@ const UserPage = ({ actions, auth, profile, trip }) => {
     const trips = tripIds.map((tripId, index) => {
       const tripDetail = trip.trips[tripId];
 
-      return <TripCard key={`${tripId}-${index}`} tripDetail={tripDetail} />;
+      return (
+        <TripCard
+          key={`${tripId}-${index}`}
+          homePage={true}
+          tripDetail={tripDetail}
+        />
+      );
     });
 
     setTripList(trips);
