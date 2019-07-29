@@ -1,9 +1,11 @@
 import auth from '@data/auth';
 import trip from '@data/trip';
+import expense from '@data/expense';
 
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
   GET_DESTINATION_PHOTO: 'TRIP/GET_DESTINATION_PHOTO',
+  GET_TRIP_EXPENSE_REPORTS: 'EXPENSE/GET_TRIP_EXPENSE_REPORTS',
   JOIN_TRIP: 'TRIP/JOIN_TRIP',
   RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
@@ -15,6 +17,7 @@ const initialState = {
   selectedTrip: null,
   trips: {},
   isNewTripModalOpen: false,
+  tripExpenses: {},
 };
 
 export default function reducer(state = initialState, action) {
@@ -22,6 +25,13 @@ export default function reducer(state = initialState, action) {
     case types.CREATE_TRIP: {
       return {
         ...state,
+      };
+    }
+
+    case types.GET_TRIP_EXPENSE_REPORTS: {
+      return {
+        ...state,
+        tripExpenses: action.reports,
       };
     }
 
@@ -58,6 +68,7 @@ export const tripActions = {
       ...formDetail,
       attendees: [],
       costs: {},
+      expenses: [],
       end_date: new Date(formDetail.end_date),
       start_date: new Date(formDetail.start_date),
     };
@@ -104,6 +115,20 @@ export const tripActions = {
         dispatch({
           type: types.SET_SELECTED_TRIP,
           selectedTrip: tripDetails.data(),
+        });
+      });
+  },
+
+  getTripExpenses: expenseRefs => dispatch => {
+    return expense()
+      .getExpenseReports(expenseRefs)
+      .then(expenseDocs => {
+        const reports = {};
+        expenseDocs.forEach(report => (reports[report.id] = report.data()));
+
+        dispatch({
+          type: types.GET_TRIP_EXPENSE_REPORTS,
+          reports,
         });
       });
   },

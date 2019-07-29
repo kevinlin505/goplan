@@ -1,37 +1,14 @@
 import expense from '@data/expense';
 
 export const types = {
-  GET_USER_EXPENSE_REPORTS: 'EXPENSE/GET_USER_EXPENSE_REPORTS',
   SUBMIT_EXPENSE: 'EXPENSE/SUBMIT_EXPENSE',
-  SUMMARIZE_EXPENSE_REPORT: 'EXPENSE/SUMMARIZE_EXPENSE_REPORT',
   UPLOAD_RECEIPT: 'EXPENSE/UPLOAD_RECEIPT',
 };
 
-const initialState = {
-  expenses: [],
-  expenseCategories: [],
-  expenseTotal: 0,
-  expenseTrips: [],
-};
+const initialState = {};
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case types.GET_USER_EXPENSE_REPORTS: {
-      return {
-        ...state,
-        expenses: action.reports,
-      };
-    }
-
-    case types.SUMMARIZE_EXPENSE_REPORT: {
-      return {
-        ...state,
-        expenseCategories: action.expenseCategories,
-        expenseTotal: action.expenseTotal,
-        expenseTrips: action.expenseTrips,
-      };
-    }
-
     case types.UPLOAD_RECEIPT: {
       return {
         ...state,
@@ -43,58 +20,9 @@ export default function reducer(state = initialState, action) {
 }
 
 export const expenseActions = {
-  getUserExpenseReports: () => (dispatch, getState) => {
-    const { profile } = getState().auth;
-
-    return expense()
-      .getUserCategoryExpenseReports(profile.expenses)
-      .then(reportDocs => {
-        const reports = reportDocs.map(doc => doc.data());
-
-        dispatch({
-          type: types.GET_USER_EXPENSE_REPORTS,
-          reports,
-        });
-
-        return dispatch(expenseActions.summarizeAllExpenses(reports));
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  },
-
-  summarizeAllExpenses: reports => dispatch => {
-    const { expenseCategories, expenseTotal, expenseTrips } = reports.reduce(
-      (expenseSummary, report) => {
-        const cost = report.amount / report.payees.length;
-        const categoryCost =
-          expenseSummary.expenseCategories[report.category] || 0;
-        const tripCost = expenseSummary.expenseTrips[report.tripId] || 0;
-
-        expenseSummary.expenseCategories[report.category] = categoryCost + cost;
-        expenseSummary.expenseTrips[report.tripId] = tripCost + cost;
-        expenseSummary.expenseTotal += cost;
-
-        return expenseSummary;
-      },
-      {
-        expenseCategories: {},
-        expenseTotal: 0,
-        expenseTrips: {},
-      },
-    );
-
-    return dispatch({
-      type: types.SUMMARIZE_EXPENSE_REPORT,
-      expenseCategories,
-      expenseTotal,
-      expenseTrips,
-    });
-  },
-
   submitExpense: (form, files) => (dispatch, getState) => {
     const {
-      auth: { userId },
+      auth: { profile },
       trip: { selectedTrip },
     } = getState();
 
@@ -102,7 +30,7 @@ export const expenseActions = {
       ...form,
       date: new Date(form.date),
       receipts: [],
-      payerId: userId,
+      payer: { userId: profile.id, userName: profile.name },
       tripId: selectedTrip.id,
     };
 
