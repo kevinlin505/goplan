@@ -87,19 +87,17 @@ const RightNavBarItems = styled.div`
 `;
 
 const NewTripButton = styled(Button)`
-  && {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 15px;
-    font-size: 14px;
-    color: ${({ theme }) => theme.colors.primaryDark};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 15px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.primary};
 
-    &:active,
-    &:focus,
-    &:hover {
-      color: ${({ theme }) => theme.colors.primaryLight};
-    }
+  &:active,
+  &:focus,
+  &:hover {
+    color: ${({ theme }) => theme.colors.primaryDark};
   }
 `;
 
@@ -121,46 +119,42 @@ const Avatar = styled.img`
 `;
 
 const SignOutButton = styled(Button)`
-  && {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 15px;
-    font-size: 14px;
-    color: ${({ theme }) => theme.colors.textLight};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 15px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.textLight};
 
-    &:active,
-    &:focus,
-    &:hover {
-      color: ${({ theme }) => theme.colors.text};
-    }
+  &:active,
+  &:focus,
+  &:hover {
+    color: ${({ theme }) => theme.colors.text};
   }
 `;
 
 const HomeLink = styled(Link)`
-  && {
-    display: flex;
-    align-items: center;
-    height: 30px;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    letter-spacing: 0.02857em;
-    text-transform: uppercase;
-    line-height: 1.75;
-    padding: 6px 15px;
-    border-radius: 4px;
-    color: ${({ theme }) => theme.colors.textLight};
-    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-      box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-      border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  line-height: 1.75;
+  padding: 6px 15px;
+  border-radius: 4px;
+  color: ${({ theme }) => theme.colors.textLight};
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 
-    &:active,
-    &:focus,
-    &:hover {
-      color: ${({ theme }) => theme.colors.text};
-      background-color: rgba(0, 0, 0, 0.08);
-    }
+  &:active,
+  &:focus,
+  &:hover {
+    color: ${({ theme }) => theme.colors.text};
+    background-color: rgba(0, 0, 0, 0.08);
   }
 `;
 

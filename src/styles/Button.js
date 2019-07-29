@@ -3,7 +3,7 @@ import { Button } from '@material-ui/core';
 import ButtonStyles from '@constants/ButtonStyles';
 
 export default styled(Button)`
-  ${({ buttonstyle, color, theme }) => {
+  ${({ buttonstyle, theme }) => {
     switch (buttonstyle) {
       case ButtonStyles.BORDERED: {
         return css`

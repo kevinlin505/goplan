@@ -17,7 +17,9 @@ export const types = {
 const initialState = {
   form: {
     attendees: [],
+    costs: {},
     destinations: [],
+    expenses: [],
     name: '',
     notes: '',
   },
@@ -76,15 +78,22 @@ export default function reducer(state = initialState, action) {
 }
 
 export const tripActions = {
-  createTrip: formDetail => dispatch => {
-    const inviteList = formDetail.attendees;
+  createTrip: () => (dispatch, getState) => {
+    const {
+      auth: { profile },
+      trip: { form },
+    } = getState();
+
+    const inviteList = form.attendees;
+    const organizer = {
+      email: profile.email,
+      id: profile.id,
+      name: profile.name,
+    };
     const tripDetail = {
-      ...formDetail,
-      attendees: [],
-      costs: {},
-      expenses: [],
-      end_date: new Date(formDetail.end_date),
-      start_date: new Date(formDetail.start_date),
+      ...form,
+      attendees: [organizer],
+      organizer,
     };
 
     return trip()
@@ -96,9 +105,11 @@ export const tripActions = {
           }),
         );
 
-        return dispatch({
+        dispatch({
           type: types.CREATE_TRIP,
         });
+
+        return dispatch(tripActions.toggleNewTripModal());
       })
       .catch(err => {
         console.log(err);
@@ -151,14 +162,17 @@ export const tripActions = {
   },
 
   getUnsplashImage: options => dispatch => {
-    trip()
+    return trip()
       .getUnsplashImage(options)
       .then(response => {
-        console.log(response);
-
-        return dispatch({
+        dispatch({
           type: types.GET_DESTINATION_PHOTO,
         });
+
+        return Promise.resolve(response.data);
+      })
+      .catch(() => {
+        return Promise.resolve('');
       });
   },
 
@@ -188,6 +202,40 @@ export const tripActions = {
     const updatedForm = {
       ...form,
       [name]: value,
+    };
+
+    dispatch({
+      type: types.UPDATE_FORM,
+      updatedForm,
+    });
+  },
+
+  removeDestination: position => (dispatch, getState) => {
+    const { form } = getState().trip;
+
+    const updatedForm = {
+      ...form,
+      destinations: [
+        ...form.destinations.slice(0, position),
+        ...form.destinations.slice(position + 1),
+      ],
+    };
+
+    dispatch({
+      type: types.UPDATE_FORM,
+      updatedForm,
+    });
+  },
+
+  removeAttendee: position => (dispatch, getState) => {
+    const { form } = getState().trip;
+
+    const updatedForm = {
+      ...form,
+      destinations: [
+        ...form.attendees.slice(0, position),
+        ...form.attendees.slice(position + 1),
+      ],
     };
 
     dispatch({

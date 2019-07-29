@@ -75,7 +75,7 @@ const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
         </LeftPanel>
         <MainPanel>
           {showTripMap ? (
-            <TripMap google={google} tripDetail={trip.selectedTrip} />
+            <TripMap destinations={trip.selectedTrip.destinations} />
           ) : null}
         </MainPanel>
         <RightPanel>

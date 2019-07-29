@@ -2,42 +2,41 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Map, InfoWindow, Marker } from 'google-maps-react';
+import googleMapsApi from '@utils/googleMapsApi';
 
-const TripMap = ({ tripDetail, google }) => {
+const TripMap = ({ destinations }) => {
+  const google = googleMapsApi();
   const [showingInfoWindow, setShowingInfoWindow] = useState(false);
   const [activeMarker, setActiveMarker] = useState(null);
+  const [activeLocation, setActiveLocation] = useState(null);
   const [markerList, setMarkerList] = useState(null);
   const [mapBounds, setMapBounds] = useState(null);
-  const centerLat =
-    tripDetail.destinations.length > 0
-      ? tripDetail.destinations[0].geo.latitude
-      : 0;
-  const centerLng =
-    tripDetail.destinations.length > 0
-      ? tripDetail.destinations[0].geo.longitude
-      : 0;
+  const centerLat = destinations.length > 0 ? destinations[0].geo.latitude : 0;
+  const centerLng = destinations.length > 0 ? destinations[0].geo.longitude : 0;
   const defaultProps = {
     center: {
       lat: centerLat,
       lng: centerLng,
     },
-    zoom: 10,
+    zoom: 8,
   };
 
-  const closeInfoWindow = () => {
+  function closeInfoWindow() {
     setShowingInfoWindow(false);
     setActiveMarker(null);
-  };
+    setActiveLocation(null);
+  }
 
-  const onMarkerClick = (event, marker) => {
+  function onMarkerClick(marker, destination) {
     setShowingInfoWindow(true);
     setActiveMarker(marker);
-  };
+    setActiveLocation(destination);
+  }
 
   useEffect(() => {
-    var bounds = new google.maps.LatLngBounds();
+    const bounds = new google.maps.LatLngBounds();
 
-    const list = tripDetail.destinations.map(destination => {
+    const list = destinations.map(destination => {
       const pos = {
         lat: destination.geo.latitude,
         lng: destination.geo.longitude,
@@ -47,9 +46,9 @@ const TripMap = ({ tripDetail, google }) => {
 
       return (
         <Marker
-          key={`map-markers-${destination.name}`}
-          name={destination.name}
-          onClick={onMarkerClick}
+          key={`map-markers-${destination.location}`}
+          name={destination.location}
+          onClick={(e, marker) => onMarkerClick(marker, destination)}
           position={pos}
         />
       );
@@ -57,25 +56,29 @@ const TripMap = ({ tripDetail, google }) => {
 
     setMapBounds(bounds);
     setMarkerList(list);
-  }, []);
+  }, [destinations.length]);
 
   return (
     <Container>
       <Map
-        bounds={tripDetail.destinations.length > 1 ? mapBounds : null}
+        bounds={destinations.length > 0 ? mapBounds : null}
         google={google}
         initialCenter={defaultProps.center}
         zoom={defaultProps.zoom}
       >
         {markerList}
-
         <InfoWindow
           marker={activeMarker}
           onClose={closeInfoWindow}
           visible={showingInfoWindow}
         >
           <div>
-            <h2>{activeMarker && activeMarker.name}</h2>
+            {activeLocation && (
+              <React.Fragment>
+                <MarkerName>{activeLocation.location}</MarkerName>
+                <div>{`${activeLocation.startAt} - ${activeLocation.endAt}`}</div>
+              </React.Fragment>
+            )}
           </div>
         </InfoWindow>
       </Map>
@@ -84,14 +87,18 @@ const TripMap = ({ tripDetail, google }) => {
 };
 
 TripMap.propTypes = {
-  tripDetail: PropTypes.object.isRequired,
-  google: PropTypes.object.isRequired,
+  destinations: PropTypes.array.isRequired,
 };
 
 const Container = styled.div`
   width: 100%;
-  height: 550px;
+  height: 300px;
+  max-width: 600px;
   position: relative;
+`;
+
+const MarkerName = styled.div`
+  font-weight: 600;
 `;
 
 export default TripMap;

@@ -1,33 +1,26 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import 'firebase/firestore';
-import firebase from '@data/_db';
 import {
   Button,
-  Chip,
-  TextField,
+  CircularProgress,
   Step,
   StepContent,
   StepLabel,
   Stepper,
 } from '@material-ui/core';
-import CancelIcon from '@material-ui/icons/Cancel';
 import CloseIcon from '@material-ui/icons/Close';
-import FaceIcon from '@material-ui/icons/Face';
-import ButtonStyles from '@constants/ButtonStyles';
 import { tripActions } from '@providers/trip/trip';
-import googleMapsApi from '@utils/googleMapsApi';
-import validateEmail from '@utils/validateEmail';
+import Attendees from '@components/trips/attendees/Attendees';
+import Destinations from '@components/trips/destinations/Destinations';
+import NameAndNotes from '@components/trips/name-and-notes/NameAndNotes';
 import Container from '@styles/modal/Container';
 import FormHeader, { FormHeaderWrapper } from '@styles/modal/FormHeader';
 import Overlay from '@styles/modal/Overlay';
 import CloseButton from '@styles/modal/CloseButton';
-import { FieldWrapper, GroupFieldWrapper, Input } from '@styles/forms/Forms';
-import NameAndNotes from '@components/trips/name-and-notes/NameAndNotes';
-import Destinations from '@components/trips/destinations/Destinations';
+import { ButtonWrapper } from '@styles/forms/Forms';
 
 const mapStateToProps = state => {
   return {
@@ -48,34 +41,40 @@ function getSteps() {
   return ['Trip name', 'Destinations', 'Attendees'];
 }
 
-function getStepContent(step, actions, trip) {
+function getStepContent(step) {
   switch (step) {
     case 0:
-      return <NameAndNotes actions={actions} trip={trip} />;
+      return <NameAndNotes />;
     case 1:
-      return <Destinations actions={actions} trip={trip} />;
+      return <Destinations />;
     case 2:
-      return <div>testing3</div>;
+      return <Attendees />;
     default:
-      return <div>testing1</div>;
+      return <NameAndNotes />;
   }
 }
 
 const NewTripModal = ({ actions, trip }) => {
   const steps = getSteps();
   const [activeStep, setActiveStep] = useState(0);
-  const [isNextButtonsEnabled, setNextButtonsEnabled] = useState({
+  const [loading, setLoading] = useState(false);
+  const [isNextButtonsDisabled, setNextButtonsDisabled] = useState({
     0: true,
     1: true,
     2: true,
   });
 
   useEffect(() => {
-    setNextButtonsEnabled({
-      ...isNextButtonsEnabled,
+    setNextButtonsDisabled({
       0: !trip.form.name.trim(),
+      1: !trip.form.destinations.length,
+      2: !trip.form.attendees.length,
     });
-  }, [trip.form.name]);
+  }, [
+    trip.form.name,
+    trip.form.destinations.length,
+    trip.form.attendees.length,
+  ]);
 
   function handleNext() {
     setActiveStep(prevActiveStep => prevActiveStep + 1);
@@ -85,9 +84,16 @@ const NewTripModal = ({ actions, trip }) => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   }
 
-  // function handleReset() {
-  //   setActiveStep(0);
-  // }
+  function handleModalClose() {
+    actions.trip.toggleNewTripModal();
+  }
+
+  function handleFormSubmit(event) {
+    event.preventDefault();
+
+    setLoading(true);
+    actions.trip.createTrip();
+  }
 
   // Create all the steps
   function constructStepForm() {
@@ -95,22 +101,29 @@ const NewTripModal = ({ actions, trip }) => {
       <Step key={`${label}-${index}`}>
         <StepLabel>{label}</StepLabel>
         <StepContent>
-          {getStepContent(index, actions, trip)}
+          {getStepContent(index)}
           <ButtonWrapper>
-            <Button
-              disabled={activeStep === 0}
+            <BackButton
+              disabled={activeStep === 0 || loading}
               onClick={handleBack}
               variant="outlined"
             >
               Back
-            </Button>
+            </BackButton>
             <Button
               color="primary"
-              disabled={isNextButtonsEnabled[index]}
-              onClick={handleNext}
+              disabled={isNextButtonsDisabled[index] || loading}
+              onClick={
+                activeStep === steps.length - 1 ? handleFormSubmit : handleNext
+              }
+              type="button"
               variant="contained"
             >
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              {loading ? (
+                <CircularProgress size={22} />
+              ) : (
+                `${activeStep === steps.length - 1 ? 'Finish' : 'Next'}`
+              )}
             </Button>
           </ButtonWrapper>
         </StepContent>
@@ -121,6 +134,12 @@ const NewTripModal = ({ actions, trip }) => {
   return (
     <Overlay>
       <Container>
+        <CloseButton onClick={handleModalClose}>
+          <CloseIcon />
+        </CloseButton>
+        <FormHeaderWrapper>
+          <FormHeader>New trip</FormHeader>
+        </FormHeaderWrapper>
         <Stepper activeStep={activeStep} orientation="vertical">
           {constructStepForm()}
         </Stepper>
@@ -135,30 +154,8 @@ NewTripModal.propTypes = {
   trip: PropTypes.object.isRequired,
 };
 
-const FullWidthField = styled(TextField)`
-  width: 100%;
-`;
-
-const ChipWrapper = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-`;
-
-const InviteChip = styled(Chip)`
-  && {
-    margin: 10px 5px;
-  }
-`;
-
-const FormError = styled.div`
-  color: red;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px 0;
+const BackButton = styled(Button)`
+  margin-right: 10px;
 `;
 
 export default connect(
