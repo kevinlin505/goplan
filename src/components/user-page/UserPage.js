@@ -37,7 +37,7 @@ const UserPage = ({ actions, auth, profile, trip }) => {
   const tripIds = Object.keys(trip.trips);
 
   useEffect(() => {
-    actions.expense.getUserExpenseReports();
+    actions.user.getUserExpenseReports();
   }, []);
 
   useEffect(() => {

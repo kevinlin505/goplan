@@ -6,7 +6,7 @@ export default function trip() {
   const db = firebase.firestore();
 
   return {
-    getUserCategoryExpenseReports: (expensesRefs = []) => {
+    getExpenseReports: (expensesRefs = []) => {
       return Promise.all(expensesRefs.map(expensesRef => expensesRef.get()));
     },
 

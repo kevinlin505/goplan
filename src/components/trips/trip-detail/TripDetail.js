@@ -54,7 +54,7 @@ const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
 
   useEffect(() => {
     if (trip.selectedTrip) {
-      actions.expense.getTripExpenses(trip.selectedTrip.expenses);
+      actions.trip.getTripExpenses(trip.selectedTrip.expenses);
       setExpenseList(trip.selectedTrip.expenses.map(ele => ele.id));
     }
   }, [trip.selectedTrip]);

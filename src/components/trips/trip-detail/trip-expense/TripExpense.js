@@ -8,22 +8,24 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 const mapStateToProps = state => {
   return {
-    expense: state.expense,
+    tripExpenses: state.trip.tripExpenses,
   };
 };
 
-const TripExpense = ({ expense, expenseList, totalExpense }) => {
+const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
   const [summaryExpense, setSummaryExpense] = useState([]);
   const [expenseSum, setExpenseSum] = useState(0);
   const [detailExpenseList, setDetailExpenseList] = useState({});
   const [attendeePayments, setAttendeePayments] = useState([]);
   const [attendeePaymentsNet, setAttendeePaymentsNet] = useState([]);
-  const [isExpenseExpanded, setExpenseExpanded] = useState(
-    expenseList.reduce((obj, expenseId) => {
-      obj[expenseId] = false;
 
-      return obj;
-    }, {}),
+  const defaultExpenseExpandList = expenseList.reduce((obj, expenseId) => {
+    obj[expenseId] = false;
+
+    return obj;
+  }, {});
+  const [isExpenseExpanded, setExpenseExpanded] = useState(
+    defaultExpenseExpandList,
   );
 
   function toggleExpenseDetail(expenseId) {
@@ -86,7 +88,7 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
     const list = {};
     const payments = {};
     expenseList.forEach(expenseId => {
-      if (expense.tripExpenses[expenseId]) {
+      if (tripExpenses[expenseId]) {
         const {
           date,
           amount,
@@ -95,7 +97,7 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
           payees,
           payer,
           receipts,
-        } = expense.tripExpenses[expenseId];
+        } = tripExpenses[expenseId];
 
         if (Object.keys(payments).length === 0) {
           payees.forEach(payee => {
@@ -141,7 +143,7 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
 
     calculatePayments(payments);
     setDetailExpenseList(list);
-  }, [Object.keys(expense.tripExpenses).length]);
+  }, [Object.keys(tripExpenses).length]);
 
   const renderExpenseList = expenseList.map((expenseId, idx) => {
     if (!detailExpenseList[expenseId]) {
@@ -192,9 +194,9 @@ const TripExpense = ({ expense, expenseList, totalExpense }) => {
 };
 
 TripExpense.propTypes = {
-  expense: PropTypes.object,
   expenseList: PropTypes.array.isRequired,
   totalExpense: PropTypes.object.isRequired,
+  tripExpense: PropTypes.object,
 };
 
 const Container = styled.div`
