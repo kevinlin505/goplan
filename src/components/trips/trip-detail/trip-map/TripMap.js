@@ -21,6 +21,15 @@ const TripMap = ({ destinations }) => {
     zoom: 8,
   };
 
+  const endDate =
+    (activeLocation &&
+      new Date(activeLocation.endAt.toDate()).toDateString()) ||
+    '';
+  const startDate =
+    (activeLocation &&
+      new Date(activeLocation.startAt.toDate()).toDateString()) ||
+    '';
+
   function closeInfoWindow() {
     setShowingInfoWindow(false);
     setActiveMarker(null);
@@ -76,7 +85,7 @@ const TripMap = ({ destinations }) => {
             {activeLocation && (
               <React.Fragment>
                 <MarkerName>{activeLocation.location}</MarkerName>
-                <div>{`${activeLocation.startAt} - ${activeLocation.endAt}`}</div>
+                <div>{`${startDate} - ${endDate}`}</div>
               </React.Fragment>
             )}
           </div>

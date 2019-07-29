@@ -130,6 +130,8 @@ const Destinations = ({ actions, destinations }) => {
                 photo: url,
                 placeId: destinationSearchResult.place_id,
                 types: destinationSearchResult.types,
+                endAt: new Date(destination.endAt),
+                startAt: new Date(destination.startAt),
               };
 
               actions.trip.updateForm('destinations', [
@@ -158,6 +160,8 @@ const Destinations = ({ actions, destinations }) => {
             {
               ...destination,
               photo: url,
+              endAt: new Date(destination.endAt),
+              startAt: new Date(destination.startAt),
             },
           ]);
 

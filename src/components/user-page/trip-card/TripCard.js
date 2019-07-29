@@ -4,46 +4,65 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import convertNumberToCurrency from '@utils/convertNumberToCurrency';
 import CardContainer from '@styles/card/CardContainer';
+import defaultBackgroundImage from '@assets/images/profileBackground.jpg';
 
-const TripCard = ({ tripDetail, homePage }) => {
-  const [attendeeList, setAttendeeList] = useState(null);
-  const startDate = new Date(tripDetail.start_date.toDate());
-  const endDate = new Date(tripDetail.end_date.toDate());
+const TripCard = ({ tripDetail }) => {
+  const sortedDestinations = tripDetail.destinations.sort(
+    (destination1, destination2) =>
+      new Date(destination1.startAt.toDate()).getMilliseconds() <
+      new Date(destination2.startAt.toDate()).getMilliseconds(),
+  );
+
+  const startDate =
+    (
+      sortedDestinations[0] && new Date(sortedDestinations[0].startAt.toDate())
+    ).toDateString() || '';
+  const endDate =
+    (
+      sortedDestinations[sortedDestinations.length - 1] &&
+      new Date(sortedDestinations[sortedDestinations.length - 1].endAt.toDate())
+    ).toDateString() || '';
+
   const destination = tripDetail.destinations[0];
   const totalCost = Object.keys(tripDetail.costs).reduce((sum, category) => {
     return sum + tripDetail.costs[category];
   }, 0);
 
-  useEffect(() => {
-    setAttendeeList(
-      tripDetail.attendees.map(attendee => {
-        return (
-          <AttendeeName key={`attendee-${attendee.email}`}>
-            {attendee.name}
-          </AttendeeName>
-        );
-      }),
-    );
-  }, [tripDetail.attendees.length]);
+  const backgroundImageUrl =
+    (destination && `${destination.photo}&w=600`) || defaultBackgroundImage;
+
+  function constructAttendeeList() {
+    return tripDetail.attendees.map(attendee => {
+      return (
+        <AttendeeName key={`attendee-${attendee.email}`}>
+          {attendee.name}
+        </AttendeeName>
+      );
+    });
+  }
 
   return (
-    <Container backgroundImageUrl={destination && destination.photo_url}>
+    <Container backgroundImageUrl={backgroundImageUrl}>
       <TripCardGradient>
         <TripCardDetail to={`/trip/${tripDetail.id}`}>
           <DetailWrapper>
             <DesinationDetail>
-              <LocationName>{tripDetail.trip_name}</LocationName>
-              <TravelDate>
-                {`${startDate.toLocaleDateString()}`} -{' '}
-                {`${endDate.toLocaleDateString()}`}
-              </TravelDate>
+              <LocationName>{tripDetail.name}</LocationName>
+              <TravelDate>{`${startDate} - ${endDate}`}</TravelDate>
             </DesinationDetail>
+<<<<<<< HEAD
             <AttendeeDetail>
               <AttendeeList>{attendeeList}</AttendeeList>
               {homePage ? (
                 <div>{convertNumberToCurrency(totalCost)}</div>
               ) : null}
             </AttendeeDetail>
+=======
+            <DesinationDetail>
+              <AttendeeList>{constructAttendeeList()}</AttendeeList>
+              <div>{convertNumberToCurrency(totalCost)}</div>
+            </DesinationDetail>
+>>>>>>> Fix display issue
           </DetailWrapper>
         </TripCardDetail>
       </TripCardGradient>
