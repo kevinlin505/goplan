@@ -22,13 +22,9 @@ const TripMap = ({ destinations }) => {
   };
 
   const endDate =
-    (activeLocation &&
-      new Date(activeLocation.endAt.toDate()).toDateString()) ||
-    '';
+    (activeLocation && new Date(activeLocation.endAt).toDateString()) || '';
   const startDate =
-    (activeLocation &&
-      new Date(activeLocation.startAt.toDate()).toDateString()) ||
-    '';
+    (activeLocation && new Date(activeLocation.startAt).toDateString()) || '';
 
   function closeInfoWindow() {
     setShowingInfoWindow(false);
@@ -51,7 +47,7 @@ const TripMap = ({ destinations }) => {
         lng: destination.geo.longitude,
       };
 
-      bounds.extend(pos);
+      bounds.extend(new google.maps.LatLng(pos));
 
       return (
         <Marker
@@ -70,7 +66,7 @@ const TripMap = ({ destinations }) => {
   return (
     <Container>
       <Map
-        bounds={destinations.length > 0 ? mapBounds : null}
+        bounds={mapBounds}
         google={google}
         initialCenter={defaultProps.center}
         zoom={defaultProps.zoom}

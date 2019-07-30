@@ -129,7 +129,6 @@ export const tripActions = {
 
           tripData.travelDates = traveDates;
           tripMap[tripDoc.data().id] = tripData;
-          tripMap[tripDoc.data().id] = tripData;
 
           return tripMap;
         }, {});

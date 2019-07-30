@@ -64,7 +64,7 @@ const Destinations = ({ actions, destinations }) => {
 
     autoCompleteApi.setFields(AUTO_COMPLETE_API_FIELDS);
 
-    const autoCompletePlaceChangedListner = autoCompleteApi.addListener(
+    const autoCompletePlaceChangedListener = autoCompleteApi.addListener(
       'place_changed',
       () => {
         const place = autoCompleteApi.getPlace();
@@ -92,7 +92,7 @@ const Destinations = ({ actions, destinations }) => {
     );
 
     return () => {
-      google.maps.event.removeListener(autoCompletePlaceChangedListner);
+      google.maps.event.removeListener(autoCompletePlaceChangedListener);
     };
   }, []);
 
@@ -130,8 +130,8 @@ const Destinations = ({ actions, destinations }) => {
                 photo: url,
                 placeId: destinationSearchResult.place_id,
                 types: destinationSearchResult.types,
-                endAt: new Date(destination.endAt),
-                startAt: new Date(destination.startAt),
+                endAt: new Date(destination.endAt).getTime(),
+                startAt: new Date(destination.startAt).getTime(),
               };
 
               actions.trip.updateForm('destinations', [
@@ -181,13 +181,13 @@ const Destinations = ({ actions, destinations }) => {
   }
 
   function constructDestinationList() {
-    return destinations.map((selectedDesination, index) => {
+    return destinations.map((selectedDestination, index) => {
       return (
         <DestinationChip
-          key={selectedDesination.location}
+          key={selectedDestination.location}
           color="primary"
           deleteIcon={<CancelIcon />}
-          label={selectedDesination.location}
+          label={selectedDestination.location}
           onDelete={() => handleRemoveDestination(index)}
         />
       );
