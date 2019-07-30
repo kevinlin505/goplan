@@ -43,19 +43,19 @@ const Render = ({ auth, component: Component, match, profile, ...props }) => {
     );
   }
 
-  return auth === AuthState.AUTHENTICATED ? (
+  const authenticatedViews = profile ? (
     <React.Fragment>
-      {profile ? (
-        <React.Fragment>
-          <NavigationBar />
-          <Component match={match} {...props} />
-        </React.Fragment>
-      ) : (
-        <LoadingWrapper>
-          <Rainy />
-        </LoadingWrapper>
-      )}
+      <NavigationBar />
+      <Component match={match} {...props} />
     </React.Fragment>
+  ) : (
+    <LoadingWrapper>
+      <Rainy />
+    </LoadingWrapper>
+  );
+
+  return auth === AuthState.AUTHENTICATED ? (
+    authenticatedViews
   ) : (
     <Redirect
       to={{
