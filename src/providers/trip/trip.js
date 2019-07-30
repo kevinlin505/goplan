@@ -243,7 +243,7 @@ export const tripActions = {
 
     const updatedForm = {
       ...form,
-      destinations: [
+      attendees: [
         ...form.attendees.slice(0, position),
         ...form.attendees.slice(position + 1),
       ],

@@ -34,8 +34,14 @@ export const getFormattedTrips = createDeepEqualSelector([getTrips], trips =>
 
 export const getSortedTrips = createDeepEqualSelector(
   [getFormattedTrips],
-  ({ current, previous }) => ({
-    current: current.sort((t1, t2) => t1.startAt < t2.startAt),
-    previous: previous.sort((t1, t2) => t1.endAt > t2.endAt),
-  }),
+  ({ current, previous }) => {
+    return {
+      current: current.sort(
+        (t1, t2) => t1.travelDates.startAt - t2.travelDates.startAt,
+      ),
+      previous: previous.sort(
+        (t1, t2) => t2.travelDates.endAt - t1.travelDates.endAt,
+      ),
+    };
+  },
 );
