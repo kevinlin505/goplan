@@ -13,7 +13,7 @@ import TripCard from '@components/user-page/trip-card/TripCard';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
 import googleMapsApi from '@utils/googleMapsApi';
 import TripExpense from '@components/trips/trip-detail/trip-expense/TripExpense';
-import CreateExpense from './CreateExpense/CreateExpense';
+import NewExpenseModal from '@components/trips/trip-detail/new-expense-modal/NewExpenseModal';
 
 const mapStateToProps = (state, props) => {
   return {
@@ -75,7 +75,7 @@ const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
         </LeftPanel>
         <MainPanel>
           {showTripMap ? (
-            <TripMap google={google} tripDetail={trip.selectedTrip} />
+            <TripMap destinations={trip.selectedTrip.destinations} />
           ) : null}
         </MainPanel>
         <RightPanel>
@@ -88,7 +88,7 @@ const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
         </RightPanel>
       </Contents>
       {isExpenseModal && (
-        <CreateExpense toggleCreateExpenseModal={toggleCreateExpenseModal} />
+        <NewExpenseModal toggleCreateExpenseModal={toggleCreateExpenseModal} />
       )}
     </Container>
   );

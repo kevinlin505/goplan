@@ -14,10 +14,9 @@ export default function trip() {
       const userRef = db.collection('users').doc(currentUser.uid);
       const tripRef = db.collection('trips').doc();
 
-      tripDetails.attendees.push(userRef);
       tripDetails.id = tripRef.id;
 
-      batch.set(tripRef, { ...tripDetails, organizer: userRef });
+      batch.set(tripRef, tripDetails);
       batch.update(userRef, {
         trips: firebase.firestore.FieldValue.arrayUnion(tripRef),
       });
@@ -46,8 +45,8 @@ export default function trip() {
       return tripRef.get();
     },
 
-    getUnsplashImage: query => {
-      return firebase.functions().httpsCallable('getUnsplashImage')(query);
+    getUnsplashImage: options => {
+      return firebase.functions().httpsCallable('getUnsplashImage')(options);
     },
 
     joinTrip: (tripId, { name, id, email }) => {

@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import {
   Button,
   Chip,
-  IconButton,
   Input,
   InputLabel,
   MenuItem,
@@ -16,7 +15,10 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import Expense from '@constants/Expense';
 import { expenseActions } from '@providers/expense/expense';
-import Overlay from '@styles/Overlay';
+import Container from '@styles/modal/Container';
+import FormHeader, { FormHeaderWrapper } from '@styles/modal/FormHeader';
+import Overlay from '@styles/modal/Overlay';
+import CloseButton from '@styles/modal/CloseButton';
 
 const mapStateToProps = state => {
   return {
@@ -32,7 +34,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const CreateExpense = ({ actions, attendees, toggleCreateExpenseModal }) => {
+const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
   const [files, setFiles] = useState([]);
   const [previewImageSrcs, setPreviewImageSrcs] = useState([]);
   const [form, setValues] = useState({
@@ -88,13 +90,13 @@ const CreateExpense = ({ actions, attendees, toggleCreateExpenseModal }) => {
   return (
     <Overlay>
       <Container>
-        <FormHeader>
+        <FormHeaderWrapper>
           <CloseButton onClick={toggleCreateExpenseModal}>
             <CloseIcon />
           </CloseButton>
-          <Header>New Expense</Header>
-        </FormHeader>
-        <CreateTripForm onSubmit={handleFormSubmit}>
+          <FormHeader>New Expense</FormHeader>
+        </FormHeaderWrapper>
+        <form onSubmit={handleFormSubmit}>
           <FieldWrapper>
             <FullWidthField
               label="Merchant Name"
@@ -211,54 +213,17 @@ const CreateExpense = ({ actions, attendees, toggleCreateExpenseModal }) => {
               Submit
             </Button>
           </ButtonWrapper>
-        </CreateTripForm>
+        </form>
       </Container>
     </Overlay>
   );
 };
 
-CreateExpense.propTypes = {
+NewExpenseModal.propTypes = {
   actions: PropTypes.object.isRequired,
   attendees: PropTypes.array.isRequired,
   toggleCreateExpenseModal: PropTypes.func.isRequired,
 };
-
-const Container = styled.div`
-  width: 100%;
-  max-width: 600px;
-  padding: 25px;
-  background: #ffffff;
-`;
-
-const FormHeader = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  position: relative;
-  width: 100%;
-`;
-
-const CloseButton = styled(IconButton)`
-  && {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    padding: 5px;
-    color: ${({ theme }) => theme.colors.black};
-    z-index: 1px;
-  }
-`;
-
-const Header = styled.h2`
-  margin: 0;
-  padding: 0;
-  font-size: 24px;
-  text-transform: capitalize;
-`;
-
-const CreateTripForm = styled.form`
-  padding: 0;
-`;
 
 const FieldWrapper = styled.div`
   display: flex;
@@ -313,4 +278,4 @@ const ButtonWrapper = styled.div`
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(CreateExpense);
+)(NewExpenseModal);

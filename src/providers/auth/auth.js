@@ -60,7 +60,7 @@ export const authActions = {
 
     auth().onStateChanged(currentUser => {
       if (currentUser) {
-        dispatch(authActions.signInSuccess(currentUser.uid));
+        dispatch(authActions.signInSuccess());
       } else if (isAuthenticated === AuthState.UNKNOWN) {
         dispatch({
           type: types.CHECK_AUTHENTICATION,
@@ -117,18 +117,30 @@ export const authActions = {
       });
   },
 
-  signInSuccess: uid => dispatch => {
+  signInSuccess: () => dispatch => {
     return user()
       .checkUserProfile()
       .then(profile => {
         if (!profile.exists) {
-          user().createUserProfile();
+          return user()
+            .createUserProfile()
+            .then(createdProfile => {
+              return dispatch({
+                type: types.SIGN_IN,
+                profile: createdProfile,
+              });
+            })
+            .catch(() => {
+              return dispatch({
+                type: types.CHECK_AUTHENTICATION,
+                status: AuthState.UNAUTHENTICATED,
+              });
+            });
         }
 
         return dispatch({
           type: types.SIGN_IN,
           profile: profile.data(),
-          uid,
         });
       });
   },

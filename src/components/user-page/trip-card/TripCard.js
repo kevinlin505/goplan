@@ -1,49 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import convertNumberToCurrency from '@utils/convertNumberToCurrency';
 import CardContainer from '@styles/card/CardContainer';
+import defaultBackgroundImage from '@assets/images/profileBackground.jpg';
 
-const TripCard = ({ tripDetail, homePage }) => {
-  const [attendeeList, setAttendeeList] = useState(null);
-  const startDate = new Date(tripDetail.start_date.toDate());
-  const endDate = new Date(tripDetail.end_date.toDate());
+const TripCard = ({ tripDetail }) => {
+  const startDate = new Date(tripDetail.travelDates.startAt).toDateString();
+  const endDate = new Date(tripDetail.travelDates.endAt).toDateString();
+
   const destination = tripDetail.destinations[0];
   const totalCost = Object.keys(tripDetail.costs).reduce((sum, category) => {
     return sum + tripDetail.costs[category];
   }, 0);
 
-  useEffect(() => {
-    setAttendeeList(
-      tripDetail.attendees.map(attendee => {
-        return (
-          <AttendeeName key={`attendee-${attendee.email}`}>
-            {attendee.name}
-          </AttendeeName>
-        );
-      }),
-    );
-  }, [tripDetail.attendees.length]);
+  const backgroundImageUrl =
+    destination && destination.photo
+      ? `${destination.photo}&w=600`
+      : defaultBackgroundImage;
+
+  function constructAttendeeList() {
+    return tripDetail.attendees.map(attendee => {
+      return (
+        <AttendeeName key={`attendee-${attendee.email}`}>
+          {attendee.name}
+        </AttendeeName>
+      );
+    });
+  }
 
   return (
-    <Container backgroundImageUrl={destination && destination.photo_url}>
+    <Container backgroundImageUrl={backgroundImageUrl}>
       <TripCardGradient>
         <TripCardDetail to={`/trip/${tripDetail.id}`}>
           <DetailWrapper>
             <DesinationDetail>
-              <LocationName>{tripDetail.trip_name}</LocationName>
-              <TravelDate>
-                {`${startDate.toLocaleDateString()}`} -{' '}
-                {`${endDate.toLocaleDateString()}`}
-              </TravelDate>
+              <LocationName>{tripDetail.name}</LocationName>
+              <TravelDate>{`${startDate} - ${endDate}`}</TravelDate>
             </DesinationDetail>
-            <AttendeeDetail>
-              <AttendeeList>{attendeeList}</AttendeeList>
-              {homePage ? (
-                <div>{convertNumberToCurrency(totalCost)}</div>
-              ) : null}
-            </AttendeeDetail>
+            <DesinationDetail>
+              <AttendeeList>{constructAttendeeList()}</AttendeeList>
+              <div>{convertNumberToCurrency(totalCost)}</div>
+            </DesinationDetail>
           </DetailWrapper>
         </TripCardDetail>
       </TripCardGradient>
@@ -97,12 +96,6 @@ const DesinationDetail = styled.div`
   padding: 20px;
 `;
 
-const AttendeeDetail = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-`;
-
 const LocationName = styled.div`
   width: 100%;
   font-size: 30px;
@@ -117,7 +110,7 @@ const TravelDate = styled.div`
 `;
 
 const AttendeeList = styled.div`
-  width: 100%;
+  width: 80%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -125,7 +118,7 @@ const AttendeeList = styled.div`
 
 const AttendeeName = styled.div`
   display: inline-block;
-  margin: 0 5px;
+  margin-right: 10px;
 `;
 
 export default TripCard;

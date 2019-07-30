@@ -1,6 +1,7 @@
 import auth from '@data/auth';
 import trip from '@data/trip';
 import expense from '@data/expense';
+import getTravelDates from '@utils/calculateTravelDates';
 
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
@@ -10,14 +11,23 @@ export const types = {
   RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
   TOGGLE_NEW_TRIP_MODAL: 'TRIP/TOGGLE_NEW_TRIP_MODAL',
+  UPDATE_FORM: 'TRIP/UPDATE_FORM',
   UPDATE_TRIP: 'TRIP/UPDATE_TRIP',
 };
 
 const initialState = {
-  selectedTrip: null,
-  trips: {},
+  form: {
+    attendees: [],
+    costs: {},
+    destinations: [],
+    expenses: [],
+    name: '',
+    notes: '',
+  },
   isNewTripModalOpen: false,
+  selectedTrip: null,
   tripExpenses: {},
+  trips: {},
 };
 
 export default function reducer(state = initialState, action) {
@@ -56,21 +66,35 @@ export default function reducer(state = initialState, action) {
       };
     }
 
+    case types.UPDATE_FORM: {
+      return {
+        ...state,
+        form: action.updatedForm,
+      };
+    }
+
     default:
       return state;
   }
 }
 
 export const tripActions = {
-  createTrip: formDetail => dispatch => {
-    const inviteList = formDetail.attendees;
+  createTrip: () => (dispatch, getState) => {
+    const {
+      auth: { profile },
+      trip: { form },
+    } = getState();
+
+    const inviteList = form.attendees;
+    const organizer = {
+      email: profile.email,
+      id: profile.id,
+      name: profile.name,
+    };
     const tripDetail = {
-      ...formDetail,
-      attendees: [],
-      costs: {},
-      expenses: [],
-      end_date: new Date(formDetail.end_date),
-      start_date: new Date(formDetail.start_date),
+      ...form,
+      attendees: [organizer],
+      organizer,
     };
 
     return trip()
@@ -82,9 +106,11 @@ export const tripActions = {
           }),
         );
 
-        return dispatch({
+        dispatch({
           type: types.CREATE_TRIP,
         });
+
+        return dispatch(tripActions.toggleNewTripModal());
       })
       .catch(err => {
         console.log(err);
@@ -96,7 +122,13 @@ export const tripActions = {
       .getAllTrips(tripRefs)
       .then(tripDocs => {
         const trips = tripDocs.reduce((tripMap, tripDoc) => {
-          tripMap[tripDoc.data().id] = tripDoc.data();
+          const tripData = tripDoc.data();
+
+          // calculate overall travel date
+          const traveDates = getTravelDates(tripData);
+
+          tripData.travelDates = traveDates;
+          tripMap[tripDoc.data().id] = tripData;
 
           return tripMap;
         }, {});
@@ -112,9 +144,12 @@ export const tripActions = {
     trip()
       .getTrip(tripRef)
       .then(tripDetails => {
+        const tripData = tripDetails.data();
+        tripData.travelDates = getTravelDates(tripData);
+
         dispatch({
           type: types.SET_SELECTED_TRIP,
-          selectedTrip: tripDetails.data(),
+          selectedTrip: tripData,
         });
       });
   },
@@ -123,8 +158,11 @@ export const tripActions = {
     return expense()
       .getExpenseReports(expenseRefs)
       .then(expenseDocs => {
-        const reports = {};
-        expenseDocs.forEach(report => (reports[report.id] = report.data()));
+        const reports = expenseDocs.reduce((reportData, report) => {
+          reportData[report.id] = report.data();
+
+          return reportData;
+        }, {});
 
         dispatch({
           type: types.GET_TRIP_EXPENSE_REPORTS,
@@ -133,15 +171,18 @@ export const tripActions = {
       });
   },
 
-  getUnsplashImage: query => dispatch => {
-    trip()
-      .getUnsplashImage(query)
+  getUnsplashImage: options => dispatch => {
+    return trip()
+      .getUnsplashImage(options)
       .then(response => {
-        console.log(response);
-
-        return dispatch({
+        dispatch({
           type: types.GET_DESTINATION_PHOTO,
         });
+
+        return Promise.resolve(response.data);
+      })
+      .catch(() => {
+        return Promise.resolve('');
       });
   },
 
@@ -162,6 +203,54 @@ export const tripActions = {
     return dispatch({
       type: types.TOGGLE_NEW_TRIP_MODAL,
       isNewTripModalOpen: !isNewTripModalOpen,
+    });
+  },
+
+  updateForm: (name, value) => (dispatch, getState) => {
+    const { form } = getState().trip;
+
+    const updatedForm = {
+      ...form,
+      [name]: value,
+    };
+
+    dispatch({
+      type: types.UPDATE_FORM,
+      updatedForm,
+    });
+  },
+
+  removeDestination: position => (dispatch, getState) => {
+    const { form } = getState().trip;
+
+    const updatedForm = {
+      ...form,
+      destinations: [
+        ...form.destinations.slice(0, position),
+        ...form.destinations.slice(position + 1),
+      ],
+    };
+
+    dispatch({
+      type: types.UPDATE_FORM,
+      updatedForm,
+    });
+  },
+
+  removeAttendee: position => (dispatch, getState) => {
+    const { form } = getState().trip;
+
+    const updatedForm = {
+      ...form,
+      attendees: [
+        ...form.attendees.slice(0, position),
+        ...form.attendees.slice(position + 1),
+      ],
+    };
+
+    dispatch({
+      type: types.UPDATE_FORM,
+      updatedForm,
     });
   },
 
