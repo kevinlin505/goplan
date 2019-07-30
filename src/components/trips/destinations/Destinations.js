@@ -160,8 +160,8 @@ const Destinations = ({ actions, destinations }) => {
             {
               ...destination,
               photo: url,
-              endAt: new Date(destination.endAt),
-              startAt: new Date(destination.startAt),
+              endAt: new Date(destination.endAt).getTime(),
+              startAt: new Date(destination.startAt).getTime(),
             },
           ]);
 
@@ -260,7 +260,7 @@ const DateInput = styled(Input)`
 `;
 
 const DestinationChip = styled(Chip)`
-  margin: 0 5px;
+  margin: 5px;
 `;
 
 export default connect(

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -7,21 +7,8 @@ import CardContainer from '@styles/card/CardContainer';
 import defaultBackgroundImage from '@assets/images/profileBackground.jpg';
 
 const TripCard = ({ tripDetail }) => {
-  const sortedDestinations = tripDetail.destinations.sort(
-    (destination1, destination2) =>
-      new Date(destination1.startAt.toDate()).getMilliseconds() <
-      new Date(destination2.startAt.toDate()).getMilliseconds(),
-  );
-
-  const startDate =
-    (
-      sortedDestinations[0] && new Date(sortedDestinations[0].startAt.toDate())
-    ).toDateString() || '';
-  const endDate =
-    (
-      sortedDestinations[sortedDestinations.length - 1] &&
-      new Date(sortedDestinations[sortedDestinations.length - 1].endAt.toDate())
-    ).toDateString() || '';
+  const startDate = new Date(tripDetail.travelDates.startAt).toDateString();
+  const endDate = new Date(tripDetail.travelDates.endAt).toDateString();
 
   const destination = tripDetail.destinations[0];
   const totalCost = Object.keys(tripDetail.costs).reduce((sum, category) => {
@@ -50,19 +37,10 @@ const TripCard = ({ tripDetail }) => {
               <LocationName>{tripDetail.name}</LocationName>
               <TravelDate>{`${startDate} - ${endDate}`}</TravelDate>
             </DesinationDetail>
-<<<<<<< HEAD
-            <AttendeeDetail>
-              <AttendeeList>{attendeeList}</AttendeeList>
-              {homePage ? (
-                <div>{convertNumberToCurrency(totalCost)}</div>
-              ) : null}
-            </AttendeeDetail>
-=======
             <DesinationDetail>
               <AttendeeList>{constructAttendeeList()}</AttendeeList>
               <div>{convertNumberToCurrency(totalCost)}</div>
             </DesinationDetail>
->>>>>>> Fix display issue
           </DetailWrapper>
         </TripCardDetail>
       </TripCardGradient>
@@ -116,12 +94,6 @@ const DesinationDetail = styled.div`
   padding: 20px;
 `;
 
-const AttendeeDetail = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-`;
-
 const LocationName = styled.div`
   width: 100%;
   font-size: 30px;
@@ -136,7 +108,7 @@ const TravelDate = styled.div`
 `;
 
 const AttendeeList = styled.div`
-  width: 100%;
+  width: 80%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -144,7 +116,7 @@ const AttendeeList = styled.div`
 
 const AttendeeName = styled.div`
   display: inline-block;
-  margin: 0 5px;
+  margin-right: 10px;
 `;
 
 export default TripCard;

@@ -92,7 +92,7 @@ Attendees.propTypes = {
 };
 
 const InviteChip = styled(Chip)`
-  margin: 0 5px;
+  margin: 5px;
 `;
 
 export default connect(

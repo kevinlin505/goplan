@@ -8,3 +8,34 @@ export const getTripStatus = createDeepEqualSelector(
   [getTripList, getParamTripId],
   (tripList, paramTripId) => tripList.some(el => el.id === paramTripId),
 );
+
+export const getTrips = state => state.trip.trips;
+
+export const getFormattedTrips = createDeepEqualSelector([getTrips], trips =>
+  Object.keys(trips).reduce(
+    (splittedTrips, tripId) => {
+      const trip = trips[tripId];
+      const now = new Date().getTime();
+
+      if (now > trip.travelDates.endAt) {
+        splittedTrips.previous.push(trip);
+      } else {
+        splittedTrips.current.push(trip);
+      }
+
+      return splittedTrips;
+    },
+    {
+      current: [],
+      previous: [],
+    },
+  ),
+);
+
+export const getSortedTrips = createDeepEqualSelector(
+  [getFormattedTrips],
+  ({ current, previous }) => ({
+    current: current.sort((t1, t2) => t1.startAt < t2.startAt),
+    previous: previous.sort((t1, t2) => t1.endAt > t2.endAt),
+  }),
+);

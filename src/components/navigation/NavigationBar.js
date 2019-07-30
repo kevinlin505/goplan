@@ -8,11 +8,13 @@ import { Button } from '@material-ui/core';
 import { AddPhotoAlternate } from '@material-ui/icons';
 import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
+import NewTripModal from '@components/trips/new-trip-modal/NewTripModal';
 import Logo from '@components/icons/Logo';
 
 const mapStateToProps = state => {
   return {
     profile: state.auth.profile,
+    trip: state.trip,
   };
 };
 
@@ -25,7 +27,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const NavigationBar = ({ actions, profile }) => {
+const NavigationBar = ({ actions, profile, trip }) => {
   return (
     <Container>
       <NavBar>
@@ -48,6 +50,7 @@ const NavigationBar = ({ actions, profile }) => {
           </SignOutButton>
         </RightNavBarItems>
       </NavBar>
+      {trip.isNewTripModalOpen && <NewTripModal />}
     </Container>
   );
 };
@@ -55,6 +58,7 @@ const NavigationBar = ({ actions, profile }) => {
 NavigationBar.propTypes = {
   actions: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
+  trip: PropTypes.object.isRequired,
 };
 
 const Container = styled.div`

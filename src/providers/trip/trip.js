@@ -1,6 +1,7 @@
 import auth from '@data/auth';
 import trip from '@data/trip';
 import expense from '@data/expense';
+import getTravelDates from '@utils/calculateTravelDates';
 
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
@@ -121,7 +122,14 @@ export const tripActions = {
       .getAllTrips(tripRefs)
       .then(tripDocs => {
         const trips = tripDocs.reduce((tripMap, tripDoc) => {
-          tripMap[tripDoc.data().id] = tripDoc.data();
+          const tripData = tripDoc.data();
+
+          // calculate overall travel date
+          const traveDates = getTravelDates(tripData);
+
+          tripData.travelDates = traveDates;
+          tripMap[tripDoc.data().id] = tripData;
+          tripMap[tripDoc.data().id] = tripData;
 
           return tripMap;
         }, {});
@@ -137,9 +145,12 @@ export const tripActions = {
     trip()
       .getTrip(tripRef)
       .then(tripDetails => {
+        const tripData = tripDetails.data();
+        tripData.travelDates = getTravelDates(tripData);
+
         dispatch({
           type: types.SET_SELECTED_TRIP,
-          selectedTrip: tripDetails.data(),
+          selectedTrip: tripData,
         });
       });
   },
