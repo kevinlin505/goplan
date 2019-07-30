@@ -47,7 +47,7 @@ const TripMap = ({ destinations }) => {
         lng: destination.geo.longitude,
       };
 
-      bounds.extend(new google.maps.LatLng(pos));
+      bounds.extend(pos);
 
       return (
         <Marker
