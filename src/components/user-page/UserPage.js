@@ -67,11 +67,16 @@ const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
         </LeftPanel>
         <MainPanel>
           <TripList>
-            <div>{constructCurrentTrips('current')}</div>
-            <div>
-              <TripListLabel>Previous trips:</TripListLabel>
-              {constructCurrentTrips('previous')}
-            </div>
+            {sortedTrips.current.length && (
+              <div>{constructCurrentTrips('current')}</div>
+            )}
+
+            {sortedTrips.previous.length && (
+              <div>
+                <TripListLabel>Previous trips:</TripListLabel>
+                {constructCurrentTrips('previous')}
+              </div>
+            )}
           </TripList>
         </MainPanel>
         <RightPanel>
@@ -123,9 +128,9 @@ const TripList = styled.div`
 `;
 
 const TripListLabel = styled.div`
+  margin-bottom: 10px;
   font-size: 16px;
   font-weight: 600;
-  margin: 10px 0;
 `;
 
 export default connect(
