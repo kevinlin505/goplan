@@ -53,13 +53,6 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
     });
   };
 
-  const updatePayeeField = event => {
-    setValues({
-      ...form,
-      payees: event.target.value,
-    });
-  };
-
   const handleFormSubmit = event => {
     event.preventDefault();
 
@@ -166,7 +159,7 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
               input={<MultiSelectField id="select-multiple-chip" />}
               multiple
               name="payees"
-              onChange={updatePayeeField}
+              onChange={updateField}
               renderValue={selected => attendeeRenderValue(selected)}
               value={form.payees}
             >
