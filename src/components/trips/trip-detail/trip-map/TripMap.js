@@ -67,6 +67,7 @@ const TripMap = ({ destinations }) => {
     <Container>
       <Map
         bounds={mapBounds}
+        disableDefaultUI={true}
         google={google}
         initialCenter={defaultProps.center}
         zoom={defaultProps.zoom}
