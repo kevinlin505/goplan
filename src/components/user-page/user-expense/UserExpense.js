@@ -47,7 +47,7 @@ export const UserExpense = ({
 
   const tripList = Object.keys(expenseTrips).map((tripId, index) => {
     const cost = expenseTrips[tripId];
-    const name = trips[tripId] && trips[tripId].trip_name;
+    const name = trips[tripId] && trips[tripId].name;
 
     return (
       <NestedListItem key={`${tripId}-${cost}-${index}`}>
