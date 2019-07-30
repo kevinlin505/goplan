@@ -59,15 +59,8 @@ export const UserExpense = ({
 
   return (
     <CardContainer>
-      <List
-        aria-labelledby="nested-list-subheader"
-        component="nav"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            Spending Summary
-          </ListSubheader>
-        }
-      >
+      <List aria-labelledby="nested-list-header" component="nav">
+        <ListHeader id="nested-list-header">Spending Summary</ListHeader>
         <ListItem button>
           <ListItemIcon>
             <AttachMoney />
@@ -108,6 +101,12 @@ UserExpense.propTypes = {
   trips: PropTypes.object.isRequired,
   userExpenses: PropTypes.object.isRequired,
 };
+
+const ListHeader = styled.div`
+  padding: 10px 16px;
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.textLight};
+`;
 
 const ListItemIcon = styled.div`
   display: inline-flex;

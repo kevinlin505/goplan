@@ -34,7 +34,10 @@ export default function user() {
       return db
         .collection('users')
         .doc(currentUser.uid)
-        .set(profileDefault);
+        .set(profileDefault)
+        .then(() => {
+          return Promise.resolve(profileDefault);
+        });
     },
 
     // fetch all attendee from an array of userRef and return user objects

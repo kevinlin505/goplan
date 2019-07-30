@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import CardContainer from '@styles/card/CardContainer';
-import dockImg from '@assets/images/dock.jpg';
+import profileBackground from '@assets/images/profileBackground.jpg';
 
 export const ProfileCard = ({ profile }) => {
   return (
@@ -42,7 +42,7 @@ const BackgroundImg = styled.img`
   left: 0;
   width: 100%;
   height: 150px;
-  background-image: url(${dockImg});
+  background-image: url(${profileBackground});
   background-size: cover;
   background-position: center;
 `;

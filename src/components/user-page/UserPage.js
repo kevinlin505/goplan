@@ -7,15 +7,16 @@ import { authActions } from '@providers/auth/auth';
 import { expenseActions } from '@providers/expense/expense';
 import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
+import { getSortedTrips } from '@selectors/tripSelector';
 import TripCard from '@components/user-page/trip-card/TripCard';
 import UserExpense from '@components/user-page/user-expense/UserExpense';
 import ProfileCard from '@components/user-page/profile-card/ProfileCard';
-import NewTripModal from '@components/trips/new-trip-modal/NewTripModal';
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
     profile: state.auth.profile,
+    sortedTrips: getSortedTrips(state),
     trip: state.trip,
   };
 };
@@ -31,10 +32,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const UserPage = ({ actions, auth, profile, trip }) => {
-  const [tripList, setTripList] = useState(null);
+const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
   const tripCount = profile && profile.trips && profile.trips.length;
-  const tripIds = Object.keys(trip.trips);
 
   useEffect(() => {
     actions.user.getUserExpenseReports();
@@ -47,21 +46,17 @@ const UserPage = ({ actions, auth, profile, trip }) => {
     }
   }, [tripCount]);
 
-  useEffect(() => {
-    const trips = tripIds.map((tripId, index) => {
-      const tripDetail = trip.trips[tripId];
-
+  function constructCurrentTrips(section) {
+    return sortedTrips[section].map((currentTrip, index) => {
       return (
         <TripCard
-          key={`${tripId}-${index}`}
+          key={`${currentTrip.id}-${index}`}
           homePage={true}
-          tripDetail={tripDetail}
+          tripDetail={currentTrip}
         />
       );
     });
-
-    setTripList(trips);
-  }, [tripIds.length]);
+  }
 
   return (
     <Container>
@@ -71,13 +66,23 @@ const UserPage = ({ actions, auth, profile, trip }) => {
           <UserExpense />
         </LeftPanel>
         <MainPanel>
-          <TripList>{tripList}</TripList>
+          <TripList>
+            {sortedTrips.current.length > 0 && (
+              <div>{constructCurrentTrips('current')}</div>
+            )}
+
+            {sortedTrips.previous.length > 0 && (
+              <div>
+                <TripListLabel>Previous trips:</TripListLabel>
+                {constructCurrentTrips('previous')}
+              </div>
+            )}
+          </TripList>
         </MainPanel>
         <RightPanel>
           <div></div>
         </RightPanel>
       </Contents>
-      {trip.isNewTripModalOpen && <NewTripModal />}
     </Container>
   );
 };
@@ -86,6 +91,7 @@ UserPage.propTypes = {
   actions: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
+  sortedTrips: PropTypes.object.isRequired,
   trip: PropTypes.object.isRequired,
 };
 
@@ -119,6 +125,12 @@ const RightPanel = styled.div`
 const TripList = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const TripListLabel = styled.div`
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 600;
 `;
 
 export default connect(

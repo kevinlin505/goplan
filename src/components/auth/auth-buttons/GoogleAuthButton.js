@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@styles/Button';
+import { Button } from '@material-ui/core';
 
 export const GoogleAuthButton = ({ handleSignIn }) => {
   return (
