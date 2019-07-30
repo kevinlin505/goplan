@@ -42,10 +42,7 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
     date: '',
     merchant: '',
     amount: '',
-    payees: attendees.map(attendee => ({
-      userId: attendee.id,
-      userName: attendee.name,
-    })),
+    payees: attendees,
     description: '',
   });
 
@@ -53,6 +50,13 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
     setValues({
       ...form,
       [event.target.name]: event.target.value,
+    });
+  };
+
+  const updatePayeeField = event => {
+    setValues({
+      ...form,
+      payees: event.target.value,
     });
   };
 
@@ -86,6 +90,18 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
       ...previewImageSrcs.slice(filePos + 1),
     ]);
   };
+
+  function attendeeRenderValue(selectedValues) {
+    return (
+      <div>
+        {selectedValues.map(value => {
+          return (
+            <Chip key={`selected-values-${value.id}`} label={value.name} />
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <Overlay>
@@ -150,23 +166,14 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
               input={<MultiSelectField id="select-multiple-chip" />}
               multiple
               name="payees"
-              onChange={updateField}
-              renderValue={selected => (
-                <div>
-                  {selected.map(value => {
-                    const { name } = attendees.filter(
-                      attendee => attendee.id === value.userId,
-                    )[0];
-                    return <Chip key={value.userId} label={name} />;
-                  })}
-                </div>
-              )}
+              onChange={updatePayeeField}
+              renderValue={selected => attendeeRenderValue(selected)}
               value={form.payees}
             >
               {attendees.map(attendee => (
                 <MenuItem
                   key={`${attendee.name}-${attendee.id}`}
-                  value={attendee.id}
+                  value={attendee}
                 >
                   {attendee.name}
                 </MenuItem>
