@@ -16,7 +16,9 @@ const TripCard = ({ tripDetail }) => {
   }, 0);
 
   const backgroundImageUrl =
-    (destination && `${destination.photo}&w=600`) || defaultBackgroundImage;
+    destination && destination.photo
+      ? `${destination.photo}&w=600`
+      : defaultBackgroundImage;
 
   function constructAttendeeList() {
     return tripDetail.attendees.map(attendee => {
