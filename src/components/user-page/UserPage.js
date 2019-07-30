@@ -67,11 +67,11 @@ const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
         </LeftPanel>
         <MainPanel>
           <TripList>
-            {sortedTrips.current.length && (
+            {sortedTrips.current.length > 0 && (
               <div>{constructCurrentTrips('current')}</div>
             )}
 
-            {sortedTrips.previous.length && (
+            {sortedTrips.previous.length > 0 && (
               <div>
                 <TripListLabel>Previous trips:</TripListLabel>
                 {constructCurrentTrips('previous')}
