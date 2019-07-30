@@ -42,12 +42,16 @@ const NavigationBar = ({ actions, profile, trip }) => {
             New Trip
           </NewTripButton>
           <HomeLink to="/home">Home</HomeLink>
-          <SignOutButton onClick={actions.auth.signOut}>
-            <ProfileAvatar>
-              <Avatar src={profile.profile_url} />
-            </ProfileAvatar>
-            Sign Out
-          </SignOutButton>
+          {profile.id && (
+            <SignOutButton onClick={actions.auth.signOut}>
+              {profile.profile_url && (
+                <ProfileAvatar>
+                  <Avatar src={profile.profile_url} />
+                </ProfileAvatar>
+              )}
+              Sign Out
+            </SignOutButton>
+          )}
         </RightNavBarItems>
       </NavBar>
       {trip.isNewTripModalOpen && <NewTripModal />}

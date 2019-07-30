@@ -12,6 +12,7 @@ import Rainy from '@components/icons/Rainy';
 const mapStateToProps = state => {
   return {
     auth: state.auth.isAuthenticated,
+    profile: state.auth.profile,
   };
 };
 
@@ -23,7 +24,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const Render = ({ auth, component: Component, match, ...props }) => {
+const Render = ({ auth, component: Component, match, profile, ...props }) => {
   if (auth === AuthState.UNKNOWN) {
     return (
       <LoadingWrapper>
@@ -44,8 +45,16 @@ const Render = ({ auth, component: Component, match, ...props }) => {
 
   return auth === AuthState.AUTHENTICATED ? (
     <React.Fragment>
-      <NavigationBar />
-      <Component match={match} {...props} />
+      {profile ? (
+        <React.Fragment>
+          <NavigationBar />
+          <Component match={match} {...props} />
+        </React.Fragment>
+      ) : (
+        <LoadingWrapper>
+          <Rainy />
+        </LoadingWrapper>
+      )}
     </React.Fragment>
   ) : (
     <Redirect
@@ -64,6 +73,11 @@ Render.propTypes = {
   auth: PropTypes.number.isRequired,
   component: PropTypes.any.isRequired,
   match: PropTypes.object.isRequired,
+  profile: PropTypes.object,
+};
+
+Render.defaultProps = {
+  profile: null,
 };
 
 const LoadingWrapper = styled.div`
