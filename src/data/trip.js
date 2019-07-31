@@ -65,6 +65,23 @@ export default function trip() {
       return batch.commit();
     },
 
+    leaveTrip: (tripId, attendee) => {
+      const tripRef = db.collection('trips').doc(tripId);
+      const userRef = db.collection('users').doc(currentUser.uid);
+
+      const batch = db.batch();
+
+      batch.update(tripRef, {
+        attendees: firebase.firestore.FieldValue.arrayRemove(attendee),
+      });
+
+      batch.update(userRef, {
+        trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
+      });
+
+      return batch.commit();
+    },
+
     updateTrip: (tripId, tripDetail) => {
       return db
         .collection('trips')
