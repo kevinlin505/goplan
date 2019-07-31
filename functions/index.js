@@ -41,7 +41,16 @@ const unsplashHelper = {
   },
 };
 
-async function getImage(url) {
+async function getImage(options) {
+  if (options.query.length === undefined || options.query.length === 0) {
+    return null;
+  }
+  const url = unsplashHelper.apiUrl(
+    keys.UNSPLASH.accessToken,
+    options.query[0],
+  );
+  console.log(`url: ${url}`);
+
   return axios
     .get(url)
     .then(response => {
@@ -51,18 +60,25 @@ async function getImage(url) {
         console.log(`data: ${imageSourceUrl}`);
         return imageSourceUrl;
       }
-      return null;
+
+      // Try again
+      options.query.shift();
+      return getImage(options);
     })
     .catch(err => {
       console.error(`erorr: ${err}`);
-      return null;
+
+      // Try again
+      options.query.shift();
+      return getImage(options);
     });
 }
 
 exports.getUnsplashImage = functions.https.onCall(options => {
-  const url = unsplashHelper.apiUrl(keys.UNSPLASH.accessToken, options.query);
-  console.log(`url: ${url}`);
-  return getImage(url);
+  if (options.query.length > 2) {
+    return null;
+  }
+  return getImage(options);
 });
 
 // AWS S3

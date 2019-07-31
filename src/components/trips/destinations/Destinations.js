@@ -116,7 +116,7 @@ const Destinations = ({ actions, destinations }) => {
         if (destinationSearchResult) {
           actions.trip
             .getUnsplashImage({
-              query: destinationSearchResult.name,
+              query: [destinationSearchResult.name, 'China'],
             })
             .then(url => {
               const updatedDestination = {
@@ -152,7 +152,7 @@ const Destinations = ({ actions, destinations }) => {
     } else if (destination.geo) {
       actions.trip
         .getUnsplashImage({
-          query: destination.location,
+          query: [destination.location, 'China'],
         })
         .then(url => {
           actions.trip.updateForm('destinations', [
