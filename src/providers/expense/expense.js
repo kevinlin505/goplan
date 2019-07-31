@@ -1,4 +1,5 @@
 import expense from '@data/expense';
+import compressFile from '@utils/compressFile';
 
 export const types = {
   SUBMIT_EXPENSE: 'EXPENSE/SUBMIT_EXPENSE',
@@ -36,30 +37,48 @@ export const expenseActions = {
 
     // TODO: set a max on total file size
     if (files.length) {
-      return Promise.all(
-        files.map(file => dispatch(expenseActions.uploadReceipts(file))),
-      )
-        .then(data => {
-          data.forEach(dataUrl => {
-            if (dataUrl) {
-              const receipt = {
-                url: dataUrl,
-              };
-              expenseForm.receipts.push(receipt);
-            }
-          });
-          return expense()
-            .submitExpense(expenseForm)
-            .then(() => {
-              dispatch({
-                type: types.SUBMIT_EXPENSE,
-              });
+      return (
+        Promise.all(
+          // files.map(file => dispatch(expenseActions.uploadReceipts(file))),
+          files.map(file =>
+            compressFile(dispatch, expenseActions.uploadReceipts, file),
+          ),
+        )
+          // new Promise((resolve, reject) => {
+          //   new Compressor(file, {
+          //     quality: 0.4,
+          //     success(result) {
+          //       resolve(dispatch(expenseActions.uploadReceipts(result)));
+          //     },
+          //     error(err) {
+          //       console.log(err.message);
+          //       reject(err);
+          //     },
+          //   });
+          // }),
+          // ),
+          .then(data => {
+            data.forEach(dataUrl => {
+              if (dataUrl) {
+                const receipt = {
+                  url: dataUrl,
+                };
+                expenseForm.receipts.push(receipt);
+              }
             });
-        })
-        .catch(err => {
-          // handle form submit error
-          console.log(err);
-        });
+            return expense()
+              .submitExpense(expenseForm)
+              .then(() => {
+                dispatch({
+                  type: types.SUBMIT_EXPENSE,
+                });
+              });
+          })
+          .catch(err => {
+            // handle form submit error
+            console.log(err);
+          })
+      );
     }
 
     return expense()
@@ -88,7 +107,6 @@ export const expenseActions = {
           name: file.name,
           tripId: selectedTrip.id,
         };
-
         expense()
           .uploadReceipt(options)
           .then(res => {
