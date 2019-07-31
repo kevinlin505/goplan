@@ -6,8 +6,10 @@ import getTravelDates from '@utils/calculateTravelDates';
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
   GET_DESTINATION_PHOTO: 'TRIP/GET_DESTINATION_PHOTO',
-  GET_TRIP_EXPENSE_REPORTS: 'EXPENSE/GET_TRIP_EXPENSE_REPORTS',
+  GET_TRIP_EXPENSE_REPORTS: 'TRIP/GET_TRIP_EXPENSE_REPORTS',
+  INVITE_TRIP: 'TRIP/INVITE_TRIP',
   JOIN_TRIP: 'TRIP/JOIN_TRIP',
+  LEAVE_TRIP: 'TRIP/LEAVE_TRIP',
   RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
   TOGGLE_NEW_TRIP_MODAL: 'TRIP/TOGGLE_NEW_TRIP_MODAL',
@@ -195,6 +197,22 @@ export const tripActions = {
           type: types.JOIN_TRIP,
         });
       });
+  },
+
+  inviteTrip: (email, tripId) => dispatch => {
+    dispatch({
+      type: types.INVITE_TRIP,
+    });
+
+    return auth().sendInviteEmail(email, tripId);
+  },
+
+  leaveTrip: (tripId, attendee) => dispatch => {
+    dispatch({
+      type: types.LEAVE_TRIP,
+    });
+
+    return trip().leaveTrip(tripId, attendee);
   },
 
   toggleNewTripModal: () => (dispatch, getState) => {
