@@ -42,7 +42,7 @@ const unsplashHelper = {
 };
 
 async function getImage(options) {
-  if (options.query.length === undefined || options.query.length === 0) {
+  if (options.query === undefined || options.query.length === 0) {
     return null;
   }
   const url = unsplashHelper.apiUrl(
