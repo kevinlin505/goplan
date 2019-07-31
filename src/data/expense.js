@@ -24,7 +24,6 @@ export default function trip() {
           if (!tripDoc.exists) {
             throw new Error('Document does not exist!');
           }
-
           const data = tripDoc.data();
           const categoryCost =
             (data.costs && data.costs[expenseDetail.category]) || 0;
