@@ -8,15 +8,22 @@ import Button from '@material-ui/core/Button';
 import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
-import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
+import {
+  getAttendee,
+  getParamTripId,
+  getTripStatus,
+} from '@selectors/tripSelector';
+import googleMapsApi from '@utils/googleMapsApi';
+import validateEmail from '@utils/validateEmail';
 import TripCard from '@components/user-page/trip-card/TripCard';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
-import googleMapsApi from '@utils/googleMapsApi';
 import TripExpense from '@components/trips/trip-detail/trip-expense/TripExpense';
 import NewExpenseModal from '@components/trips/trip-detail/new-expense-modal/NewExpenseModal';
+import { FieldWrapper, Input } from '@styles/forms/Forms';
 
 const mapStateToProps = (state, props) => {
   return {
+    attendee: getAttendee(state, props),
     trip: state.trip,
     tripId: getParamTripId(state, props),
     userInTrip: getTripStatus(state, props),
@@ -33,7 +40,15 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
+const TripDetail = ({
+  actions,
+  attendee,
+  history,
+  trip,
+  tripId,
+  userInTrip,
+  match,
+}) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
   const [expenseList, setExpenseList] = useState(null);
   const google = googleMapsApi();
@@ -59,12 +74,53 @@ const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
     }
   }, [trip.selectedTrip]);
 
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [validEmail, setValidEmail] = useState(false);
+
+  useEffect(() => {
+    setValidEmail(validateEmail(inviteEmail));
+  }, [inviteEmail]);
+
+  function handleInviteEmail(event) {
+    setInviteEmail(event.target.value);
+  }
+
+  function handleInvite() {
+    if (inviteEmail) {
+      actions.trip.inviteTrip(inviteEmail, tripId);
+    }
+  }
+
+  function handleLeaveTrip() {
+    actions.trip.leaveTrip(tripId, attendee).then(() => {
+      history.push('/home');
+    });
+  }
+
   // Need to clean up this part, we should not get into this component if selectedTrip is null.
   return (
     <Container>
       <Contents>
         <LeftPanel>
           {showTripCard ? <TripCard tripDetail={trip.selectedTrip} /> : null}
+          <FieldWrapper>
+            <Input
+              label="Invite email"
+              onChange={handleInviteEmail}
+              value={inviteEmail}
+            />
+            <Button
+              color="primary"
+              disabled={!validEmail}
+              onClick={handleInvite}
+              variant="contained"
+            >
+              Invite
+            </Button>
+          </FieldWrapper>
+          <Button color="primary" onClick={handleLeaveTrip} variant="contained">
+            Leave
+          </Button>
           <Button
             color="primary"
             onClick={toggleCreateExpenseModal}
@@ -96,6 +152,8 @@ const TripDetail = ({ actions, trip, tripId, userInTrip, match }) => {
 
 TripDetail.propTypes = {
   actions: PropTypes.object.isRequired,
+  attendee: PropTypes.object,
+  history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   selectedTrip: PropTypes.object,
   trip: PropTypes.object.isRequired,
@@ -104,6 +162,7 @@ TripDetail.propTypes = {
 };
 
 TripDetail.defaultProps = {
+  attendee: {},
   selectedTrip: null,
 };
 
