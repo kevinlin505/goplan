@@ -88,13 +88,13 @@ const SignIn = ({ actions }) => {
       </ContentContainer>
       <Attribution>
         {'Photo by '}
-        <Link href={photographer} target="_blank">
+        <ReferenceLink href={photographer} target="_blank">
           {background.name}
-        </Link>
+        </ReferenceLink>
         {' on '}
-        <Link href={source} target="_blank">
+        <ReferenceLink href={source} target="_blank">
           Unsplash
-        </Link>
+        </ReferenceLink>
       </Attribution>
     </Background>
   );
@@ -146,7 +146,7 @@ const Attribution = styled.div`
   text-shadow: 1px 1px 2px ${({ theme }) => theme.colors.black};
 `;
 
-const Link = styled.a`
+const ReferenceLink = styled.a`
   color: ${({ theme }) => theme.colors.white};
 
   &:active,
