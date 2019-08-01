@@ -45,6 +45,7 @@ export default function trip() {
               expenses: firebase.firestore.FieldValue.arrayUnion(expenseRef),
             });
           });
+
           transaction.set(expenseRef, expenseDetail);
         });
       });
