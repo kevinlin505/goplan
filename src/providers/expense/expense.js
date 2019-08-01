@@ -31,7 +31,7 @@ export const expenseActions = {
       ...form,
       date: new Date(form.date),
       receipts: [],
-      payer: { userId: profile.id, userName: profile.name },
+      payer: { email: profile.email, id: profile.id, name: profile.name },
       tripId: selectedTrip.id,
     };
 
@@ -53,6 +53,7 @@ export const expenseActions = {
               expenseForm.receipts.push(receipt);
             }
           });
+
           return expense()
             .submitExpense(expenseForm)
             .then(() => {
