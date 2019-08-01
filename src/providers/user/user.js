@@ -122,12 +122,13 @@ export const userActions = {
   },
 
   updateProfile: profile => dispatch => {
-    user()
+    return user()
       .updateUserProfile(profile)
-      .then(
-        dispatch({
+      .then(() => {
+        return dispatch({
           type: types.UPDATE_USER_DETAILS,
-        }),
-      );
+        });
+      })
+      .catch(error => Promise.resolve());
   },
 };
