@@ -31,10 +31,9 @@ export const expenseActions = {
       ...form,
       date: new Date(form.date),
       receipts: [],
-      payer: { userId: profile.id, userName: profile.name },
+      payer: { email: profile.email, id: profile.id, name: profile.name },
       tripId: selectedTrip.id,
     };
-
     // TODO: set a max on total file size
     if (files.length) {
       return Promise.all(

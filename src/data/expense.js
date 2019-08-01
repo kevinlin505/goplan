@@ -27,7 +27,6 @@ export default function trip() {
           const data = tripDoc.data();
           const categoryCost =
             (data.costs && data.costs[expenseDetail.category]) || 0;
-
           const tripDetail = {
             expenses: firebase.firestore.FieldValue.arrayUnion(expenseRef),
             costs: {
@@ -36,16 +35,13 @@ export default function trip() {
                 parseFloat(categoryCost) + parseFloat(expenseDetail.amount),
             },
           };
-
           transaction.update(tripRef, tripDetail);
-
           expenseDetail.payees.forEach(payee => {
-            const userRef = db.collection('users').doc(payee.userId);
+            const userRef = db.collection('users').doc(payee.id);
             transaction.update(userRef, {
               expenses: firebase.firestore.FieldValue.arrayUnion(expenseRef),
             });
           });
-
           transaction.set(expenseRef, expenseDetail);
         });
       });

@@ -36,33 +36,48 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
     };
   }
 
-  function calculatePayments(payments) {
-    const payerAmounts = [];
+  function renderNetPayments(netPayments) {
+    // const payerAmounts = [];
     const netPayerAmounts = [];
-    const spiltPayment = expenseSum / Object.keys(payments).length;
+    // const spiltPayment = expenseSum / Object.keys(netPayments).length;
+
+    Object.keys(netPayments).forEach(key => {
+      // const payerNetAmount = netPayments[key][1] - spiltPayment;
+
+      // payerAmounts.push(
+      //   <AttendeePaymentListItem key={`total-payment-paid-${key}`}>
+      //     <div>{`${netPayments[key][0]} paid`}</div>
+      //     <div>{convertNumberToCurrency(netPayments[key][1])}</div>
+      //   </AttendeePaymentListItem>,
+      // );
+
+      netPayerAmounts.push(
+        <AttendeePaymentListItem key={`net-payment-${key}`}>
+          <div>{`${netPayments[key][0]} ${
+            netPayments[key][1] > 0 ? 'receives' : 'owes'
+          }`}</div>
+          <div>{convertNumberToCurrency(Math.abs(netPayments[key][1]))}</div>
+        </AttendeePaymentListItem>,
+      );
+    });
+
+    // setAttendeePayments(payerAmounts);
+    setAttendeePaymentsNet(netPayerAmounts);
+  }
+
+  function renderPayments(payments) {
+    const payerAmounts = [];
 
     Object.keys(payments).forEach(key => {
-      const payerNetAmount = payments[key][1] - spiltPayment;
-
       payerAmounts.push(
         <AttendeePaymentListItem key={`total-payment-paid-${key}`}>
           <div>{`${payments[key][0]} paid`}</div>
           <div>{convertNumberToCurrency(payments[key][1])}</div>
         </AttendeePaymentListItem>,
       );
-
-      netPayerAmounts.push(
-        <AttendeePaymentListItem key={`net-payment-${key}`}>
-          <div>{`${payments[key][0]} ${
-            payerNetAmount > 0 ? 'receives' : 'owes'
-          }`}</div>
-          <div>{convertNumberToCurrency(Math.abs(payerNetAmount))}</div>
-        </AttendeePaymentListItem>,
-      );
     });
 
     setAttendeePayments(payerAmounts);
-    setAttendeePaymentsNet(netPayerAmounts);
   }
 
   useEffect(() => {
@@ -86,6 +101,7 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
 
   useEffect(() => {
     const list = {};
+    const netPayments = {};
     const payments = {};
     expenseList.forEach(expenseId => {
       if (tripExpenses[expenseId]) {
@@ -99,14 +115,32 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
           receipts,
         } = tripExpenses[expenseId];
 
-        if (Object.keys(payments).length === 0) {
-          payees.forEach(payee => {
-            payments[payee.userId] = [payee.userName, 0];
-          });
+        // if (Object.keys(netPayments).length === 0) {
+        //   payees.forEach(payee => {
+        //     netPayments[payee.id] = [payee.name, 0];
+        //   });
+        // }
+
+        // netPayments[payer.id][1] += parseFloat(amount);
+
+        const splitAmount = parseFloat(amount) / payees.length;
+        debugger;
+        payees.forEach(payee => {
+          debugger;
+          if (!netPayments[payee.id]) {
+            netPayments[payee.id] = [payee.name, 0];
+          }
+          netPayments[payee.id][1] -= splitAmount;
+        });
+        debugger;
+        netPayments[payer.id][1] += parseFloat(amount);
+
+        if (!payments[payer.id]) {
+          payments[payer.id] = [payer.name, 0];
         }
 
-        payments[payer.userId][1] += parseFloat(amount);
-
+        payments[payer.id][1] += parseFloat(amount);
+        debugger;
         list[expenseId] = (
           <DetailContentList>
             <DetailContentListItem>
@@ -127,7 +161,7 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
             </DetailContentListItem>
             <DetailContentListItem>
               <div>Who paid</div>
-              <div>{payer.userName}</div>
+              <div>{payer.name}</div>
             </DetailContentListItem>
             <DetailContentListItem>
               {receipts[0] ? (
@@ -141,7 +175,8 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
       }
     });
 
-    calculatePayments(payments);
+    renderNetPayments(netPayments);
+    renderPayments(payments);
     setDetailExpenseList(list);
   }, [Object.keys(tripExpenses).length]);
 
