@@ -114,9 +114,13 @@ const Destinations = ({ actions, destinations }) => {
       googlePlaceService.textSearch({ query: destination.address }, data => {
         const destinationSearchResult = data[0];
         if (destinationSearchResult) {
+          const addressComponents = destinationSearchResult.formatted_address.split(
+            ', ',
+          );
+          const country = addressComponents[addressComponents.length - 1];
           actions.trip
             .getUnsplashImage({
-              query: destinationSearchResult.name,
+              query: [destinationSearchResult.name, country],
             })
             .then(url => {
               const updatedDestination = {
@@ -152,7 +156,7 @@ const Destinations = ({ actions, destinations }) => {
     } else if (destination.geo) {
       actions.trip
         .getUnsplashImage({
-          query: destination.location,
+          query: [destination.location, destination.country],
         })
         .then(url => {
           actions.trip.updateForm('destinations', [
