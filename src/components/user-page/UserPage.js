@@ -62,7 +62,7 @@ const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
     <Container>
       <Contents>
         <LeftPanel>
-          <ProfileCard profile={profile} />
+          <ProfileCard actions={actions} profile={profile} />
           <UserExpense />
         </LeftPanel>
         <MainPanel>

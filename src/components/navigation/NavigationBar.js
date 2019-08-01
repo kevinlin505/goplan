@@ -92,6 +92,7 @@ const LogoLink = styled(Link)`
 
 const RightNavBarItems = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const NewTripButton = styled(Button)`
