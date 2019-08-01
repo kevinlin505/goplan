@@ -37,20 +37,9 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
   }
 
   function renderNetPayments(netPayments) {
-    // const payerAmounts = [];
     const netPayerAmounts = [];
-    // const spiltPayment = expenseSum / Object.keys(netPayments).length;
 
     Object.keys(netPayments).forEach(key => {
-      // const payerNetAmount = netPayments[key][1] - spiltPayment;
-
-      // payerAmounts.push(
-      //   <AttendeePaymentListItem key={`total-payment-paid-${key}`}>
-      //     <div>{`${netPayments[key][0]} paid`}</div>
-      //     <div>{convertNumberToCurrency(netPayments[key][1])}</div>
-      //   </AttendeePaymentListItem>,
-      // );
-
       netPayerAmounts.push(
         <AttendeePaymentListItem key={`net-payment-${key}`}>
           <div>{`${netPayments[key][0]} ${
@@ -61,7 +50,6 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
       );
     });
 
-    // setAttendeePayments(payerAmounts);
     setAttendeePaymentsNet(netPayerAmounts);
   }
 
@@ -114,33 +102,21 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
           payer,
           receipts,
         } = tripExpenses[expenseId];
-
-        // if (Object.keys(netPayments).length === 0) {
-        //   payees.forEach(payee => {
-        //     netPayments[payee.id] = [payee.name, 0];
-        //   });
-        // }
-
-        // netPayments[payer.id][1] += parseFloat(amount);
-
         const splitAmount = parseFloat(amount) / payees.length;
-        debugger;
+
+        if (!payments[payer.id]) {
+          payments[payer.id] = [payer.name, 0];
+        }
+        payments[payer.id][1] += parseFloat(amount);
+
         payees.forEach(payee => {
-          debugger;
           if (!netPayments[payee.id]) {
             netPayments[payee.id] = [payee.name, 0];
           }
           netPayments[payee.id][1] -= splitAmount;
         });
-        debugger;
         netPayments[payer.id][1] += parseFloat(amount);
 
-        if (!payments[payer.id]) {
-          payments[payer.id] = [payer.name, 0];
-        }
-
-        payments[payer.id][1] += parseFloat(amount);
-        debugger;
         list[expenseId] = (
           <DetailContentList>
             <DetailContentListItem>
