@@ -1,23 +1,92 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import deepEqual from 'fast-deep-equal';
+import { CardMedia, IconButton } from '@material-ui/core';
+import { Edit, Check } from '@material-ui/icons';
 import CardContainer from '@styles/card/CardContainer';
+import { Input } from '@styles/forms/Forms';
 import profileBackground from '@assets/images/profileBackground.jpg';
 
-export const ProfileCard = ({ profile }) => {
+export const ProfileCard = ({ actions, profile }) => {
+  const [profileForm, setProfileForm] = useState({
+    ...profile,
+  });
+
+  const [enableEdit, setEnableEdit] = useState(false);
+
+  function handleFormUpdate(event) {
+    setProfileForm({
+      ...profileForm,
+      [event.target.name]: event.target.value,
+    });
+  }
+
+  function handleEditProfile() {
+    if (!enableEdit) {
+      setEnableEdit(true);
+    } else if (!deepEqual(profileForm, profile)) {
+      actions.user
+        .updateProfile(profileForm)
+        .then(() => {
+          setEnableEdit(false);
+        })
+        .catch(() => {
+          setProfileForm(profile);
+          setEnableEdit(false);
+        });
+    } else {
+      setEnableEdit(false);
+    }
+  }
+
   return (
     <Container>
-      <BackgroundImg />
+      <BackgroundImg
+        alt="Contemplative Reptile"
+        component="img"
+        image={profileBackground}
+      />
       <Profile>
         <Avatar src={profile.profile_url} />
       </Profile>
       <ProfileInfo>
-        <UserName>{profile.name}</UserName>
+        <NameWrapper>
+          <UserName>{profile.name}</UserName>
+          <EditButton onClick={handleEditProfile}>
+            {enableEdit ? <CheckIcon /> : <EditIcon />}
+          </EditButton>
+        </NameWrapper>
         <InfoField>{profile.email}</InfoField>
-        <InfoField>{profile.phone_number}</InfoField>
-        {profile.venmo && <InfoField>Venmo: {profile.venmo}</InfoField>}
-        {profile.quickpay && (
-          <InfoField>Quickpay: {profile.quickpay}</InfoField>
+        {(profileForm.phone_number || enableEdit) && (
+          <EditInput
+            disabled={!enableEdit}
+            label={enableEdit && 'Phone number'}
+            name="phone_number"
+            onChange={handleFormUpdate}
+            value={profileForm.phone_number}
+            variant={enableEdit ? 'filled' : 'standard'}
+          />
+        )}
+        {(profileForm.venmo || enableEdit) && (
+          <EditInput
+            disabled={!enableEdit}
+            label={enableEdit && 'Venmo'}
+            name="venmo"
+            onChange={handleFormUpdate}
+            value={profileForm.venmo}
+            variant={enableEdit ? 'filled' : 'standard'}
+          />
+        )}
+        {(profileForm.quickpay || enableEdit) && (
+          <EditInput
+            disabled={!enableEdit}
+            label={enableEdit && 'Quickpay'}
+            name="quickpay"
+            onChange={handleFormUpdate}
+            value={profileForm.quickpay}
+            variant={enableEdit ? 'filled' : 'standard'}
+          />
         )}
       </ProfileInfo>
     </Container>
@@ -25,6 +94,7 @@ export const ProfileCard = ({ profile }) => {
 };
 
 ProfileCard.propTypes = {
+  actions: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
 };
 
@@ -35,16 +105,13 @@ const Container = styled(CardContainer)`
   align-items: center;
 `;
 
-const BackgroundImg = styled.img`
+const BackgroundImg = styled(CardMedia)`
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
   width: 100%;
   height: 150px;
-  background-image: url(${profileBackground});
-  background-size: cover;
-  background-position: center;
 `;
 
 const Profile = styled.div`
@@ -60,10 +127,36 @@ const ProfileInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 30px;
+  width: 100%;
+  padding: 0 20px 30px;
 `;
 
 const Avatar = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
+const NameWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const EditButton = styled(IconButton)`
+  position: absolute;
+  left: 100%;
+  width: 26px;
+  height: 26px;
+  padding: 5px;
+`;
+
+const EditIcon = styled(Edit)`
+  width: 100%;
+  height: 100%;
+`;
+
+const CheckIcon = styled(Check)`
   width: 100%;
   height: 100%;
 `;
@@ -75,8 +168,39 @@ const UserName = styled.div`
 `;
 
 const InfoField = styled.div`
-  margin: 2px 0;
+  margin: 2px 0 5px;
   color: ${({ theme }) => theme.colors.textLight};
+`;
+
+const EditInput = styled(Input)`
+  padding: 0 10px;
+
+  .MuiInput-underline {
+    ${({ disabled }) =>
+      disabled &&
+      css`
+        &::before,
+        &::after {
+          content: none;
+        }
+      `};
+  }
+
+  input {
+    ${({ disabled }) =>
+      disabled &&
+      css`
+        padding: 0;
+        font-size: 14px;
+        color: ${({ theme }) => theme.colors.textLight};
+        text-align: center;
+
+        &::before,
+        &::after {
+          content: '';
+        }
+      `};
+  }
 `;
 
 export default ProfileCard;

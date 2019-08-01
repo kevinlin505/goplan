@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import convertNumberToCurrency from '@utils/convertNumberToCurrency';
-import CardContainer from '@styles/card/CardContainer';
 import defaultBackgroundImage from '@assets/images/profileBackground.jpg';
 
 const TripCard = ({ tripDetail }) => {
@@ -54,7 +53,7 @@ TripCard.propTypes = {
   tripDetail: PropTypes.object.isRequired,
 };
 
-const Container = styled(CardContainer)`
+const Container = styled.div`
   height: 280px;
   margin: 0 auto 20px;
   background-image: url(${({ backgroundImageUrl }) => backgroundImageUrl});

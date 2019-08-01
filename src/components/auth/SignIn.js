@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
 import GoogleAuthButton from '@components/auth/auth-buttons/GoogleAuthButton';
 import FacebookAuthButton from '@components/auth/auth-buttons/FacebookAuthButton';
-import backgroundImg from '@assets/images/background.jpg';
+import CardContainer from '@styles/card/CardContainer';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -16,14 +16,57 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const RANDOM_NUMBER = Math.floor(Math.random() * 7);
+
 const SignIn = ({ actions }) => {
+  const backgrounds = [
+    {
+      handle: '@dinoreichmuth',
+      name: 'Dino Reichmuth',
+      url: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800',
+    },
+    {
+      handle: '@nilsnedel',
+      name: 'Nils Nedel',
+      url: 'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96',
+    },
+    {
+      handle: '@ranasawalha',
+      name: 'Rana Sawalha',
+      url: 'https://images.unsplash.com/photo-1504609773096-104ff2c73ba4',
+    },
+    {
+      handle: '@erwanhesry',
+      name: 'Erwan Hesry',
+      url: 'https://images.unsplash.com/photo-1479888230021-c24f136d849f',
+    },
+    {
+      handle: '@marilark',
+      name: 'Charlie Costello',
+      url: 'https://images.unsplash.com/photo-1499123785106-343e69e68db1',
+    },
+    {
+      handle: '@agent_illustrateur',
+      name: 'Christine Roy',
+      url: 'https://images.unsplash.com/photo-1502920514313-52581002a659',
+    },
+    {
+      handle: '@an_ku_sh',
+      name: 'Ankush Minda',
+      url: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3',
+    },
+  ];
+  const background = backgrounds[RANDOM_NUMBER];
+  const photographer = `https://unsplash.com/${background.handle}?utm_source=GoPlan&utm_medium=referral`;
+  const source = `https://unsplash.com/?utm_source=GoPlan&utm_medium=referral`;
+
   return (
-    <Background>
+    <Background imageSource={background.url}>
       <ContentContainer>
         <Logo>
           <svg height="68" viewBox="0 0 281 68" width="281">
             <text
-              fill="#E86060"
+              fill="#e91e63"
               fillRule="evenodd"
               fontFamily="JCfg, PilGi"
               fontSize="100"
@@ -43,6 +86,16 @@ const SignIn = ({ actions }) => {
           />
         </LoginButtonContainer>
       </ContentContainer>
+      <Attribution>
+        {'Photo by '}
+        <Link href={photographer} target="_blank">
+          {background.name}
+        </Link>
+        {' on '}
+        <Link href={source} target="_blank">
+          Unsplash
+        </Link>
+      </Attribution>
     </Background>
   );
 };
@@ -56,23 +109,20 @@ const Background = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-image: url(${backgroundImg});
+  background-image: url(${({ imageSource }) => imageSource});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
 `;
 
-const ContentContainer = styled.div`
-  position: relative;
+const ContentContainer = styled(CardContainer)`
   padding: 40px;
   width: 100%;
   max-width: 400px;
   background: rgba(255, 255, 255, 0.75);
-  box-shadow: rgba(198, 208, 235, 0.5) 0px 20px 40px;
-  box-sizing: border-box;
   text-align: center;
-  overflow: auto;
-  border-radius: ${props => props.theme.styles.smallCornerRadius};
+  overflow: hidden;
+  border-radius: 4px;
 `;
 
 const LoginButtonContainer = styled.div`
@@ -85,6 +135,24 @@ const Logo = styled.div`
 
   svg {
     width: 100%;
+  }
+`;
+
+const Attribution = styled.div`
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  color: ${({ theme }) => theme.colors.white};
+  text-shadow: 1px 1px 2px ${({ theme }) => theme.colors.black};
+`;
+
+const Link = styled.a`
+  color: ${({ theme }) => theme.colors.white};
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: ${({ theme }) => theme.colors.white};
   }
 `;
 
