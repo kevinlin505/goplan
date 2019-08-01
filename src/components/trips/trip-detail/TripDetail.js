@@ -88,6 +88,7 @@ const TripDetail = ({
   function handleInvite() {
     if (inviteEmail) {
       actions.trip.inviteTrip(inviteEmail, tripId);
+      setInviteEmail('');
     }
   }
 
