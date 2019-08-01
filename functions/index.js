@@ -56,9 +56,13 @@ async function getImage(options) {
     .then(response => {
       const results = response.data.results;
       if (results.length > 0) {
-        const imageSourceUrl = results[0].urls.full;
+        const result = results[0];
+        const imageSourceUrl = result.urls.full;
+        const name = result.user.name;
+        const handle = result.user.username;
         console.log(`data: ${imageSourceUrl}`);
-        return imageSourceUrl;
+
+        return { imageSourceUrl, name, handle };
       }
 
       // Try again
