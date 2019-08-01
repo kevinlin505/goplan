@@ -34,6 +34,7 @@ export const expenseActions = {
       payer: { email: profile.email, id: profile.id, name: profile.name },
       tripId: selectedTrip.id,
     };
+
     // TODO: set a max on total file size
     if (files.length) {
       return Promise.all(
@@ -52,6 +53,7 @@ export const expenseActions = {
               expenseForm.receipts.push(receipt);
             }
           });
+
           return expense()
             .submitExpense(expenseForm)
             .then(() => {

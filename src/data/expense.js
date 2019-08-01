@@ -24,6 +24,7 @@ export default function trip() {
           if (!tripDoc.exists) {
             throw new Error('Document does not exist!');
           }
+
           const data = tripDoc.data();
           const categoryCost =
             (data.costs && data.costs[expenseDetail.category]) || 0;
@@ -35,13 +36,16 @@ export default function trip() {
                 parseFloat(categoryCost) + parseFloat(expenseDetail.amount),
             },
           };
+
           transaction.update(tripRef, tripDetail);
+
           expenseDetail.payees.forEach(payee => {
             const userRef = db.collection('users').doc(payee.id);
             transaction.update(userRef, {
               expenses: firebase.firestore.FieldValue.arrayUnion(expenseRef),
             });
           });
+
           transaction.set(expenseRef, expenseDetail);
         });
       });

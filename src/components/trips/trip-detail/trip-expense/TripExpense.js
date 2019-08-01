@@ -16,8 +16,8 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
   const [summaryExpense, setSummaryExpense] = useState([]);
   const [expenseSum, setExpenseSum] = useState(0);
   const [detailExpenseList, setDetailExpenseList] = useState({});
-  const [attendeePayments, setAttendeePayments] = useState([]);
-  const [attendeePaymentsNet, setAttendeePaymentsNet] = useState([]);
+  const [attendeePayments, setAttendeePayments] = useState({});
+  const [attendeeNetPayments, setAttendeeNetPayments] = useState({});
 
   const defaultExpenseExpandList = expenseList.reduce((obj, expenseId) => {
     obj[expenseId] = false;
@@ -37,35 +37,27 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
   }
 
   function renderNetPayments(netPayments) {
-    const netPayerAmounts = [];
-
-    Object.keys(netPayments).forEach(key => {
-      netPayerAmounts.push(
-        <AttendeePaymentListItem key={`net-payment-${key}`}>
-          <div>{`${netPayments[key][0]} ${
-            netPayments[key][1] > 0 ? 'receives' : 'owes'
+    return Object.keys(netPayments).map(id => {
+      return (
+        <AttendeePaymentListItem key={`net-payment-${id}`}>
+          <div>{`${netPayments[id][0]} ${
+            netPayments[id][1] > 0 ? 'receives' : 'owes'
           }`}</div>
-          <div>{convertNumberToCurrency(Math.abs(netPayments[key][1]))}</div>
-        </AttendeePaymentListItem>,
+          <div>{convertNumberToCurrency(Math.abs(netPayments[id][1]))}</div>
+        </AttendeePaymentListItem>
       );
     });
-
-    setAttendeePaymentsNet(netPayerAmounts);
   }
 
   function renderPayments(payments) {
-    const payerAmounts = [];
-
-    Object.keys(payments).forEach(key => {
-      payerAmounts.push(
-        <AttendeePaymentListItem key={`total-payment-paid-${key}`}>
-          <div>{`${payments[key][0]} paid`}</div>
-          <div>{convertNumberToCurrency(payments[key][1])}</div>
-        </AttendeePaymentListItem>,
+    return Object.keys(payments).map(id => {
+      return (
+        <AttendeePaymentListItem key={`total-payment-paid-${id}`}>
+          <div>{`${payments[id][0]} paid`}</div>
+          <div>{convertNumberToCurrency(payments[id][1])}</div>
+        </AttendeePaymentListItem>
       );
     });
-
-    setAttendeePayments(payerAmounts);
   }
 
   useEffect(() => {
@@ -151,8 +143,8 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
       }
     });
 
-    renderNetPayments(netPayments);
-    renderPayments(payments);
+    setAttendeeNetPayments(netPayments);
+    setAttendeePayments(payments);
     setDetailExpenseList(list);
   }, [Object.keys(tripExpenses).length]);
 
@@ -186,18 +178,18 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
           <div>{convertNumberToCurrency(expenseSum)}</div>
         </SummaryContentHeader>
         <ExpenseSummary>{summaryExpense}</ExpenseSummary>
-        {attendeePayments.length ? (
+        {
           <AttendeePaymentList>
             Total paid by attendee
-            {attendeePayments}
+            {renderPayments(attendeePayments)}
           </AttendeePaymentList>
-        ) : null}
-        {attendeePaymentsNet.length ? (
+        }
+        {
           <AttendeePaymentList>
             Net amount by attendee
-            {attendeePaymentsNet}
+            {renderNetPayments(attendeeNetPayments)}
           </AttendeePaymentList>
-        ) : null}
+        }
       </SummaryContent>
       {renderExpenseList}
     </Container>
