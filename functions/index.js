@@ -31,7 +31,7 @@ const readHTMLFile = (path, callback) => {
   });
 };
 
-async function sendInvitationEmail(email, invitationLink) {
+async function sendInvitationEmail(options) {
   const promise = new Promise((resolve, reject) => {
     readHTMLFile('./constants/invitation-email-template.html', (err, html) => {
       if (err) {
@@ -39,7 +39,9 @@ async function sendInvitationEmail(email, invitationLink) {
       }
       const template = handlebars.compile(html);
       const replacements = {
-        invitationLink,
+        inviterName: options.inviterName,
+        inviterEmail: options.inviterEmail,
+        invitationLink: options.invitationLink,
       };
       const htmlToSend = template(replacements);
       resolve(htmlToSend);
@@ -49,7 +51,7 @@ async function sendInvitationEmail(email, invitationLink) {
   return promise.then(res => {
     const mailOptions = {
       from: `${APP_NAME} <noreply@firebase.com>`,
-      to: email,
+      to: options.inviteeEmail,
       subject: `Invitation to join ${APP_NAME}!`,
       html: res,
     };
@@ -58,8 +60,8 @@ async function sendInvitationEmail(email, invitationLink) {
   });
 }
 
-exports.sendInvitationEmail = functions.https.onCall(data => {
-  return sendInvitationEmail(data.email, data.invitationLink);
+exports.sendInvitationEmail = functions.https.onCall(options => {
+  return sendInvitationEmail(options);
 });
 
 // Unsplash
