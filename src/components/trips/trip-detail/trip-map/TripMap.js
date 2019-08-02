@@ -18,7 +18,7 @@ const TripMap = ({ destinations }) => {
       lat: centerLat,
       lng: centerLng,
     },
-    zoom: 8,
+    zoom: 12,
   };
 
   const endDate =
@@ -66,11 +66,13 @@ const TripMap = ({ destinations }) => {
   return (
     <Container>
       <Map
-        bounds={mapBounds}
+        bounds={destinations.length > 1 ? mapBounds : null}
         disableDefaultUI={true}
+        fullscreenControl={true}
         google={google}
         initialCenter={defaultProps.center}
         zoom={defaultProps.zoom}
+        zoomControl={true}
       >
         {markerList}
         <InfoWindow
