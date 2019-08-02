@@ -135,7 +135,7 @@ export const tripActions = {
           return tripMap;
         }, {});
 
-        dispatch({
+        return dispatch({
           type: types.RETRIEVE_ALL_TRIPS,
           trips,
         });
@@ -143,13 +143,13 @@ export const tripActions = {
   },
 
   getTrip: tripRef => dispatch => {
-    trip()
+    return trip()
       .getTrip(tripRef)
       .then(tripDetails => {
         const tripData = tripDetails.data();
         tripData.travelDates = getTravelDates(tripData);
 
-        dispatch({
+        return dispatch({
           type: types.SET_SELECTED_TRIP,
           selectedTrip: tripData,
         });
@@ -166,7 +166,7 @@ export const tripActions = {
           return reportData;
         }, {});
 
-        dispatch({
+        return dispatch({
           type: types.GET_TRIP_EXPENSE_REPORTS,
           reports,
         });

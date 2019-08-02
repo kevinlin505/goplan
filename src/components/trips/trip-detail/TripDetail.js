@@ -26,6 +26,7 @@ const mapStateToProps = (state, props) => {
     attendee: getAttendee(state, props),
     trip: state.trip,
     tripId: getParamTripId(state, props),
+    users: state.user.users,
     userInTrip: getTripStatus(state, props),
   };
 };
@@ -46,6 +47,7 @@ const TripDetail = ({
   history,
   trip,
   tripId,
+  users,
   userInTrip,
   match,
 }) => {
@@ -60,7 +62,9 @@ const TripDetail = ({
   };
 
   useEffect(() => {
-    actions.trip.getTrip(tripId);
+    actions.trip.getTrip(tripId).then(data => {
+      actions.user.getAllAttendees(data.selectedTrip.attendees);
+    });
 
     if (!userInTrip) {
       actions.trip.joinTrip(tripId);
@@ -103,7 +107,31 @@ const TripDetail = ({
     <Container>
       <Contents>
         <LeftPanel>
-          {showTripCard ? <TripCard tripDetail={trip.selectedTrip} /> : null}
+          {/* {showTripCard ? <TripCard tripDetail={trip.selectedTrip} /> : null} */}
+          <div>
+            <div>{trip.selectedTrip && trip.selectedTrip.name}</div>
+            <div>
+              {trip.selectedTrip &&
+                `${new Date(
+                  trip.selectedTrip.travelDates.startAt,
+                ).toLocaleDateString()} - ${new Date(
+                  trip.selectedTrip.travelDates.endAt,
+                ).toLocaleDateString()}`}
+            </div>
+            <div>
+              {users &&
+                Object.keys(users).length &&
+                trip.selectedTrip.attendees.map((key, idx) => {
+                  return (
+                    <div key={`${key.id}-${idx}`}>
+                      <div>{users[key.id].name}</div>
+                      <div>{`venmo: ${users[key.id].venmo}`}</div>
+                      <div>{`quickpay: ${users[key.id].quickpay}`}</div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
           <FieldWrapper>
             <Input
               label="Invite email"
@@ -131,11 +159,27 @@ const TripDetail = ({
           </Button>
         </LeftPanel>
         <MainPanel>
+          {trip.selectedTrip &&
+            trip.selectedTrip.destinations.map((destination, idx) => {
+              return (
+                <div
+                  key={`${destination}-${idx}`}
+                  style={{
+                    backgroundImage: `url(${destination.photo})`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'contain, cover',
+                    height: '100px',
+                  }}
+                >
+                  {' '}
+                </div>
+              );
+            })}
+        </MainPanel>
+        <RightPanel>
           {showTripMap ? (
             <TripMap destinations={trip.selectedTrip.destinations} />
           ) : null}
-        </MainPanel>
-        <RightPanel>
           {expenseList && (
             <TripExpense
               expenseList={expenseList}
@@ -159,6 +203,7 @@ TripDetail.propTypes = {
   selectedTrip: PropTypes.object,
   trip: PropTypes.object.isRequired,
   tripId: PropTypes.string.isRequired,
+  users: PropTypes.object,
   userInTrip: PropTypes.bool.isRequired,
 };
 
