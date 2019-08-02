@@ -4,6 +4,8 @@ const axios = require('axios');
 const uuidv3 = require('uuid/v3');
 const AWS = require('aws-sdk/global');
 const S3 = require('aws-sdk/clients/s3');
+const handlebars = require('handlebars');
+const fs = require('fs');
 const keys = require('./constants/Keys');
 
 // Invitation Email
@@ -19,15 +21,41 @@ const mailTransport = nodemailer.createTransport({
 
 const APP_NAME = 'GoPlan';
 
+const readHTMLFile = (path, callback) => {
+  fs.readFile(path, { encoding: 'utf-8' }, (err, html) => {
+    if (err) {
+      throw err;
+    } else {
+      callback(null, html);
+    }
+  });
+};
+
 async function sendInvitationEmail(email, invitationLink) {
-  const mailOptions = {
-    from: `${APP_NAME} <noreply@firebase.com>`,
-    to: email,
-  };
-  mailOptions.subject = `Invitation to join ${APP_NAME}!`;
-  mailOptions.text = `Please join GoPlan. Link: ${invitationLink}`;
-  await mailTransport.sendMail(mailOptions);
-  return null;
+  const promise = new Promise((resolve, reject) => {
+    readHTMLFile('./constants/invitation-email-template.html', (err, html) => {
+      if (err) {
+        reject(err);
+      }
+      const template = handlebars.compile(html);
+      const replacements = {
+        invitationLink,
+      };
+      const htmlToSend = template(replacements);
+      resolve(htmlToSend);
+    });
+  });
+
+  return promise.then(res => {
+    const mailOptions = {
+      from: `${APP_NAME} <noreply@firebase.com>`,
+      to: email,
+      subject: `Invitation to join ${APP_NAME}!`,
+      html: res,
+    };
+    mailTransport.sendMail(mailOptions);
+    return null;
+  });
 }
 
 exports.sendInvitationEmail = functions.https.onCall(data => {

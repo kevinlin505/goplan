@@ -2,11 +2,12 @@
   "name": "new-user-email-functions",
   "description": "Send an email to new users and users who delete their account",
   "dependencies": {
+    "aws-sdk": "2.493.0",
     "axios": "^0.19.0",
     "firebase-admin": "^8.2.0",
     "firebase-functions": "^3.1.0",
+    "handlebars": "^4.1.2",
     "nodemailer": "^4.0.1",
-    "aws-sdk": "2.493.0",
     "uuid": "3.3.2"
   },
   "devDependencies": {
