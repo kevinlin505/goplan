@@ -15,10 +15,10 @@ import {
 } from '@selectors/tripSelector';
 import googleMapsApi from '@utils/googleMapsApi';
 import validateEmail from '@utils/validateEmail';
-import TripCard from '@components/user-page/trip-card/TripCard';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
 import TripExpense from '@components/trips/trip-detail/trip-expense/TripExpense';
 import NewExpenseModal from '@components/trips/trip-detail/new-expense-modal/NewExpenseModal';
+import TripTimeline from '@components/trips/trip-detail/trip-timeline/TripTimeline';
 import { FieldWrapper, Input } from '@styles/forms/Forms';
 
 const mapStateToProps = (state, props) => {
@@ -102,91 +102,97 @@ const TripDetail = ({
     });
   }
 
+  function renderAttendees() {
+    let list = [];
+    if (users && Object.keys(users).length) {
+      list = trip.selectedTrip.attendees.map((key, idx) => {
+        return (
+          <TripAttendee key={`${key.id}-${idx}`}>
+            <AttendeeName>{users[key.id].name}</AttendeeName>
+            <AttendeeInfo>
+              <AttendeePaymentInfo>
+                <AttendeePaymentLabel>Venmo:</AttendeePaymentLabel>
+                <div>{users[key.id].venmo}</div>
+              </AttendeePaymentInfo>
+              <AttendeePaymentInfo>
+                <AttendeePaymentLabel>Quickpay:</AttendeePaymentLabel>
+                <div>{users[key.id].quickpay}</div>
+              </AttendeePaymentInfo>
+            </AttendeeInfo>
+          </TripAttendee>
+        );
+      });
+    }
+
+    return list;
+  }
+
   // Need to clean up this part, we should not get into this component if selectedTrip is null.
   return (
     <Container>
       <Contents>
-        <LeftPanel>
-          {/* {showTripCard ? <TripCard tripDetail={trip.selectedTrip} /> : null} */}
-          <div>
-            <div>{trip.selectedTrip && trip.selectedTrip.name}</div>
-            <div>
-              {trip.selectedTrip &&
-                `${new Date(
-                  trip.selectedTrip.travelDates.startAt,
-                ).toLocaleDateString()} - ${new Date(
-                  trip.selectedTrip.travelDates.endAt,
-                ).toLocaleDateString()}`}
-            </div>
-            <div>
-              {users &&
-                Object.keys(users).length &&
-                trip.selectedTrip.attendees.map((key, idx) => {
-                  return (
-                    <div key={`${key.id}-${idx}`}>
-                      <div>{users[key.id].name}</div>
-                      <div>{`venmo: ${users[key.id].venmo}`}</div>
-                      <div>{`quickpay: ${users[key.id].quickpay}`}</div>
-                    </div>
-                  );
-                })}
-            </div>
-          </div>
-          <FieldWrapper>
-            <Input
-              label="Invite email"
-              onChange={handleInviteEmail}
-              value={inviteEmail}
-            />
+        <TopPanel>
+          <TopLeftPanel>
+            <TripDetailContainer>
+              <TripName>{trip.selectedTrip && trip.selectedTrip.name}</TripName>
+              <TripDates>
+                {trip.selectedTrip &&
+                  `${new Date(
+                    trip.selectedTrip.travelDates.startAt,
+                  ).toLocaleDateString()} - ${new Date(
+                    trip.selectedTrip.travelDates.endAt,
+                  ).toLocaleDateString()}`}
+              </TripDates>
+              <TripAttendeesList>
+                Attendees
+                {renderAttendees()}
+              </TripAttendeesList>
+            </TripDetailContainer>
+            <FieldWrapper>
+              <Input
+                label="Invite email"
+                onChange={handleInviteEmail}
+                value={inviteEmail}
+              />
+              <Button
+                color="primary"
+                disabled={!validEmail}
+                onClick={handleInvite}
+                variant="contained"
+              >
+                Invite
+              </Button>
+            </FieldWrapper>
             <Button
               color="primary"
-              disabled={!validEmail}
-              onClick={handleInvite}
+              onClick={handleLeaveTrip}
               variant="contained"
             >
-              Invite
+              Leave
             </Button>
-          </FieldWrapper>
-          <Button color="primary" onClick={handleLeaveTrip} variant="contained">
-            Leave
-          </Button>
-          <Button
-            color="primary"
-            onClick={toggleCreateExpenseModal}
-            variant="contained"
-          >
-            New Expense
-          </Button>
-        </LeftPanel>
-        <MainPanel>
-          {trip.selectedTrip &&
-            trip.selectedTrip.destinations.map((destination, idx) => {
-              return (
-                <div
-                  key={`${destination}-${idx}`}
-                  style={{
-                    backgroundImage: `url(${destination.photo})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain, cover',
-                    height: '100px',
-                  }}
-                >
-                  {' '}
-                </div>
-              );
-            })}
-        </MainPanel>
-        <RightPanel>
-          {showTripMap ? (
-            <TripMap destinations={trip.selectedTrip.destinations} />
-          ) : null}
+            <Button
+              color="primary"
+              onClick={toggleCreateExpenseModal}
+              variant="contained"
+            >
+              New Expense
+            </Button>
+          </TopLeftPanel>
+          <TopRightPanel>
+            {trip.selectedTrip && TripTimeline(trip.selectedTrip.destinations)}
+            {showTripMap && (
+              <TripMap destinations={trip.selectedTrip.destinations} />
+            )}
+          </TopRightPanel>
+        </TopPanel>
+        <BottomPanel>
           {expenseList && (
             <TripExpense
               expenseList={expenseList}
               totalExpense={trip.selectedTrip.costs}
             />
           )}
-        </RightPanel>
+        </BottomPanel>
       </Contents>
       {isExpenseModal && (
         <NewExpenseModal toggleCreateExpenseModal={toggleCreateExpenseModal} />
@@ -218,25 +224,81 @@ const Container = styled.div`
 
 const Contents = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   width: 100%;
   max-width: ${({ theme }) => theme.sizes.giant}px;
   margin: 0 auto;
 `;
 
-const LeftPanel = styled.div`
-  width: 25%;
+const TopPanel = styled.div`
+  display: flex;
+  width: 100%;
   padding: 15px;
 `;
 
-const MainPanel = styled.div`
-  width: 50%;
+const BottomPanel = styled.div`
+  width: 100%;
   padding: 15px;
 `;
 
-const RightPanel = styled.div`
-  width: 25%;
+const TopLeftPanel = styled.div`
+  width: 33%;
   padding: 15px;
+`;
+
+const TopRightPanel = styled.div`
+  width: 66%;
+  padding 15px;
+`;
+
+const TripDetailContainer = styled.div`
+  width: 100%;
+  margin: 0 15px;
+`;
+
+const TripName = styled.div`
+  font-size: 30px;
+  margin: 10px 0;
+`;
+
+const TripDates = styled.div`
+  font-size: 18px;
+  margin: 10px 0;
+`;
+
+const TripAttendeesList = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+`;
+
+const TripAttendee = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0;
+  text-decoration: none;
+`;
+
+const AttendeeName = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 80px;
+  text-decoration: none;
+`;
+
+const AttendeeInfo = styled.div`
+  padding: 0 10px;
+  text-decoration: none;
+`;
+
+const AttendeePaymentInfo = styled.div`
+  line-height: 1.5em;
+  display: flex;
+`;
+
+const AttendeePaymentLabel = styled.div`
+  width: 80px;
 `;
 
 export default connect(

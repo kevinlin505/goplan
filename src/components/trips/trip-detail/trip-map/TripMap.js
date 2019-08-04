@@ -99,8 +99,8 @@ TripMap.propTypes = {
 };
 
 const Container = styled.div`
-  width: 100%;
-  height: 300px;
+  width: 50%;
+  height: 200px;
   max-width: 600px;
   position: relative;
 `;

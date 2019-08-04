@@ -174,26 +174,24 @@ const TripExpense = ({ tripExpenses, expenseList, totalExpense }) => {
 
   return (
     <Container>
-      <SummaryContent>
-        <SummaryContentHeader>
-          <div>Total Expense</div>
-          <div>{convertNumberToCurrency(expenseSum)}</div>
-        </SummaryContentHeader>
-        <ExpenseSummary>{summaryExpense}</ExpenseSummary>
-        {
-          <AttendeePaymentList>
-            Total paid by attendee
-            {renderPayments()}
-          </AttendeePaymentList>
-        }
-        {
-          <AttendeePaymentList>
-            Net amount by attendee
-            {renderNetPayments()}
-          </AttendeePaymentList>
-        }
-      </SummaryContent>
-      {renderExpenseList}
+      <SummaryContainer>
+        <SummaryContent>
+          <SummaryTotal>
+            <div>Total Expense</div>
+            <div>{convertNumberToCurrency(expenseSum)}</div>
+          </SummaryTotal>
+          <ExpenseSummary>{summaryExpense}</ExpenseSummary>
+        </SummaryContent>
+        <AttendeePaymentList>
+          Total paid by attendee
+          {renderPayments()}
+        </AttendeePaymentList>
+        <AttendeePaymentList>
+          Net amount by attendee
+          {renderNetPayments()}
+        </AttendeePaymentList>
+      </SummaryContainer>
+      <DetailContentCotainer>{renderExpenseList}</DetailContentCotainer>
     </Container>
   );
 };
@@ -208,17 +206,25 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const SummaryContent = styled.div`
+const SummaryContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
   color: ${({ theme }) => theme.colors.text};
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 4px;
   padding: 10px;
   margin: 0 0 10px 0;
-  font-size: 18px;
   box-shadow: 0px 1px 3px 0px ${({ theme }) => theme.colors.divider};
 `;
 
-const SummaryContentHeader = styled.div`
+const SummaryContent = styled.div`
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+`;
+
+const SummaryTotal = styled.div`
   display: flex;
   justify-content: space-between;
 `;
@@ -243,6 +249,7 @@ const AttendeePaymentList = styled.ul`
   margin: 0;
   list-style: none;
   font-size: 16px;
+  width: 20%;
 `;
 
 const AttendeePaymentListItem = styled.li`
@@ -253,12 +260,20 @@ const AttendeePaymentListItem = styled.li`
   justify-content: space-between;
 `;
 
+const DetailContentCotainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+`;
+
 const DetailExpenseContent = styled.div`
   font-size: 16px;
   color: ${({ theme }) => theme.colors.text};
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 4px;
   box-shadow: 0px 1px 3px 0px ${({ theme }) => theme.colors.divider};
+  width: 30%;
+  margin: 10px 15px;
 `;
 
 const DetailContentList = styled.ul`
@@ -280,7 +295,7 @@ const DetailContentListHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 2px 10px;
-  margin: 10px 0 0 0;
+  margin: 5px 0;
   border-radius: 4px;
 
   &:active,
