@@ -16,12 +16,13 @@ export default function auth() {
       const addMessage = firebase
         .functions()
         .httpsCallable('sendInvitationEmail');
+      const { currentUser } = firebase.auth();
 
       return addMessage({
         inviteeEmail,
         invitationLink: `https://goplan-3b4b1.web.app/#/trip/${tripId}`,
-        inviterName: `John Doe`,
-        inviterEmail: `Sample@test.com`,
+        inviterName: currentUser.displayName,
+        inviterEmail: currentUser.email,
       });
     },
 
