@@ -95,7 +95,9 @@ export const tripActions = {
     };
     const tripDetail = {
       ...form,
-      attendees: [organizer],
+      attendees: {
+        [profile.id]: organizer,
+      },
       organizer,
     };
 
@@ -212,12 +214,12 @@ export const tripActions = {
     return auth().sendInviteEmail(email, tripId, tripName, tripDates);
   },
 
-  leaveTrip: (tripId, attendee) => dispatch => {
+  leaveTrip: tripId => dispatch => {
     dispatch({
       type: types.LEAVE_TRIP,
     });
 
-    return trip().leaveTrip(tripId, attendee);
+    return trip().leaveTrip(tripId);
   },
 
   toggleNewTripModal: () => (dispatch, getState) => {

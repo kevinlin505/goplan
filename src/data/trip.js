@@ -53,10 +53,11 @@ export default function trip() {
       const batch = db.batch();
       const userRef = db.collection('users').doc(currentUser.uid);
       const tripRef = db.collection('trips').doc(tripId);
-      const attendeeObject = { name, id, email };
 
       batch.update(tripRef, {
-        attendees: firebase.firestore.FieldValue.arrayUnion(attendeeObject),
+        members: {
+          [id]: { name, id, email },
+        },
       });
       batch.update(userRef, {
         trips: firebase.firestore.FieldValue.arrayUnion(tripRef),
@@ -65,21 +66,41 @@ export default function trip() {
       return batch.commit();
     },
 
-    leaveTrip: (tripId, attendee) => {
+    leaveTrip: tripId => {
       const tripRef = db.collection('trips').doc(tripId);
       const userRef = db.collection('users').doc(currentUser.uid);
 
-      const batch = db.batch();
+      // const batch = db.batch();
 
-      batch.update(tripRef, {
-        attendees: firebase.firestore.FieldValue.arrayRemove(attendee),
+      return db.runTransaction(transaction => {
+        return transaction.get(tripRef).then(tripDoc => {
+          if (!tripDoc.exists) {
+            throw new Error('Trip does not exists!');
+          }
+
+          const { members } = tripDoc.data();
+          delete members[currentUser.uid];
+
+          transaction.update(tripRef, {
+            members,
+          });
+          transaction.update(userRef, {
+            trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
+          });
+        });
       });
 
-      batch.update(userRef, {
-        trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
-      });
+      // batch.update(tripRef, {
+      //   attendees: {
+      //     [currentUser.uid]: firebase.firestore.FieldValue.delete(),
+      //   },
+      // });
 
-      return batch.commit();
+      // batch.update(userRef, {
+      //   trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
+      // });
+
+      // return batch.commit();
     },
 
     updateTrip: (tripId, tripDetail) => {
