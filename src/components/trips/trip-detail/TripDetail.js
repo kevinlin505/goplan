@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import { withStyles } from '@material-ui/core/styles';
 import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
@@ -15,11 +17,14 @@ import {
 } from '@selectors/tripSelector';
 import googleMapsApi from '@utils/googleMapsApi';
 import validateEmail from '@utils/validateEmail';
+import TripAttendees from '@components/trips/trip-detail/trip-attendees/TripAttendees';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
-import TripExpense from '@components/trips/trip-detail/trip-expense/TripExpense';
+import TripExpenseSummary from '@components/trips/trip-detail/trip-expense/TripExpenseSummary';
+import TripExpenseDetails from '@components/trips/trip-detail/trip-expense/TripExpenseDetails';
 import NewExpenseModal from '@components/trips/trip-detail/new-expense-modal/NewExpenseModal';
-import TripTimeline from '@components/trips/trip-detail/trip-timeline/TripTimeline';
-import { FieldWrapper, Input } from '@styles/forms/Forms';
+import { Input } from '@styles/forms/Forms';
+import CardContainer from '@styles/card/CardContainer';
+import styles from '@styles/theme/theme';
 
 const mapStateToProps = (state, props) => {
   return {
@@ -44,6 +49,7 @@ const mapDispatchToProps = dispatch => {
 const TripDetail = ({
   actions,
   attendee,
+  classes,
   history,
   trip,
   tripId,
@@ -102,29 +108,32 @@ const TripDetail = ({
     });
   }
 
-  function renderAttendees() {
-    let list = [];
-    if (users && Object.keys(users).length) {
-      list = trip.selectedTrip.attendees.map((key, idx) => {
-        return (
-          <TripAttendee key={`${key.id}-${idx}`}>
-            <AttendeeName>{users[key.id].name}</AttendeeName>
-            <AttendeeInfo>
-              <AttendeePaymentInfo>
-                <AttendeePaymentLabel>Venmo:</AttendeePaymentLabel>
-                <div>{users[key.id].venmo}</div>
-              </AttendeePaymentInfo>
-              <AttendeePaymentInfo>
-                <AttendeePaymentLabel>Quickpay:</AttendeePaymentLabel>
-                <div>{users[key.id].quickpay}</div>
-              </AttendeePaymentInfo>
-            </AttendeeInfo>
-          </TripAttendee>
-        );
-      });
-    }
-
-    return list;
+  function renderDestinations() {
+    return trip.selectedTrip.destinations.map((destination, idx) => {
+      return (
+        <DestinationContainer key={`destination-${destination.location}`}>
+          <DestinationContent>
+            <DestinationHeader>
+              {`${new Date(destination.startAt).toLocaleDateString()} - ${
+                destination.location
+              }`}
+            </DestinationHeader>
+            <Divider component="div" />
+            <DestinationInfo>
+              <DestinationPhoto
+                key={`${destination}-${idx}`}
+                destinationPhoto={destination.photo}
+              >
+                {' '}
+              </DestinationPhoto>
+              <DestinationWeather>
+                <div>Weather Info</div>
+              </DestinationWeather>
+            </DestinationInfo>
+          </DestinationContent>
+        </DestinationContainer>
+      );
+    });
   }
 
   // Need to clean up this part, we should not get into this component if selectedTrip is null.
@@ -133,7 +142,7 @@ const TripDetail = ({
       <Contents>
         <TopPanel>
           <TopLeftPanel>
-            <TripDetailContainer>
+            <CardContainer>
               <TripName>{trip.selectedTrip && trip.selectedTrip.name}</TripName>
               <TripDates>
                 {trip.selectedTrip &&
@@ -145,41 +154,59 @@ const TripDetail = ({
               </TripDates>
               <TripAttendeesList>
                 Attendees
-                {renderAttendees()}
+                {users && Object.keys(users).length && (
+                  <TripAttendees attendees={trip.selectedTrip.attendees} />
+                )}
               </TripAttendeesList>
-            </TripDetailContainer>
-            <FieldWrapper>
-              <Input
-                label="Invite email"
-                onChange={handleInviteEmail}
-                value={inviteEmail}
-              />
+
+              <Wrapper>
+                <Input
+                  label="Invite email"
+                  onChange={handleInviteEmail}
+                  value={inviteEmail}
+                />
+                <Button
+                  className={classes.greyButton}
+                  color="primary"
+                  disabled={!validEmail}
+                  onClick={handleInvite}
+                  variant="contained"
+                >
+                  Invite
+                </Button>
+              </Wrapper>
               <Button
+                className={classes.blueButton}
                 color="primary"
-                disabled={!validEmail}
-                onClick={handleInvite}
+                onClick={handleLeaveTrip}
                 variant="contained"
               >
-                Invite
+                Leave
               </Button>
-            </FieldWrapper>
-            <Button
-              color="primary"
-              onClick={handleLeaveTrip}
-              variant="contained"
-            >
-              Leave
-            </Button>
-            <Button
-              color="primary"
-              onClick={toggleCreateExpenseModal}
-              variant="contained"
-            >
-              New Expense
-            </Button>
+              <Button
+                className={classes.blueButton}
+                color="primary"
+                onClick={toggleCreateExpenseModal}
+                variant="contained"
+              >
+                New Expense
+              </Button>
+            </CardContainer>
           </TopLeftPanel>
+          <TopMiddlePanel>
+            <CardContainer>
+              {trip.selectedTrip && renderDestinations()}
+            </CardContainer>
+          </TopMiddlePanel>
           <TopRightPanel>
-            {trip.selectedTrip && TripTimeline(trip.selectedTrip.destinations)}
+            {expenseList && (
+              <CardContainer>
+                <TripExpenseSummary
+                  expenseList={expenseList}
+                  totalExpense={trip.selectedTrip.costs}
+                />
+              </CardContainer>
+            )}
             {showTripMap && (
               <TripMap destinations={trip.selectedTrip.destinations} />
             )}
@@ -187,10 +214,15 @@ const TripDetail = ({
         </TopPanel>
         <BottomPanel>
           {expenseList && (
-            <TripExpense
-              expenseList={expenseList}
-              totalExpense={trip.selectedTrip.costs}
-            />
+            <TripExpenseDetailsContainer>
+              <TripExpenseDetailsHeader>
+                Detail expense by receipts
+              </TripExpenseDetailsHeader>
+              <TripExpenseDetails
+                expenseList={expenseList}
+                totalExpense={trip.selectedTrip.costs}
+              />
+            </TripExpenseDetailsContainer>
           )}
         </BottomPanel>
       </Contents>
@@ -204,6 +236,7 @@ const TripDetail = ({
 TripDetail.propTypes = {
   actions: PropTypes.object.isRequired,
   attendee: PropTypes.object,
+  classes: PropTypes.any,
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   selectedTrip: PropTypes.object,
@@ -227,7 +260,7 @@ const Contents = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  max-width: ${({ theme }) => theme.sizes.giant}px;
+  max-width: ${({ theme }) => theme.sizes.colossal}px;
   margin: 0 auto;
 `;
 
@@ -243,65 +276,84 @@ const BottomPanel = styled.div`
 `;
 
 const TopLeftPanel = styled.div`
-  width: 33%;
+  width: 28%;
   padding: 15px;
 `;
 
-const TopRightPanel = styled.div`
-  width: 66%;
+const TopMiddlePanel = styled.div`
+  width: 50%;
   padding 15px;
 `;
 
-const TripDetailContainer = styled.div`
-  width: 100%;
-  margin: 0 15px;
+const TopRightPanel = styled.div`
+  width: 22%;
+  padding: 15px;
 `;
 
 const TripName = styled.div`
   font-size: 30px;
-  margin: 10px 0;
+  margin: 8px 16px;
 `;
 
 const TripDates = styled.div`
   font-size: 18px;
-  margin: 10px 0;
+  margin: 8px 16px;
 `;
 
 const TripAttendeesList = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 16px;
+  padding: 0;
+  margin: 0 8px 0 16px;
 `;
 
-const TripAttendee = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 5px 0;
-  text-decoration: none;
+const Wrapper = styled.div`
+  padding: 5px 0;
+  margin: 5px 16px;
 `;
 
-const AttendeeName = styled.div`
-  font-size: 14px;
+const DestinationContainer = styled.div`
+  position: relative;
+  padding: 8px 16px;
+`;
+
+const DestinationContent = styled.div``;
+
+const DestinationHeader = styled.div`
+  padding: 5px 0;
+  font-size: 18px;
   font-weight: 500;
-  min-width: 80px;
-  text-decoration: none;
 `;
 
-const AttendeeInfo = styled.div`
-  padding: 0 10px;
-  text-decoration: none;
-`;
-
-const AttendeePaymentInfo = styled.div`
-  line-height: 1.5em;
+const DestinationInfo = styled.div`
   display: flex;
+  padding: 0;
 `;
 
-const AttendeePaymentLabel = styled.div`
-  width: 80px;
+const DestinationPhoto = styled.div`
+  padding: 10px;
+  margin: 10px;
+  background-image: url(${({ destinationPhoto }) => destinationPhoto});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover, contain;
+  width: 50%;
+  height: 100px;
+  opacity: 0.8;
+`;
+
+const DestinationWeather = styled.div`
+  padding: 10px;
+`;
+
+const TripExpenseDetailsContainer = styled.div``;
+
+const TripExpenseDetailsHeader = styled.div`
+  font-size: 18px;
 `;
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withRouter(TripDetail));
+)(withStyles(styles)(withRouter(TripDetail)));

@@ -88,6 +88,7 @@ const DestinationContent = styled.div`
 const DestinationHeader = styled.div`
   padding-bottom: 10px;
   font-size: 18px;
+  font-weight: 300;
 `;
 
 const DestinationInfo = styled.div`
