@@ -104,7 +104,15 @@ export const tripActions = {
       .then(tripId => {
         Promise.all(
           inviteList.map(attendee => {
-            return auth().sendInviteEmail(attendee, tripId);
+            const dates = getTravelDates(tripDetail);
+            const startDate = new Date(dates.startAt).toDateString();
+            const endDate = new Date(dates.endAt).toDateString();
+            return auth().sendInviteEmail(
+              attendee,
+              tripId,
+              tripDetail.name,
+              `${startDate}-${endDate}`,
+            );
           }),
         );
 

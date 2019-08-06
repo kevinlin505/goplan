@@ -36,6 +36,8 @@ const sendInvitationEmail = async options => {
         inviterName: options.inviterName,
         inviterEmail: options.inviterEmail,
         invitationLink: options.invitationLink,
+        tripName: options.tripName,
+        tripDates: options.tripDates,
       };
       const htmlToSend = template(replacements);
       resolve(htmlToSend);
