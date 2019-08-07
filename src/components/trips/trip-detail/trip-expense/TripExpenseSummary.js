@@ -22,15 +22,15 @@ const TripExpenseSummary = ({ tripExpenses, expenseList, totalExpense }) => {
   const [isNetAmountExpand, setNetAmountExpand] = useState(true);
 
   function toggleCategoryList() {
-    setCategoryExpand(!isCategoryExpand);
+    setCategoryExpand(prevCategoryExpand => !prevCategoryExpand);
   }
 
   function toggleAttendeePaidList() {
-    setAttendeePaidExpand(!isAttendeePaidExpand);
+    setAttendeePaidExpand(prevAttendeePaidExpand => !prevAttendeePaidExpand);
   }
 
   function toggleNetAmountList() {
-    setNetAmountExpand(!isNetAmountExpand);
+    setNetAmountExpand(prevNetAmountExpand => !prevNetAmountExpand);
   }
 
   function renderNetPayments() {
@@ -144,7 +144,7 @@ const TripExpenseSummary = ({ tripExpenses, expenseList, totalExpense }) => {
 TripExpenseSummary.propTypes = {
   expenseList: PropTypes.array.isRequired,
   totalExpense: PropTypes.object.isRequired,
-  tripExpenses: PropTypes.object,
+  tripExpenses: PropTypes.object.isRequired,
 };
 
 const ListHeader = styled.div`

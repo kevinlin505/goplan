@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import { withStyles } from '@material-ui/core/styles';
+import { Button, Divider, withStyles } from '@material-ui/core';
 import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
@@ -63,6 +61,13 @@ const TripDetail = ({
   const showTripCard =
     trip.selectedTrip && trip.selectedTrip.id === match.params.tripId;
   const showTripMap = showTripCard && google;
+  const tripStartDate =
+    trip.selectedTrip &&
+    new Date(trip.selectedTrip.travelDates.startAt).toLocaleDateString();
+  const tripEndDate =
+    trip.selectedTrip &&
+    new Date(trip.selectedTrip.travelDates.endAt).toLocaleDateString();
+
   const toggleCreateExpenseModal = () => {
     setExpenseModal(!isExpenseModal);
   };
@@ -111,26 +116,21 @@ const TripDetail = ({
   function renderDestinations() {
     return trip.selectedTrip.destinations.map((destination, idx) => {
       return (
-        <DestinationContainer key={`destination-${destination.location}`}>
-          <DestinationContent>
+        <DestinationContainer key={`trip-destination-${idx}`}>
+          <div>
             <DestinationHeader>
-              {`${new Date(destination.startAt).toLocaleDateString()} - ${
-                destination.location
-              }`}
+              {`${tripStartDate} - ${destination.location}`}
             </DestinationHeader>
             <Divider component="div" />
             <DestinationInfo>
               <DestinationPhoto
-                key={`${destination}-${idx}`}
                 destinationPhoto={destination.photo}
-              >
-                {' '}
-              </DestinationPhoto>
+              ></DestinationPhoto>
               <DestinationWeather>
                 <div>Weather Info</div>
               </DestinationWeather>
             </DestinationInfo>
-          </DestinationContent>
+          </div>
         </DestinationContainer>
       );
     });
@@ -144,14 +144,7 @@ const TripDetail = ({
           <TopLeftPanel>
             <CardContainer>
               <TripName>{trip.selectedTrip && trip.selectedTrip.name}</TripName>
-              <TripDates>
-                {trip.selectedTrip &&
-                  `${new Date(
-                    trip.selectedTrip.travelDates.startAt,
-                  ).toLocaleDateString()} - ${new Date(
-                    trip.selectedTrip.travelDates.endAt,
-                  ).toLocaleDateString()}`}
-              </TripDates>
+              <TripDates>{`${tripStartDate} - ${tripEndDate}`}</TripDates>
               <TripAttendeesList>
                 Attendees
                 {users && Object.keys(users).length && (
@@ -214,7 +207,7 @@ const TripDetail = ({
         </TopPanel>
         <BottomPanel>
           {expenseList && (
-            <TripExpenseDetailsContainer>
+            <div>
               <TripExpenseDetailsHeader>
                 Detail expense by receipts
               </TripExpenseDetailsHeader>
@@ -222,7 +215,7 @@ const TripDetail = ({
                 expenseList={expenseList}
                 totalExpense={trip.selectedTrip.costs}
               />
-            </TripExpenseDetailsContainer>
+            </div>
           )}
         </BottomPanel>
       </Contents>
@@ -318,8 +311,6 @@ const DestinationContainer = styled.div`
   padding: 8px 16px;
 `;
 
-const DestinationContent = styled.div``;
-
 const DestinationHeader = styled.div`
   padding: 5px 0;
   font-size: 18px;
@@ -346,8 +337,6 @@ const DestinationPhoto = styled.div`
 const DestinationWeather = styled.div`
   padding: 10px;
 `;
-
-const TripExpenseDetailsContainer = styled.div``;
 
 const TripExpenseDetailsHeader = styled.div`
   font-size: 18px;

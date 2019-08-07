@@ -19,11 +19,13 @@ const TripAttendees = ({ users, attendees }) => {
   function renderAttendeeList() {
     return attendees.map((attendeeObj, idx) => {
       const user = users[attendeeObj.id];
-      let divider = <Divider component="li" variant="inset" />;
-      if (idx === attendees.length - 1) divider = null;
+      const divider =
+        idx === attendees.length - 1 ? null : (
+          <Divider component="li" variant="inset" />
+        );
 
       return (
-        <div key={`trip-attendee-${user.name}`}>
+        <div key={`trip-attendee-${idx}`}>
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
               <Avatar alt={user.name} src={user.profile_url} />

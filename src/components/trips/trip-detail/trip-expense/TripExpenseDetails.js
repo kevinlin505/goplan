@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import convertNumberToCurrency from '@utils/convertNumberToCurrency';
-import { Collapse, List, ListItem } from '@material-ui/core';
+import { Collapse, List } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 const mapStateToProps = state => {
@@ -13,8 +13,6 @@ const mapStateToProps = state => {
 };
 
 const TripExpenseSummary = ({ tripExpenses, expenseList }) => {
-  const [detailExpenseList, setDetailExpenseList] = useState({});
-
   const defaultExpenseExpandList = expenseList.reduce((obj, expenseId) => {
     obj[expenseId] = false;
 
@@ -24,6 +22,9 @@ const TripExpenseSummary = ({ tripExpenses, expenseList }) => {
     defaultExpenseExpandList,
   );
 
+  // Toggle isExpenseExpanded object with expenseId as key and boolean as values.
+  // Make a copy of the isExpenseExpanded object before changing the value as not
+  // to mutate the object in the state and then change the state with setState.
   function toggleExpenseDetail(expenseId) {
     return () => {
       const copy = { ...isExpenseExpanded };
@@ -32,110 +33,76 @@ const TripExpenseSummary = ({ tripExpenses, expenseList }) => {
     };
   }
 
-  useEffect(() => {
-    const list = {};
-    expenseList.forEach(expenseId => {
-      if (tripExpenses[expenseId]) {
-        const {
-          date,
-          amount,
-          description,
-          merchant,
-          payer,
-          receipts,
-        } = tripExpenses[expenseId];
+  function renderExpenseListItem(expenseId) {
+    if (tripExpenses[expenseId]) {
+      const {
+        date,
+        amount,
+        description,
+        merchant,
+        payer,
+        receipts,
+      } = tripExpenses[expenseId];
 
-        list[expenseId] = (
-          // <DetailContentList>
-          //   <DetailContentListItem>
-          //     <div>Date</div>
-          //     <div>{date.toDate().toLocaleDateString()}</div>
-          //   </DetailContentListItem>
-          //   <DetailContentListItem>
-          //     <div>Amount</div>
-          //     <div>{convertNumberToCurrency(parseFloat(amount))}</div>
-          //   </DetailContentListItem>
-          //   <DetailContentListItem>
-          //     <div>Merchant</div>
-          //     <div>{merchant}</div>
-          //   </DetailContentListItem>
-          //   <DetailContentListItem>
-          //     <div>Description</div>
-          //     <div style={{ textAlign: 'right' }}>{description}</div>
-          //   </DetailContentListItem>
-          //   <DetailContentListItem>
-          //     <div>Who paid</div>
-          //     <div>{payer.name}</div>
-          //   </DetailContentListItem>
-          //   <DetailContentListItem>
-          //     {receipts[0] ? (
-          //       <a href={receipts[0].url} target="_blank">
-          //         Receipt
-          //       </a>
-          //     ) : null}
-          //   </DetailContentListItem>
-          // </DetailContentList>
-          <List>
-            <DetailContentListItem>
-              <ListItemText>Date</ListItemText>
-              <ItemCost>{date.toDate().toLocaleDateString()}</ItemCost>
-            </DetailContentListItem>
-            <DetailContentListItem>
-              <ListItemText>Amount</ListItemText>
-              <ItemCost>{convertNumberToCurrency(parseFloat(amount))}</ItemCost>
-            </DetailContentListItem>
-            <DetailContentListItem>
-              <ListItemText>Merchant</ListItemText>
-              <ItemCost>{merchant}</ItemCost>
-            </DetailContentListItem>
-            <DetailContentListItem>
-              <ListItemText>Description</ListItemText>
-              <ItemCost style={{ textAlign: 'right' }}>{description}</ItemCost>
-            </DetailContentListItem>
-            <DetailContentListItem>
-              <ListItemText>Who paid</ListItemText>
-              <ItemCost>{payer.name}</ItemCost>
-            </DetailContentListItem>
-            <DetailContentListItem>
-              {receipts[0] ? (
-                <a href={receipts[0].url} target="_blank">
-                  Receipt
-                </a>
-              ) : null}
-            </DetailContentListItem>
-          </List>
-        );
-      }
-    });
-
-    setDetailExpenseList(list);
-  }, [Object.keys(tripExpenses).length]);
-
-  const renderExpenseList = expenseList.map((expenseId, idx) => {
-    if (!detailExpenseList[expenseId]) {
-      return null;
+      return (
+        <List>
+          <DetailContentListItem>
+            <ListItemText>Date</ListItemText>
+            <ItemCost>{date.toDate().toLocaleDateString()}</ItemCost>
+          </DetailContentListItem>
+          <DetailContentListItem>
+            <ListItemText>Amount</ListItemText>
+            <ItemCost>{convertNumberToCurrency(parseFloat(amount))}</ItemCost>
+          </DetailContentListItem>
+          <DetailContentListItem>
+            <ListItemText>Merchant</ListItemText>
+            <ItemCost>{merchant}</ItemCost>
+          </DetailContentListItem>
+          <DetailContentListItem>
+            <ListItemText>Description</ListItemText>
+            <ItemCost style={{ textAlign: 'right' }}>{description}</ItemCost>
+          </DetailContentListItem>
+          <DetailContentListItem>
+            <ListItemText>Who paid</ListItemText>
+            <ItemCost>{payer.name}</ItemCost>
+          </DetailContentListItem>
+          <DetailContentListItem>
+            {receipts[0] ? (
+              <a href={receipts[0].url} target="_blank">
+                Receipt
+              </a>
+            ) : null}
+          </DetailContentListItem>
+        </List>
+      );
     }
 
-    return (
-      <DetailExpenseContent key={`trip-expense-detail-${idx}`}>
-        <DetailContentListHeader onClick={toggleExpenseDetail(expenseId)}>
-          <div>Expense #{idx + 1}</div>
-          {isExpenseExpanded[expenseId] ? <ExpandLess /> : <ExpandMore />}
-        </DetailContentListHeader>
-        <Collapse
-          in={isExpenseExpanded[expenseId]}
-          timeout="auto"
-          unmountOnExit
-        >
-          {detailExpenseList[expenseId]}
-        </Collapse>
-      </DetailExpenseContent>
-    );
-  });
+    return null;
+  }
+
+  function renderExpenseList() {
+    return expenseList.map((expenseId, idx) => {
+      return (
+        <DetailExpenseContent key={`trip-expense-detail-${idx}`}>
+          <DetailContentListHeader onClick={toggleExpenseDetail(expenseId)}>
+            <div>Expense #{idx + 1}</div>
+            {isExpenseExpanded[expenseId] ? <ExpandLess /> : <ExpandMore />}
+          </DetailContentListHeader>
+          <Collapse
+            in={isExpenseExpanded[expenseId]}
+            timeout="auto"
+            unmountOnExit
+          >
+            {renderExpenseListItem(expenseId)}
+          </Collapse>
+        </DetailExpenseContent>
+      );
+    });
+  }
 
   return (
     <Container>
-      <DetailContentCotainer>{renderExpenseList}</DetailContentCotainer>
+      <DetailContentCotainer>{renderExpenseList()}</DetailContentCotainer>
     </Container>
   );
 };
@@ -143,7 +110,7 @@ const TripExpenseSummary = ({ tripExpenses, expenseList }) => {
 TripExpenseSummary.propTypes = {
   expenseList: PropTypes.array.isRequired,
   totalExpense: PropTypes.object.isRequired,
-  tripExpenses: PropTypes.object,
+  tripExpenses: PropTypes.object.isRequired,
 };
 
 const Container = styled.div`
@@ -176,12 +143,6 @@ const ListItemText = styled.div`
 const ItemCost = styled.div`
   display: inline-block;
 `;
-
-// const DetailContentList = styled.ul`
-//   list-style: none;
-//   padding: 0;
-//   margin: 0;
-// `;
 
 const DetailContentListItem = styled.li`
   font-size: 14px;
