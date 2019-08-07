@@ -10,12 +10,12 @@ export const getTripStatus = createDeepEqualSelector(
 );
 
 export const getUserId = state => state.auth.profile.id;
-export const getAttendees = state =>
-  state.trip.selectedTrip && state.trip.selectedTrip.attendees;
-export const getAttendee = createDeepEqualSelector(
-  [getAttendees, getUserId],
-  (attendees, userId) =>
-    attendees && attendees.filter(attendee => attendee.id === userId)[0],
+export const getMembers = state =>
+  state.trip.selectedTrip && state.trip.selectedTrip.members;
+export const getMember = createDeepEqualSelector(
+  [getMembers, getUserId],
+  (members, userId) =>
+    members && members.filter(member => member.id === userId)[0],
 );
 
 export const getTrips = state => state.trip.trips;

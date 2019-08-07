@@ -51,12 +51,13 @@ export default function trip() {
 
     joinTrip: (tripId, { name, id, email }) => {
       const batch = db.batch();
+
       const userRef = db.collection('users').doc(currentUser.uid);
       const tripRef = db.collection('trips').doc(tripId);
-      const attendeeObject = { name, id, email };
 
       batch.update(tripRef, {
-        attendees: firebase.firestore.FieldValue.arrayUnion(attendeeObject),
+        [`members.${id}`]: { name, id, email },
+        invites: firebase.firestore.FieldValue.arrayRemove(email),
       });
       batch.update(userRef, {
         trips: firebase.firestore.FieldValue.arrayUnion(tripRef),
@@ -65,16 +66,15 @@ export default function trip() {
       return batch.commit();
     },
 
-    leaveTrip: (tripId, attendee) => {
+    leaveTrip: tripId => {
+      const batch = db.batch();
+
       const tripRef = db.collection('trips').doc(tripId);
       const userRef = db.collection('users').doc(currentUser.uid);
 
-      const batch = db.batch();
-
       batch.update(tripRef, {
-        attendees: firebase.firestore.FieldValue.arrayRemove(attendee),
+        [`members.${currentUser.uid}`]: firebase.firestore.FieldValue.delete(),
       });
-
       batch.update(userRef, {
         trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
       });
