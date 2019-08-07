@@ -13,6 +13,7 @@ import {
   getParamTripId,
   getTripStatus,
 } from '@selectors/tripSelector';
+import getTravelDates from '@utils/calculateTravelDates';
 import googleMapsApi from '@utils/googleMapsApi';
 import validateEmail from '@utils/validateEmail';
 import TripAttendees from '@components/trips/trip-detail/trip-attendees/TripAttendees';
@@ -102,7 +103,12 @@ const TripDetail = ({
 
   function handleInvite() {
     if (inviteEmail) {
-      actions.trip.inviteTrip(inviteEmail, tripId);
+      actions.trip.inviteTrip(
+        inviteEmail,
+        tripId,
+        trip.selectedTrip.name,
+        getTravelDates(trip.selectedTrip),
+      );
       setInviteEmail('');
     }
   }

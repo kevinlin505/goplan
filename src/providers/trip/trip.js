@@ -104,7 +104,12 @@ export const tripActions = {
       .then(tripId => {
         Promise.all(
           inviteList.map(attendee => {
-            return auth().sendInviteEmail(attendee, tripId);
+            return auth().sendInviteEmail(
+              attendee,
+              tripId,
+              tripDetail.name,
+              getTravelDates(tripDetail),
+            );
           }),
         );
 
@@ -199,12 +204,12 @@ export const tripActions = {
       });
   },
 
-  inviteTrip: (email, tripId) => dispatch => {
+  inviteTrip: (email, tripId, tripName, tripDates) => dispatch => {
     dispatch({
       type: types.INVITE_TRIP,
     });
 
-    return auth().sendInviteEmail(email, tripId);
+    return auth().sendInviteEmail(email, tripId, tripName, tripDates);
   },
 
   leaveTrip: (tripId, attendee) => dispatch => {
