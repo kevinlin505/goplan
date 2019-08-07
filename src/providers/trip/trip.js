@@ -104,14 +104,11 @@ export const tripActions = {
       .then(tripId => {
         Promise.all(
           inviteList.map(attendee => {
-            const dates = getTravelDates(tripDetail);
-            const startDate = new Date(dates.startAt).toDateString();
-            const endDate = new Date(dates.endAt).toDateString();
             return auth().sendInviteEmail(
               attendee,
               tripId,
               tripDetail.name,
-              `${startDate}-${endDate}`,
+              getTravelDates(tripDetail),
             );
           }),
         );
@@ -207,12 +204,12 @@ export const tripActions = {
       });
   },
 
-  inviteTrip: (email, tripId) => dispatch => {
+  inviteTrip: (email, tripId, tripName, tripDates) => dispatch => {
     dispatch({
       type: types.INVITE_TRIP,
     });
 
-    return auth().sendInviteEmail(email, tripId);
+    return auth().sendInviteEmail(email, tripId, tripName, tripDates);
   },
 
   leaveTrip: (tripId, attendee) => dispatch => {

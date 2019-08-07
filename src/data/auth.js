@@ -17,6 +17,9 @@ export default function auth() {
         .functions()
         .httpsCallable('sendInvitationEmail');
       const { currentUser } = firebase.auth();
+      const startDate = new Date(tripDates.startAt).toDateString();
+      const endDate = new Date(tripDates.endAt).toDateString();
+      const formattedDates = `${startDate} - ${endDate}`;
 
       return addMessage({
         inviteeEmail,
@@ -24,7 +27,7 @@ export default function auth() {
         inviterName: currentUser.displayName,
         inviterEmail: currentUser.email,
         tripName,
-        tripDates,
+        tripDates: formattedDates,
       });
     },
 
