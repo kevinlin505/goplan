@@ -20,6 +20,7 @@ import { tripActions } from '@providers/trip/trip';
 import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
 import googleMapsApi from '@utils/googleMapsApi';
 import validateEmail from '@utils/validateEmail';
+import getTravelDates from '@utils/calculateTravelDates';
 import TripMembers from '@components/trips/trip-detail/trip-members/TripMembers';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
 import TripExpenseSummary from '@components/trips/trip-detail/trip-expense/TripExpenseSummary';
@@ -94,7 +95,7 @@ const TripDetail = ({
         inviteEmail,
         tripId,
         trip.selectedTrip.name,
-        // getTravelDates(trip.selectedTrip),
+        getTravelDates(trip.selectedTrip),
       );
       setInviteEmail('');
     }
