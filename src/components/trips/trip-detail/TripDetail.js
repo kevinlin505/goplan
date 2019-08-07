@@ -6,14 +6,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Divider, withStyles } from '@material-ui/core';
 import openWeatherApi from '@utils/openWeatherApi';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCloud,
-  faSun,
-  faCloudShowersHeavy,
-  faSnowflake,
-  faWater,
-} from '@fortawesome/free-solid-svg-icons';
 import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
@@ -107,31 +99,13 @@ const TripDetail = ({
       openWeatherApi(destination.geo).then(resp => {
         weather[destination.placeId] = {
           condition: resp.weather[0].main,
+          icon: `http://openweathermap.org/img/wn/${resp.weather[0].icon}@2x.png`,
           temperature: resp.main.temp,
         };
 
         setWeatherObject(weather);
       });
     });
-  }
-
-  function pickWeatherIcon(condition) {
-    switch (true) {
-      case condition.includes('now'):
-        return faSnowflake;
-      case condition.includes('louds'):
-        return faCloud;
-      case condition.includes('storm'):
-        return faCloudShowersHeavy;
-      case condition.includes('ain'):
-        return faCloudShowersHeavy;
-      case condition.includes('ist') || condition.includes('aze'):
-        return faWater;
-      case condition.includes('sun') || condition.includes('lear'):
-        return faSun;
-      default:
-        return faSun;
-    }
   }
 
   function renderWeatherObject(placeId) {
@@ -142,9 +116,10 @@ const TripDetail = ({
         <div>Current weather condition</div>
         <WeatherInfo>
           <WeatherIcon>
-            <FontAwesomeIcon
-              icon={pickWeatherIcon(destinationWeather.condition)}
-            />
+            <WeatherIconImage
+              alt={destinationWeather.condition}
+              src={destinationWeather.icon}
+            ></WeatherIconImage>
           </WeatherIcon>
           <WeatherTemperature>
             {destinationWeather.temperature.toFixed(1)} &#176;F
@@ -402,12 +377,19 @@ const TripExpenseDetailsHeader = styled.div`
 const WeatherInfo = styled.div`
   margin: 5px 0;
   display: flex;
+  align-items: center;
 `;
 
 const WeatherIcon = styled.div`
-  color: ${({ theme }) => theme.colors.textLight};
-  font-size: 22px;
-  padding: 0 10px 0 0;
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  margin: 0 10px 0 5px;
+`;
+
+const WeatherIconImage = styled.img`
+  transform: scale(1.4);
+  width: 30px;
 `;
 
 const WeatherTemperature = styled.div`
