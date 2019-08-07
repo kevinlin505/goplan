@@ -3,6 +3,16 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Map, InfoWindow, Marker } from 'google-maps-react';
 import googleMapsApi from '@utils/googleMapsApi';
+import openWeatherApi from '@utils/openWeatherApi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCloud,
+  faSun,
+  faCloudShowersHeavy,
+  faCloudSun,
+  faSnowflake,
+  faWater,
+} from '@fortawesome/free-solid-svg-icons';
 
 const TripMap = ({ destinations }) => {
   const google = googleMapsApi();
@@ -11,6 +21,7 @@ const TripMap = ({ destinations }) => {
   const [activeLocation, setActiveLocation] = useState(null);
   const [markerList, setMarkerList] = useState(null);
   const [mapBounds, setMapBounds] = useState(null);
+  const [weatherObject, setWeatherObject] = useState({});
   const centerLat = destinations.length > 0 ? destinations[0].geo.latitude : 0;
   const centerLng = destinations.length > 0 ? destinations[0].geo.longitude : 0;
   const defaultProps = {
@@ -37,6 +48,55 @@ const TripMap = ({ destinations }) => {
     setActiveMarker(marker);
     setActiveLocation(destination);
   }
+
+  function pickWeatherIcon(condition) {
+    switch (true) {
+      case condition.includes('now'):
+        return faSnowflake;
+      case condition.includes('louds'):
+        return faCloud;
+      case condition.includes('storm'):
+        return faCloudShowersHeavy;
+      case condition.includes('ain'):
+        return faCloudShowersHeavy;
+      case condition.includes('ist') || condition.includes('aze'):
+        return faWater;
+      case condition.includes('sun') || condition.includes('lear'):
+        return faSun;
+      default:
+        return faSun;
+    }
+  }
+
+  function renderWeatherObject() {
+    return Object.keys(weatherObject).map((address, idx) => {
+      const destinationWeather = weatherObject[address];
+      return (
+        <div key={`destination-weather-${idx}`}>
+          <div>{address}</div>
+          <div>{destinationWeather.condition}</div>
+          <div>{destinationWeather.temperature} F</div>
+          <FontAwesomeIcon
+            icon={pickWeatherIcon(destinationWeather.condition)}
+          />
+        </div>
+      );
+    });
+  }
+
+  useEffect(() => {
+    const weather = { ...weatherObject };
+    destinations.forEach(destination => {
+      openWeatherApi(destination.geo).then(resp => {
+        weather[destination.address] = {
+          condition: resp.weather[0].main,
+          temperature: resp.main.temp,
+        };
+
+        setWeatherObject(weather);
+      });
+    });
+  }, []);
 
   useEffect(() => {
     const bounds = new google.maps.LatLngBounds();
@@ -90,6 +150,7 @@ const TripMap = ({ destinations }) => {
           </div>
         </InfoWindow>
       </Map>
+      <WeatherContainer>{renderWeatherObject()}</WeatherContainer>
     </Container>
   );
 };
@@ -107,6 +168,12 @@ const Container = styled.div`
 
 const MarkerName = styled.div`
   font-weight: 600;
+`;
+
+const WeatherContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-top: 300px;
 `;
 
 export default TripMap;
