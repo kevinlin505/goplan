@@ -8,15 +8,10 @@ import { Button, Divider, withStyles } from '@material-ui/core';
 import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
-import {
-  getAttendee,
-  getParamTripId,
-  getTripStatus,
-} from '@selectors/tripSelector';
-import getTravelDates from '@utils/calculateTravelDates';
+import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
 import googleMapsApi from '@utils/googleMapsApi';
 import validateEmail from '@utils/validateEmail';
-import TripAttendees from '@components/trips/trip-detail/trip-attendees/TripAttendees';
+import TripMembers from '@components/trips/trip-detail/trip-members/TripMembers';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
 import TripExpenseSummary from '@components/trips/trip-detail/trip-expense/TripExpenseSummary';
 import TripExpenseDetails from '@components/trips/trip-detail/trip-expense/TripExpenseDetails';
@@ -27,7 +22,6 @@ import styles from '@styles/theme/theme';
 
 const mapStateToProps = (state, props) => {
   return {
-    attendee: getAttendee(state, props),
     trip: state.trip,
     tripId: getParamTripId(state, props),
     users: state.user.users,
@@ -47,7 +41,6 @@ const mapDispatchToProps = dispatch => {
 
 const TripDetail = ({
   actions,
-  attendee,
   classes,
   history,
   trip,
@@ -75,7 +68,7 @@ const TripDetail = ({
 
   useEffect(() => {
     actions.trip.getTrip(tripId).then(data => {
-      actions.user.getAllAttendees(data.selectedTrip.attendees);
+      actions.user.getAllMembers(data.selectedTrip.members);
     });
 
     if (!userInTrip) {
@@ -114,7 +107,7 @@ const TripDetail = ({
   }
 
   function handleLeaveTrip() {
-    actions.trip.leaveTrip(tripId, attendee).then(() => {
+    actions.trip.leaveTrip(tripId).then(() => {
       history.push('/home');
     });
   }
@@ -130,7 +123,7 @@ const TripDetail = ({
             <Divider component="div" />
             <DestinationInfo>
               <DestinationPhoto
-                destinationPhoto={destination.photo}
+                destinationPhoto={destination.photo.imageSourceUrl}
               ></DestinationPhoto>
               <DestinationWeather>
                 <div>Weather Info</div>
@@ -151,12 +144,12 @@ const TripDetail = ({
             <CardContainer>
               <TripName>{trip.selectedTrip && trip.selectedTrip.name}</TripName>
               <TripDates>{`${tripStartDate} - ${tripEndDate}`}</TripDates>
-              <TripAttendeesList>
-                Attendees
+              <TripMemberList>
+                Members
                 {users && Object.keys(users).length && (
-                  <TripAttendees attendees={trip.selectedTrip.attendees} />
+                  <TripMembers members={trip.selectedTrip.members} />
                 )}
-              </TripAttendeesList>
+              </TripMemberList>
 
               <Wrapper>
                 <Input
@@ -234,7 +227,6 @@ const TripDetail = ({
 
 TripDetail.propTypes = {
   actions: PropTypes.object.isRequired,
-  attendee: PropTypes.object,
   classes: PropTypes.any,
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
@@ -246,7 +238,6 @@ TripDetail.propTypes = {
 };
 
 TripDetail.defaultProps = {
-  attendee: {},
   selectedTrip: null,
 };
 
@@ -281,7 +272,7 @@ const TopLeftPanel = styled.div`
 
 const TopMiddlePanel = styled.div`
   width: 50%;
-  padding 15px;
+  padding: 15px;
 `;
 
 const TopRightPanel = styled.div`
@@ -299,7 +290,7 @@ const TripDates = styled.div`
   margin: 8px 16px;
 `;
 
-const TripAttendeesList = styled.div`
+const TripMemberList = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 16px;

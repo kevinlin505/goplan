@@ -16,7 +16,7 @@ const TripTimeline = destinations => {
             <DestinationInfo>
               <DestinationPhoto
                 key={`${destination}-${idx}`}
-                destinationPhoto={destination.photo}
+                destinationPhoto={destination.photo.imageSourceUrl}
               >
                 {' '}
               </DestinationPhoto>
