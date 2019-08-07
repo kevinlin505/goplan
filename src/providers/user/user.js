@@ -55,15 +55,16 @@ export default function reducer(state = initialState, action) {
 
 export const userActions = {
   // fetch all attendee of a trip and dispatch it to the store
-  getAllAttendees: attendeeObjects => dispatch => {
+  getAllAttendees: attendeeArray => dispatch => {
     user()
-      .getAllAttendees(attendeeObjects)
+      .getAllAttendees(attendeeArray)
       .then(docs => {
-        const attendees = docs.map(doc => {
+        const attendees = docs.reduce((obj, doc) => {
           const data = doc.data();
           data.id = doc.id;
-          return data;
-        });
+          obj[doc.id] = data;
+          return obj;
+        }, {});
 
         dispatch({
           type: types.GET_ALL_ATTENDEES,

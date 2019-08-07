@@ -41,9 +41,9 @@ export default function user() {
     },
 
     // fetch all attendee from an array of userRef and return user objects
-    getAllAttendees: attendeeObjects => {
+    getAllAttendees: attendeeArray => {
       return Promise.all(
-        attendeeObjects.map(attendeeObject => {
+        attendeeArray.map(attendeeObject => {
           return db
             .collection('users')
             .doc(attendeeObject.id)

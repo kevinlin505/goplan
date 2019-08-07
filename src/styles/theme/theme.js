@@ -22,6 +22,7 @@ const theme = {
   },
 
   sizes: {
+    colossal: 1300,
     giant: 1200,
     large: 1024,
     medium: 768,
@@ -34,6 +35,10 @@ const theme = {
     margin: '20px',
     padding: '20px',
   },
+
+  greyButton: { margin: '10px 0' },
+
+  blueButton: { margin: '0 40px 20px 16px' },
 };
 
 export default theme;
