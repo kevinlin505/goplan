@@ -12,17 +12,22 @@ export default function auth() {
       return firebase.functions().httpsCallable('getUnsplashImage')(query);
     },
 
-    sendInviteEmail: (inviteeEmail, tripId) => {
+    sendInviteEmail: (inviteeEmail, tripId, tripName, tripDates) => {
       const addMessage = firebase
         .functions()
         .httpsCallable('sendInvitationEmail');
       const { currentUser } = firebase.auth();
+      const startDate = new Date(tripDates.startAt).toDateString();
+      const endDate = new Date(tripDates.endAt).toDateString();
+      const formattedDates = `${startDate} - ${endDate}`;
 
       return addMessage({
         inviteeEmail,
         invitationLink: `https://goplan-3b4b1.web.app/#/trip/${tripId}`,
         inviterName: currentUser.displayName,
         inviterEmail: currentUser.email,
+        tripName,
+        tripDates: formattedDates,
       });
     },
 
