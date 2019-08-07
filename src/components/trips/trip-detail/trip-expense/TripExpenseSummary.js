@@ -15,18 +15,18 @@ const mapStateToProps = state => {
 const TripExpenseSummary = ({ tripExpenses, expenseList, totalExpense }) => {
   const [summaryExpense, setSummaryExpense] = useState([]);
   const [expenseSum, setExpenseSum] = useState(0);
-  const [attendeePayments, setAttendeePayments] = useState({});
-  const [attendeeNetPayments, setAttendeeNetPayments] = useState({});
+  const [memberPayments, setMemberPayments] = useState({});
+  const [memberNetPayments, setMemberNetPayments] = useState({});
   const [isCategoryExpand, setCategoryExpand] = useState(true);
-  const [isAttendeePaidExpand, setAttendeePaidExpand] = useState(true);
+  const [isMemberPaidExpand, setMemberPaidExpand] = useState(true);
   const [isNetAmountExpand, setNetAmountExpand] = useState(true);
 
   function toggleCategoryList() {
     setCategoryExpand(prevCategoryExpand => !prevCategoryExpand);
   }
 
-  function toggleAttendeePaidList() {
-    setAttendeePaidExpand(prevAttendeePaidExpand => !prevAttendeePaidExpand);
+  function toggleMemberPaidList() {
+    setMemberPaidExpand(prevMemberPaidExpand => !prevMemberPaidExpand);
   }
 
   function toggleNetAmountList() {
@@ -34,14 +34,14 @@ const TripExpenseSummary = ({ tripExpenses, expenseList, totalExpense }) => {
   }
 
   function renderNetPayments() {
-    return Object.keys(attendeeNetPayments).map(id => {
+    return Object.keys(memberNetPayments).map(id => {
       return (
         <NestedListItem key={`net-payment-${id}`}>
-          <NestedListItemText>{`${attendeeNetPayments[id][0]} ${
-            attendeeNetPayments[id][1] > 0 ? 'receives' : 'owes'
+          <NestedListItemText>{`${memberNetPayments[id][0]} ${
+            memberNetPayments[id][1] > 0 ? 'receives' : 'owes'
           }`}</NestedListItemText>
           <ItemCost>
-            {convertNumberToCurrency(Math.abs(attendeeNetPayments[id][1]))}
+            {convertNumberToCurrency(Math.abs(memberNetPayments[id][1]))}
           </ItemCost>
         </NestedListItem>
       );
@@ -49,15 +49,13 @@ const TripExpenseSummary = ({ tripExpenses, expenseList, totalExpense }) => {
   }
 
   function renderPayments() {
-    return Object.keys(attendeePayments).map(id => {
+    return Object.keys(memberPayments).map(id => {
       return (
         <NestedListItem key={`total-payment-paid-${id}`}>
           <NestedListItemText>{`${
-            attendeePayments[id][0]
+            memberPayments[id][0]
           } paid`}</NestedListItemText>
-          <ItemCost>
-            {convertNumberToCurrency(attendeePayments[id][1])}
-          </ItemCost>
+          <ItemCost>{convertNumberToCurrency(memberPayments[id][1])}</ItemCost>
         </NestedListItem>
       );
     });
@@ -105,8 +103,8 @@ const TripExpenseSummary = ({ tripExpenses, expenseList, totalExpense }) => {
       }
     });
 
-    setAttendeeNetPayments(netPayments);
-    setAttendeePayments(payments);
+    setMemberNetPayments(netPayments);
+    setMemberPayments(payments);
   }, [Object.keys(tripExpenses).length]);
 
   return (
@@ -123,15 +121,15 @@ const TripExpenseSummary = ({ tripExpenses, expenseList, totalExpense }) => {
       <Collapse in={isCategoryExpand} timeout="auto" unmountOnExit>
         <List component="div">{summaryExpense}</List>
       </Collapse>
-      <ListItem button onClick={toggleAttendeePaidList}>
-        <ListItemText>Total Paid by Attendee</ListItemText>
-        {isAttendeePaidExpand ? <ExpandLess /> : <ExpandMore />}
+      <ListItem button onClick={toggleMemberPaidList}>
+        <ListItemText>Total Paid by Member</ListItemText>
+        {isMemberPaidExpand ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
-      <Collapse in={isAttendeePaidExpand} timeout="auto" unmountOnExit>
+      <Collapse in={isMemberPaidExpand} timeout="auto" unmountOnExit>
         <List component="div">{renderPayments()}</List>
       </Collapse>
       <ListItem button onClick={toggleNetAmountList}>
-        <ListItemText>Net Amount by Attendee</ListItemText>
+        <ListItemText>Net Amount by Member</ListItemText>
         {isNetAmountExpand ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={isNetAmountExpand} timeout="auto" unmountOnExit>

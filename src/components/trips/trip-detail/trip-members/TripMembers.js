@@ -15,17 +15,17 @@ const mapStateToProp = state => {
   };
 };
 
-const TripAttendees = ({ users, attendees }) => {
-  function renderAttendeeList() {
-    return attendees.map((attendeeObj, idx) => {
-      const user = users[attendeeObj.id];
+const TripMembers = ({ users, members }) => {
+  function renderMemberList() {
+    return Object.keys(members).map((memberId, idx) => {
+      const user = users[memberId];
       const divider =
-        idx === attendees.length - 1 ? null : (
+        idx === members.length - 1 ? null : (
           <Divider component="li" variant="inset" />
         );
 
       return (
-        <div key={`trip-attendee-${idx}`}>
+        <div key={`trip-member-${idx}`}>
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
               <Avatar alt={user.name} src={user.profile_url} />
@@ -33,16 +33,16 @@ const TripAttendees = ({ users, attendees }) => {
             <ListItemText
               primary={user.name}
               secondary={
-                <AttendeeInfoText>
-                  <AttendeePaymentInfo>
-                    <AttendeePaymentLabel>Venmo:</AttendeePaymentLabel>
+                <MemberInfoText>
+                  <MemberPaymentInfo>
+                    <MemberPaymentLabel>Venmo:</MemberPaymentLabel>
                     <span>{user.venmo}</span>
-                  </AttendeePaymentInfo>
-                  <AttendeePaymentInfo>
-                    <AttendeePaymentLabel>Quickpay:</AttendeePaymentLabel>
+                  </MemberPaymentInfo>
+                  <MemberPaymentInfo>
+                    <MemberPaymentLabel>Quickpay:</MemberPaymentLabel>
                     <span>{user.quickpay}</span>
-                  </AttendeePaymentInfo>
-                </AttendeeInfoText>
+                  </MemberPaymentInfo>
+                </MemberInfoText>
               }
             />
           </ListItem>
@@ -52,26 +52,26 @@ const TripAttendees = ({ users, attendees }) => {
     });
   }
 
-  return <List>{renderAttendeeList()}</List>;
+  return <List>{renderMemberList()}</List>;
 };
 
-TripAttendees.propTypes = {
-  attendees: PropTypes.array.isRequired,
+TripMembers.propTypes = {
+  members: PropTypes.object.isRequired,
   users: PropTypes.object.isRequired,
 };
 
-const AttendeeInfoText = styled.span`
+const MemberInfoText = styled.span`
   display: flex;
   flex-direction: column;
 `;
 
-const AttendeePaymentInfo = styled.span`
+const MemberPaymentInfo = styled.span`
   line-height: 1.5em;
   display: flex;
 `;
 
-const AttendeePaymentLabel = styled.span`
+const MemberPaymentLabel = styled.span`
   width: 80px;
 `;
 
-export default connect(mapStateToProp)(TripAttendees);
+export default connect(mapStateToProp)(TripMembers);

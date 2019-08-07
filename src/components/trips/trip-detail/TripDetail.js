@@ -11,7 +11,7 @@ import { tripActions } from '@providers/trip/trip';
 import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
 import googleMapsApi from '@utils/googleMapsApi';
 import validateEmail from '@utils/validateEmail';
-import TripAttendees from '@components/trips/trip-detail/trip-attendees/TripAttendees';
+import TripMembers from '@components/trips/trip-detail/trip-members/TripMembers';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
 import TripExpenseSummary from '@components/trips/trip-detail/trip-expense/TripExpenseSummary';
 import TripExpenseDetails from '@components/trips/trip-detail/trip-expense/TripExpenseDetails';
@@ -68,7 +68,7 @@ const TripDetail = ({
 
   useEffect(() => {
     actions.trip.getTrip(tripId).then(data => {
-      actions.user.getAllAttendees(data.selectedTrip.attendees);
+      actions.user.getAllMembers(data.selectedTrip.members);
     });
 
     if (!userInTrip) {
@@ -123,7 +123,7 @@ const TripDetail = ({
             <Divider component="div" />
             <DestinationInfo>
               <DestinationPhoto
-                destinationPhoto={destination.photo}
+                destinationPhoto={destination.photo.imageSourceUrl}
               ></DestinationPhoto>
               <DestinationWeather>
                 <div>Weather Info</div>
@@ -144,12 +144,12 @@ const TripDetail = ({
             <CardContainer>
               <TripName>{trip.selectedTrip && trip.selectedTrip.name}</TripName>
               <TripDates>{`${tripStartDate} - ${tripEndDate}`}</TripDates>
-              <TripAttendeesList>
-                Attendees
+              <TripMemberList>
+                Members
                 {users && Object.keys(users).length && (
-                  <TripAttendees attendees={trip.selectedTrip.attendees} />
+                  <TripMembers members={trip.selectedTrip.members} />
                 )}
-              </TripAttendeesList>
+              </TripMemberList>
 
               <Wrapper>
                 <Input
@@ -290,7 +290,7 @@ const TripDates = styled.div`
   margin: 8px 16px;
 `;
 
-const TripAttendeesList = styled.div`
+const TripMemberList = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 16px;

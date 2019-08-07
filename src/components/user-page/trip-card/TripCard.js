@@ -16,7 +16,7 @@ const TripCard = ({ tripDetail }) => {
 
   const backgroundImageUrl =
     destination && destination.photo
-      ? `${destination.photo}&w=600`
+      ? `${destination.photo.imageSourceUrl}&w=600`
       : defaultBackgroundImage;
 
   function constructMemberList() {

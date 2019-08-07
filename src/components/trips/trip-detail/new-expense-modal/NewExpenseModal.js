@@ -226,7 +226,7 @@ const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
 
 NewExpenseModal.propTypes = {
   actions: PropTypes.object.isRequired,
-  members: PropTypes.array.isRequired,
+  members: PropTypes.object.isRequired,
   toggleCreateExpenseModal: PropTypes.func.isRequired,
 };
 

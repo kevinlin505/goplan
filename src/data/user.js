@@ -43,10 +43,10 @@ export default function user() {
     // fetch all members from an array of member details
     getAllMembers: members => {
       return Promise.all(
-        members.map(member => {
+        Object.keys(members).map(memberId => {
           return db
             .collection('users')
-            .doc(member.id)
+            .doc(memberId)
             .get();
         }),
       );
