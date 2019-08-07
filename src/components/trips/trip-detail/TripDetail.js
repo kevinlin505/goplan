@@ -5,6 +5,15 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Divider, withStyles } from '@material-ui/core';
+import openWeatherApi from '@utils/openWeatherApi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCloud,
+  faSun,
+  faCloudShowersHeavy,
+  faSnowflake,
+  faWater,
+} from '@fortawesome/free-solid-svg-icons';
 import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
@@ -51,6 +60,9 @@ const TripDetail = ({
 }) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
   const [expenseList, setExpenseList] = useState(null);
+  const [weatherObject, setWeatherObject] = useState({});
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [validEmail, setValidEmail] = useState(false);
   const google = googleMapsApi();
   const showTripCard =
     trip.selectedTrip && trip.selectedTrip.id === match.params.tripId;
@@ -62,33 +74,15 @@ const TripDetail = ({
     trip.selectedTrip &&
     new Date(trip.selectedTrip.travelDates.endAt).toLocaleDateString();
 
-  const toggleCreateExpenseModal = () => {
-    setExpenseModal(!isExpenseModal);
-  };
+  function toggleCreateExpenseModal() {
+    setExpenseModal(prevExpenseModal => !prevExpenseModal);
+  }
 
-  useEffect(() => {
-    actions.trip.getTrip(tripId).then(data => {
-      actions.user.getAllMembers(data.selectedTrip.members);
+  function handleLeaveTrip() {
+    actions.trip.leaveTrip(tripId).then(() => {
+      history.push('/home');
     });
-
-    if (!userInTrip) {
-      actions.trip.joinTrip(tripId);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (trip.selectedTrip) {
-      actions.trip.getTripExpenses(trip.selectedTrip.expenses);
-      setExpenseList(trip.selectedTrip.expenses.map(ele => ele.id));
-    }
-  }, [trip.selectedTrip]);
-
-  const [inviteEmail, setInviteEmail] = useState('');
-  const [validEmail, setValidEmail] = useState(false);
-
-  useEffect(() => {
-    setValidEmail(validateEmail(inviteEmail));
-  }, [inviteEmail]);
+  }
 
   function handleInviteEmail(event) {
     setInviteEmail(event.target.value);
@@ -100,16 +94,64 @@ const TripDetail = ({
         inviteEmail,
         tripId,
         trip.selectedTrip.name,
-        getTravelDates(trip.selectedTrip),
+        // getTravelDates(trip.selectedTrip),
       );
       setInviteEmail('');
     }
   }
 
-  function handleLeaveTrip() {
-    actions.trip.leaveTrip(tripId).then(() => {
-      history.push('/home');
+  function getWeatherInfo(destinations) {
+    const weather = { ...weatherObject };
+    destinations.forEach(destination => {
+      openWeatherApi(destination.geo).then(resp => {
+        weather[destination.placeId] = {
+          condition: resp.weather[0].main,
+          temperature: resp.main.temp,
+        };
+
+        setWeatherObject(weather);
+      });
     });
+  }
+
+  function pickWeatherIcon(condition) {
+    switch (true) {
+      case condition.includes('now'):
+        return faSnowflake;
+      case condition.includes('louds'):
+        return faCloud;
+      case condition.includes('storm'):
+        return faCloudShowersHeavy;
+      case condition.includes('ain'):
+        return faCloudShowersHeavy;
+      case condition.includes('ist') || condition.includes('aze'):
+        return faWater;
+      case condition.includes('sun') || condition.includes('lear'):
+        return faSun;
+      default:
+        return faSun;
+    }
+  }
+
+  function renderWeatherObject(placeId) {
+    const destinationWeather = weatherObject[placeId];
+
+    return destinationWeather ? (
+      <DestinationWeather>
+        <div>Current weather condition</div>
+        <WeatherInfo>
+          <WeatherIcon>
+            <FontAwesomeIcon
+              icon={pickWeatherIcon(destinationWeather.condition)}
+            />
+          </WeatherIcon>
+          <WeatherTemperature>
+            {destinationWeather.temperature.toFixed(1)} &#176;F
+          </WeatherTemperature>
+        </WeatherInfo>
+        <div>{destinationWeather.condition}</div>
+      </DestinationWeather>
+    ) : null;
   }
 
   function renderDestinations() {
@@ -125,15 +167,31 @@ const TripDetail = ({
               <DestinationPhoto
                 destinationPhoto={destination.photo.imageSourceUrl}
               ></DestinationPhoto>
-              <DestinationWeather>
-                <div>Weather Info</div>
-              </DestinationWeather>
+              {renderWeatherObject(destination.placeId)}
             </DestinationInfo>
           </div>
         </DestinationContainer>
       );
     });
   }
+
+  useEffect(() => {
+    setValidEmail(validateEmail(inviteEmail));
+  }, [inviteEmail]);
+
+  useEffect(() => {
+    actions.trip.getTrip(tripId).then(data => {
+      actions.user.getAllMembers(data.selectedTrip.members);
+      actions.trip.getTripExpenses(data.selectedTrip.expenses);
+      getWeatherInfo(data.selectedTrip.destinations);
+
+      setExpenseList(data.selectedTrip.expenses.map(ele => ele.id));
+    });
+
+    if (!userInTrip) {
+      actions.trip.joinTrip(tripId);
+    }
+  }, []);
 
   // Need to clean up this part, we should not get into this component if selectedTrip is null.
   return (
@@ -333,10 +391,26 @@ const DestinationPhoto = styled.div`
 
 const DestinationWeather = styled.div`
   padding: 10px;
+  font-size: 16px;
 `;
 
 const TripExpenseDetailsHeader = styled.div`
   font-size: 18px;
+`;
+
+const WeatherInfo = styled.div`
+  margin: 5px 0;
+  display: flex;
+`;
+
+const WeatherIcon = styled.div`
+  color: ${({ theme }) => theme.colors.textLight};
+  font-size: 22px;
+  padding: 0 10px 0 0;
+`;
+
+const WeatherTemperature = styled.div`
+  font-size: 20px;
 `;
 
 export default connect(
