@@ -19,12 +19,12 @@ const TripCard = ({ tripDetail }) => {
       ? `${destination.photo}&w=600`
       : defaultBackgroundImage;
 
-  function constructAttendeeList() {
-    return tripDetail.attendees.map(attendee => {
+  function constructMemberList() {
+    return Object.keys(tripDetail.members).map(memberId => {
+      const member = tripDetail.members[memberId];
+
       return (
-        <AttendeeName key={`attendee-${attendee.email}`}>
-          {attendee.name}
-        </AttendeeName>
+        <MemberName key={`member-${member.email}`}>{member.name}</MemberName>
       );
     });
   }
@@ -39,7 +39,7 @@ const TripCard = ({ tripDetail }) => {
               <TravelDate>{`${startDate} - ${endDate}`}</TravelDate>
             </DesinationDetail>
             <DesinationDetail>
-              <AttendeeList>{constructAttendeeList()}</AttendeeList>
+              <MemberList>{constructMemberList()}</MemberList>
               <div>{convertNumberToCurrency(totalCost)}</div>
             </DesinationDetail>
           </DetailWrapper>
@@ -108,14 +108,14 @@ const TravelDate = styled.div`
   font-size: 16px;
 `;
 
-const AttendeeList = styled.div`
+const MemberList = styled.div`
   width: 80%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
-const AttendeeName = styled.div`
+const MemberName = styled.div`
   display: inline-block;
   margin-right: 10px;
 `;

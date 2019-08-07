@@ -40,13 +40,13 @@ export default function user() {
         });
     },
 
-    // fetch all attendee from an array of userRef and return user objects
-    getAllAttendees: attendeeArray => {
+    // fetch all members from an array of member details
+    getAllMembers: members => {
       return Promise.all(
-        attendeeArray.map(attendeeObject => {
+        members.map(member => {
           return db
             .collection('users')
-            .doc(attendeeObject.id)
+            .doc(member.id)
             .get();
         }),
       );

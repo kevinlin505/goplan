@@ -89,18 +89,6 @@ export default function trip() {
           });
         });
       });
-
-      // batch.update(tripRef, {
-      //   attendees: {
-      //     [currentUser.uid]: firebase.firestore.FieldValue.delete(),
-      //   },
-      // });
-
-      // batch.update(userRef, {
-      //   trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
-      // });
-
-      // return batch.commit();
     },
 
     updateTrip: (tripId, tripDetail) => {

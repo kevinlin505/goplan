@@ -19,10 +19,10 @@ export const types = {
 
 const initialState = {
   form: {
-    attendees: [],
     costs: {},
     destinations: [],
     expenses: [],
+    members: [],
     name: '',
     notes: '',
   },
@@ -87,7 +87,7 @@ export const tripActions = {
       trip: { form },
     } = getState();
 
-    const inviteList = form.attendees;
+    const inviteList = form.members;
     const organizer = {
       email: profile.email,
       id: profile.id,
@@ -95,7 +95,7 @@ export const tripActions = {
     };
     const tripDetail = {
       ...form,
-      attendees: {
+      members: {
         [profile.id]: organizer,
       },
       organizer,
@@ -105,9 +105,9 @@ export const tripActions = {
       .createTrip(tripDetail)
       .then(tripId => {
         Promise.all(
-          inviteList.map(attendee => {
+          inviteList.map(member => {
             return auth().sendInviteEmail(
-              attendee,
+              member,
               tripId,
               tripDetail.name,
               getTravelDates(tripDetail),
@@ -262,14 +262,14 @@ export const tripActions = {
     });
   },
 
-  removeAttendee: position => (dispatch, getState) => {
+  removeMember: position => (dispatch, getState) => {
     const { form } = getState().trip;
 
     const updatedForm = {
       ...form,
-      attendees: [
-        ...form.attendees.slice(0, position),
-        ...form.attendees.slice(position + 1),
+      members: [
+        ...form.members.slice(0, position),
+        ...form.members.slice(position + 1),
       ],
     };
 

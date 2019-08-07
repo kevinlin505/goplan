@@ -24,7 +24,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const Attendees = ({ actions, form }) => {
+const Members = ({ actions, form }) => {
   const [invite, setInvite] = useState('');
 
   function updateField(event) {
@@ -38,8 +38,8 @@ const Attendees = ({ actions, form }) => {
       event.preventDefault();
 
       if (validateEmail(event.target.value)) {
-        actions.trip.updateForm('attendees', [
-          ...form.attendees,
+        actions.trip.updateForm('members', [
+          ...form.members,
           event.target.value,
         ]);
 
@@ -48,20 +48,20 @@ const Attendees = ({ actions, form }) => {
     }
   }
 
-  function handleRemoveAttendee(position) {
-    actions.trip.removeAttendee(position);
+  function handleRemoveMember(position) {
+    actions.trip.removeMember(position);
   }
 
-  function constructAttendeeList() {
-    return form.attendees.map((attendee, index) => {
+  function constructMemberList() {
+    return form.members.map((member, index) => {
       return (
         <InviteChip
-          key={attendee}
+          key={member}
           color="primary"
           deleteIcon={<CancelIcon />}
           icon={<FaceIcon />}
-          label={attendee}
-          onDelete={() => handleRemoveAttendee(index)}
+          label={member}
+          onDelete={() => handleRemoveMember(index)}
         />
       );
     });
@@ -71,8 +71,8 @@ const Attendees = ({ actions, form }) => {
     <React.Fragment>
       <FieldWrapper>
         <Input
-          label="Attendees"
-          name="attendee"
+          label="Members"
+          name="member"
           onBlur={updateField}
           onChange={updateField}
           onKeyPress={updateField}
@@ -81,12 +81,12 @@ const Attendees = ({ actions, form }) => {
           value={invite}
         />
       </FieldWrapper>
-      <FieldWrapper>{constructAttendeeList()}</FieldWrapper>
+      <FieldWrapper>{constructMemberList()}</FieldWrapper>
     </React.Fragment>
   );
 };
 
-Attendees.propTypes = {
+Members.propTypes = {
   actions: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
 };
@@ -98,4 +98,4 @@ const InviteChip = styled(Chip)`
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Attendees);
+)(Members);

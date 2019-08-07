@@ -22,7 +22,7 @@ import CloseButton from '@styles/modal/CloseButton';
 
 const mapStateToProps = state => {
   return {
-    attendees: state.trip.selectedTrip.attendees,
+    members: state.trip.selectedTrip.members,
   };
 };
 
@@ -34,7 +34,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
+const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
   const [files, setFiles] = useState([]);
   const [previewImageSrcs, setPreviewImageSrcs] = useState([]);
   const [form, setValues] = useState({
@@ -42,7 +42,7 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
     date: '',
     merchant: '',
     amount: '',
-    payees: attendees,
+    payees: members,
     description: '',
   });
 
@@ -84,7 +84,7 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
     ]);
   };
 
-  function attendeeRenderValue(selectedValues) {
+  function memberRenderValue(selectedValues) {
     return (
       <div>
         {selectedValues.map(value => {
@@ -94,6 +94,18 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
         })}
       </div>
     );
+  }
+
+  function constructPayees() {
+    return Object.keys(members).map(memberId => {
+      const member = members[memberId];
+
+      return (
+        <MenuItem key={`${member.name}-${member.id}`} value={member}>
+          {member.name}
+        </MenuItem>
+      );
+    });
   }
 
   return (
@@ -160,17 +172,10 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
               multiple
               name="payees"
               onChange={updateField}
-              renderValue={selected => attendeeRenderValue(selected)}
+              renderValue={selected => memberRenderValue(selected)}
               value={form.payees}
             >
-              {attendees.map(attendee => (
-                <MenuItem
-                  key={`${attendee.name}-${attendee.id}`}
-                  value={attendee}
-                >
-                  {attendee.name}
-                </MenuItem>
-              ))}
+              {constructPayees()}
             </Select>
           </FieldWrapper>
           <FieldWrapper>
@@ -221,7 +226,7 @@ const NewExpenseModal = ({ actions, attendees, toggleCreateExpenseModal }) => {
 
 NewExpenseModal.propTypes = {
   actions: PropTypes.object.isRequired,
-  attendees: PropTypes.array.isRequired,
+  members: PropTypes.array.isRequired,
   toggleCreateExpenseModal: PropTypes.func.isRequired,
 };
 

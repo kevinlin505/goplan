@@ -2,7 +2,7 @@ import user from '@data/user';
 import expense from '@data/expense';
 
 export const types = {
-  GET_ALL_ATTENDEES: 'USER/GET_ALL_ATTENDEES',
+  GET_ALL_MEMBERS: 'USER/GET_ALL_MEMBERS',
   GET_USER_EXPENSE_REPORTS: 'EXPENSE/GET_USER_EXPENSE_REPORTS',
   SUMMARIZE_EXPENSE_REPORT: 'EXPENSE/SUMMARIZE_EXPENSE_REPORT',
   UPDATE_USER_DETAILS: 'USER/UPDATE_USER_DETAILS',
@@ -19,10 +19,10 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case types.GET_ALL_ATTENDEES: {
+    case types.GET_ALL_MEMBERS: {
       return {
         ...state,
-        users: action.attendees,
+        users: action.members,
       };
     }
 
@@ -54,12 +54,12 @@ export default function reducer(state = initialState, action) {
 }
 
 export const userActions = {
-  // fetch all attendee of a trip and dispatch it to the store
-  getAllAttendees: attendeeArray => dispatch => {
+  // fetch all members of a trip and dispatch it to the store
+  getAllMembers: memberList => dispatch => {
     user()
-      .getAllAttendees(attendeeArray)
+      .getAllMembers(memberList)
       .then(docs => {
-        const attendees = docs.reduce((obj, doc) => {
+        const members = docs.reduce((obj, doc) => {
           const data = doc.data();
           data.id = doc.id;
           obj[doc.id] = data;
@@ -67,8 +67,8 @@ export const userActions = {
         }, {});
 
         dispatch({
-          type: types.GET_ALL_ATTENDEES,
-          attendees,
+          type: types.GET_ALL_MEMBERS,
+          members,
         });
       });
   },
