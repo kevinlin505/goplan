@@ -22,7 +22,8 @@ const initialState = {
     costs: {},
     destinations: [],
     expenses: [],
-    members: [],
+    invites: [],
+    members: {},
     name: '',
     notes: '',
   },
@@ -87,7 +88,6 @@ export const tripActions = {
       trip: { form },
     } = getState();
 
-    const inviteList = form.members;
     const organizer = {
       email: profile.email,
       id: profile.id,
@@ -105,7 +105,7 @@ export const tripActions = {
       .createTrip(tripDetail)
       .then(tripId => {
         Promise.all(
-          inviteList.map(member => {
+          form.invites.map(member => {
             return auth().sendInviteEmail(
               member,
               tripId,

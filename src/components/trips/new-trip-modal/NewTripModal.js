@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { tripActions } from '@providers/trip/trip';
-import Members from '@components/trips/members/Members';
+import Invites from '@components/trips/invites/Invites';
 import Destinations from '@components/trips/destinations/Destinations';
 import NameAndNotes from '@components/trips/name-and-notes/NameAndNotes';
 import Container from '@styles/modal/Container';
@@ -38,7 +38,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 function getSteps() {
-  return ['Trip name', 'Destinations', 'Members'];
+  return ['Trip name', 'Destinations', 'Invites'];
 }
 
 function getStepContent(step) {
@@ -48,7 +48,7 @@ function getStepContent(step) {
     case 1:
       return <Destinations />;
     case 2:
-      return <Members />;
+      return <Invites />;
     default:
       return <NameAndNotes />;
   }
@@ -61,16 +61,15 @@ const NewTripModal = ({ actions, trip }) => {
   const [isNextButtonsDisabled, setNextButtonsDisabled] = useState({
     0: true,
     1: true,
-    2: true,
+    2: false,
   });
 
   useEffect(() => {
     setNextButtonsDisabled({
       0: !trip.form.name.trim(),
       1: !trip.form.destinations.length,
-      2: !trip.form.members.length,
     });
-  }, [trip.form.name, trip.form.destinations.length, trip.form.members.length]);
+  }, [trip.form.name, trip.form.destinations.length]);
 
   function handleNext() {
     setActiveStep(prevActiveStep => prevActiveStep + 1);

@@ -51,13 +51,13 @@ export default function trip() {
 
     joinTrip: (tripId, { name, id, email }) => {
       const batch = db.batch();
+
       const userRef = db.collection('users').doc(currentUser.uid);
       const tripRef = db.collection('trips').doc(tripId);
 
       batch.update(tripRef, {
-        members: {
-          [id]: { name, id, email },
-        },
+        [`members.${id}`]: { name, id, email },
+        invites: firebase.firestore.FieldValue.arrayRemove(email),
       });
       batch.update(userRef, {
         trips: firebase.firestore.FieldValue.arrayUnion(tripRef),
@@ -67,28 +67,19 @@ export default function trip() {
     },
 
     leaveTrip: tripId => {
+      const batch = db.batch();
+
       const tripRef = db.collection('trips').doc(tripId);
       const userRef = db.collection('users').doc(currentUser.uid);
 
-      // const batch = db.batch();
-
-      return db.runTransaction(transaction => {
-        return transaction.get(tripRef).then(tripDoc => {
-          if (!tripDoc.exists) {
-            throw new Error('Trip does not exists!');
-          }
-
-          const { members } = tripDoc.data();
-          delete members[currentUser.uid];
-
-          transaction.update(tripRef, {
-            members,
-          });
-          transaction.update(userRef, {
-            trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
-          });
-        });
+      batch.update(tripRef, {
+        [`members.${currentUser.uid}`]: firebase.firestore.FieldValue.delete(),
       });
+      batch.update(userRef, {
+        trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
+      });
+
+      return batch.commit();
     },
 
     updateTrip: (tripId, tripDetail) => {

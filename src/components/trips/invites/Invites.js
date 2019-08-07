@@ -24,7 +24,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const Members = ({ actions, form }) => {
+const Invites = ({ actions, form }) => {
   const [invite, setInvite] = useState('');
 
   function updateField(event) {
@@ -38,8 +38,8 @@ const Members = ({ actions, form }) => {
       event.preventDefault();
 
       if (validateEmail(event.target.value)) {
-        actions.trip.updateForm('members', [
-          ...form.members,
+        actions.trip.updateForm('invites', [
+          ...form.invites,
           event.target.value,
         ]);
 
@@ -48,20 +48,20 @@ const Members = ({ actions, form }) => {
     }
   }
 
-  function handleRemoveMember(position) {
+  function handleRemoveInvite(position) {
     actions.trip.removeMember(position);
   }
 
   function constructMemberList() {
-    return form.members.map((member, index) => {
+    return form.invites.map((email, index) => {
       return (
         <InviteChip
-          key={member}
+          key={`invite-chip-${email}-${index}`}
           color="primary"
           deleteIcon={<CancelIcon />}
           icon={<FaceIcon />}
-          label={member}
-          onDelete={() => handleRemoveMember(index)}
+          label={email}
+          onDelete={() => handleRemoveInvite(index)}
         />
       );
     });
@@ -71,8 +71,8 @@ const Members = ({ actions, form }) => {
     <React.Fragment>
       <FieldWrapper>
         <Input
-          label="Members"
-          name="member"
+          label="invites"
+          name="invite"
           onBlur={updateField}
           onChange={updateField}
           onKeyPress={updateField}
@@ -86,7 +86,7 @@ const Members = ({ actions, form }) => {
   );
 };
 
-Members.propTypes = {
+Invites.propTypes = {
   actions: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
 };
@@ -98,4 +98,4 @@ const InviteChip = styled(Chip)`
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Members);
+)(Invites);
