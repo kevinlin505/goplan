@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Divider, withStyles } from '@material-ui/core';
-import openWeatherApi from '@utils/openWeatherApi';
 import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
@@ -96,15 +95,17 @@ const TripDetail = ({
   function getWeatherInfo(destinations) {
     const weather = { ...weatherObject };
     destinations.forEach(destination => {
-      openWeatherApi(destination.geo).then(resp => {
-        weather[destination.placeId] = {
-          condition: resp.weather[0].main,
-          icon: `http://openweathermap.org/img/wn/${resp.weather[0].icon}@2x.png`,
-          temperature: resp.main.temp,
-        };
+      actions.trip
+        .getWeather(destination.geo.latitude, destination.geo.longitude)
+        .then(resp => {
+          weather[destination.placeId] = {
+            condition: resp.weather[0].main,
+            icon: `http://openweathermap.org/img/wn/${resp.weather[0].icon}@2x.png`,
+            temperature: resp.main.temp,
+          };
 
-        setWeatherObject(weather);
-      });
+          setWeatherObject(weather);
+        });
     });
   }
 
