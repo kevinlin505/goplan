@@ -49,6 +49,13 @@ export default function trip() {
       return firebase.functions().httpsCallable('getUnsplashImage')(options);
     },
 
+    getWeather: (latitude, longitude) => {
+      return firebase.functions().httpsCallable('getWeather')({
+        latitude,
+        longitude,
+      });
+    },
+
     joinTrip: (tripId, { name, id, email }) => {
       const batch = db.batch();
 
