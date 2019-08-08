@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { expenseActions } from '@providers/expense/expense';
 import convertNumberToCurrency from '@utils/convertNumberToCurrency';
-import { Collapse, List } from '@material-ui/core';
+import { Button, Collapse, List } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 const mapStateToProps = state => {
@@ -12,7 +14,15 @@ const mapStateToProps = state => {
   };
 };
 
-const TripExpenseSummary = ({ tripExpenses, expenseList }) => {
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: {
+      expense: bindActionCreators(expenseActions, dispatch),
+    },
+  };
+};
+
+const TripExpenseSummary = ({ actions, tripExpenses, expenseList }) => {
   const defaultExpenseExpandList = expenseList.reduce((obj, expenseId) => {
     obj[expenseId] = false;
 
@@ -21,6 +31,12 @@ const TripExpenseSummary = ({ tripExpenses, expenseList }) => {
   const [isExpenseExpanded, setExpenseExpanded] = useState(
     defaultExpenseExpandList,
   );
+
+  function handleRemoveExpense(expenseId) {
+    return () => {
+      actions.expense.removeExpense(expenseId, tripExpenses[expenseId]);
+    };
+  }
 
   // Toggle isExpenseExpanded object with expenseId as key and boolean as values.
   // Make a copy of the isExpenseExpanded object before changing the value as not
@@ -73,6 +89,13 @@ const TripExpenseSummary = ({ tripExpenses, expenseList }) => {
               </a>
             ) : null}
           </DetailContentListItem>
+          <Button
+            color="primary"
+            onClick={handleRemoveExpense(expenseId)}
+            variant="contained"
+          >
+            Remove Expense
+          </Button>
         </List>
       );
     }
@@ -108,6 +131,7 @@ const TripExpenseSummary = ({ tripExpenses, expenseList }) => {
 };
 
 TripExpenseSummary.propTypes = {
+  actions: PropTypes.object.isRequired,
   expenseList: PropTypes.array.isRequired,
   totalExpense: PropTypes.object.isRequired,
   tripExpenses: PropTypes.object.isRequired,
@@ -168,4 +192,7 @@ const DetailContentListHeader = styled.div`
   }
 `;
 
-export default connect(mapStateToProps)(TripExpenseSummary);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TripExpenseSummary);
