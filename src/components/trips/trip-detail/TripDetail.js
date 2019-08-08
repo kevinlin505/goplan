@@ -96,15 +96,17 @@ const TripDetail = ({
   function getWeatherInfo(destinations) {
     const weather = { ...weatherObject };
     destinations.forEach(destination => {
-      openWeatherApi(destination.geo).then(resp => {
-        weather[destination.placeId] = {
-          condition: resp.weather[0].main,
-          icon: `http://openweathermap.org/img/wn/${resp.weather[0].icon}@2x.png`,
-          temperature: resp.main.temp,
-        };
+      actions.trip
+        .getWeather(destination.geo.latitude, destination.geo.longitude)
+        .then(resp => {
+          weather[destination.placeId] = {
+            condition: resp.weather[0].main,
+            icon: `http://openweathermap.org/img/wn/${resp.weather[0].icon}@2x.png`,
+            temperature: resp.main.temp,
+          };
 
-        setWeatherObject(weather);
-      });
+          setWeatherObject(weather);
+        });
     });
   }
 

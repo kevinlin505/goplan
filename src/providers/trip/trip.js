@@ -7,6 +7,7 @@ export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
   GET_DESTINATION_PHOTO: 'TRIP/GET_DESTINATION_PHOTO',
   GET_TRIP_EXPENSE_REPORTS: 'TRIP/GET_TRIP_EXPENSE_REPORTS',
+  GET_WEATHER_INFO: 'TRIP/GET_WEATHER_INFO',
   INVITE_TRIP: 'TRIP/INVITE_TRIP',
   JOIN_TRIP: 'TRIP/JOIN_TRIP',
   LEAVE_TRIP: 'TRIP/LEAVE_TRIP',
@@ -186,6 +187,21 @@ export const tripActions = {
       .then(response => {
         dispatch({
           type: types.GET_DESTINATION_PHOTO,
+        });
+
+        return Promise.resolve(response.data);
+      })
+      .catch(() => {
+        return Promise.resolve('');
+      });
+  },
+
+  getWeather: (latitude, longitude) => dispatch => {
+    return trip()
+      .getWeather(latitude, longitude)
+      .then(response => {
+        dispatch({
+          type: types.GET_WEATHER_INFO,
         });
 
         return Promise.resolve(response.data);
