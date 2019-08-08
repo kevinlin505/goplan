@@ -77,6 +77,16 @@ export default function reducer(state = initialState, action) {
       };
     }
 
+    case types.UPDATE_TRIP: {
+      return {
+        ...state,
+        trips: {
+          ...state.trips,
+          [action.tripDetail.id]: action.tripDetail,
+        },
+      };
+    }
+
     default:
       return state;
   }
@@ -303,5 +313,20 @@ export const tripActions = {
           type: types.UPDATE_TRIP,
         });
       });
+  },
+
+  subscribeToTripChange: tripId => dispatch => {
+    trip().subscribeToTripChange(tripId, tripSnapshot => {
+      if (tripSnapshot.exists && !tripSnapshot.metadata.hasPendingWrites) {
+        dispatch({
+          type: types.UPDATE_TRIP,
+          tripDetail: tripSnapshot.data(),
+        });
+      }
+    });
+  },
+
+  unsubscribeToTripChange: () => () => {
+    trip().unsubscribeToTripChange();
   },
 };

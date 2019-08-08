@@ -87,21 +87,15 @@ const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
   function memberRenderValue(selectedValues) {
     return (
       <div>
-        {Object.keys(selectedValues).map(memberId => {
-          const member = selectedValues[memberId];
-
-          return (
-            <Chip key={`selected-values-${member.id}`} label={member.name} />
-          );
-        })}
+        {selectedValues.map(value => (
+          <Chip key={`selected-values-${value.id}`} label={value.name} />
+        ))}
       </div>
     );
   }
 
   function constructPayees() {
-    return Object.keys(members).map(memberId => {
-      const member = members[memberId];
-
+    return Object.values(members).map(member => {
       return (
         <MenuItem key={`${member.name}-${member.id}`} value={member}>
           {member.name}

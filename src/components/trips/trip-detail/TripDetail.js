@@ -165,9 +165,15 @@ const TripDetail = ({
       setExpenseList(data.selectedTrip.expenses.map(ele => ele.id));
     });
 
+    actions.trip.subscribeToTripChange(tripId);
+
     if (!userInTrip) {
       actions.trip.joinTrip(tripId);
     }
+
+    return () => {
+      actions.trip.unsubscribeToTripChange();
+    };
   }, []);
 
   // Need to clean up this part, we should not get into this component if selectedTrip is null.

@@ -56,11 +56,22 @@ export default function reducer(state = initialState, action) {
 
 export const authActions = {
   checkAuth: () => (dispatch, getState) => {
-    const { isAuthenticated } = getState().auth;
-
     auth().onStateChanged(currentUser => {
+      const { isAuthenticated } = getState().auth;
       if (currentUser) {
         dispatch(authActions.signInSuccess());
+
+        user().subscribeToProfileChange(profileSnapshot => {
+          if (
+            profileSnapshot.exists &&
+            !profileSnapshot.metadata.hasPendingWrites
+          ) {
+            dispatch({
+              type: types.UPDATE_PROFILE,
+              profile: profileSnapshot.data(),
+            });
+          }
+        });
       } else if (isAuthenticated === AuthState.UNKNOWN) {
         dispatch({
           type: types.CHECK_AUTHENTICATION,
@@ -108,6 +119,8 @@ export const authActions = {
   },
 
   signOut: () => dispatch => {
+    user().unsubscribeToProfileChange();
+
     return auth()
       .signOut()
       .then(() => {
