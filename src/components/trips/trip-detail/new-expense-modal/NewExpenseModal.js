@@ -42,7 +42,7 @@ const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
     date: '',
     merchant: '',
     amount: '',
-    payees: members,
+    payees: Object.values(members),
     description: '',
   });
 
@@ -87,9 +87,11 @@ const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
   function memberRenderValue(selectedValues) {
     return (
       <div>
-        {selectedValues.map(value => {
+        {Object.keys(selectedValues).map(memberId => {
+          const member = selectedValues[memberId];
+
           return (
-            <Chip key={`selected-values-${value.id}`} label={value.name} />
+            <Chip key={`selected-values-${member.id}`} label={member.name} />
           );
         })}
       </div>

@@ -1,7 +1,9 @@
 import expense from '@data/expense';
 import compressFile from '@utils/compressFile';
+import awsRemoveFunction from '@utils/awsRemoveFunction';
 
 export const types = {
+  REMOVE_EXPENSE: 'EXPENSE/REMOVE_EXPENSE',
   SUBMIT_EXPENSE: 'EXPENSE/SUBMIT_EXPENSE',
   UPLOAD_RECEIPT: 'EXPENSE/UPLOAD_RECEIPT',
 };
@@ -11,9 +13,10 @@ const initialState = {};
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case types.UPLOAD_RECEIPT: {
-      return {
-        ...state,
-      };
+      return { ...state };
+    }
+    case types.REMOVE_EXPENSE: {
+      return { ...state };
     }
     default:
       return state;
@@ -77,6 +80,18 @@ export const expenseActions = {
       })
       .catch(err => {
         // handle form submit error
+        console.log(err);
+      });
+  },
+
+  removeExpense: (expenseId, expenseObject) => dispatch => {
+    expense()
+      .removeExpense(expenseId, expenseObject)
+      .then(() => {
+        awsRemoveFunction(expenseObject.receipts);
+        dispatch({ type: types.REMOVE_EXPENSE });
+      })
+      .catch(err => {
         console.log(err);
       });
   },
