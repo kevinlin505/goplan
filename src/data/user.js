@@ -3,10 +3,11 @@ import 'firebase/database';
 import 'firebase/firestore';
 import firebase from '@data/_db';
 
+let unsubscribe = null;
+
 export default function user() {
   const db = firebase.firestore();
   const { currentUser } = firebase.auth();
-  let unsubscribe = null;
 
   return {
     checkUserProfile: () => {
@@ -76,6 +77,7 @@ export default function user() {
     unsubscribeToProfileChange: () => {
       if (unsubscribe) {
         unsubscribe();
+        unsubscribe = null;
       }
     },
   };

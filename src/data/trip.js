@@ -2,6 +2,8 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import firebase from '@data/_db';
 
+let unsubscribe = null;
+
 export default function trip() {
   const db = firebase.firestore();
   const { currentUser } = firebase.auth();
@@ -94,6 +96,27 @@ export default function trip() {
         .collection('trips')
         .doc(tripId)
         .update(tripDetail);
+    },
+
+    subscribeToTripChange: (tripId, callback) => {
+      if (!unsubscribe && tripId && callback) {
+        unsubscribe = db
+          .collection('trips')
+          .doc(tripId)
+          .onSnapshot(
+            {
+              includeMetadataChanges: true,
+            },
+            callback,
+          );
+      }
+    },
+
+    unsubscribeToTripChange: () => {
+      if (unsubscribe) {
+        unsubscribe();
+        unsubscribe = null;
+      }
     },
   };
 }
