@@ -4,17 +4,17 @@ import PropTypes from 'prop-types';
 import AuthState from '@constants/AuthState';
 import AuthHandler from '@components/routers/auth-handler/AuthHandler';
 
-export const AuthRoute = ({ auth, component: Component, ...rest }) => {
+export const AuthRoute = ({ auth, component: Component, ...props }) => {
   return (
     <Route
-      {...rest}
-      render={({ location, ...props }) => {
+      {...props}
+      render={({ location, ...renderProps }) => {
         return auth === AuthState.AUTHENTICATED ? (
           <Redirect
             to={(location.state && location.state.originalMatchUrl) || '/home'}
           />
         ) : (
-          <Component {...props} />
+          <Component {...renderProps} />
         );
       }}
     />
@@ -26,15 +26,18 @@ AuthRoute.propTypes = {
   component: PropTypes.any.isRequired,
 };
 
-export const ProtectedRoute = ({ component, ...rest }) => {
+export const ProtectedRoute = ({ auth, component, ...props }) => {
   return (
     <Route
-      {...rest}
-      render={props => <AuthHandler component={component} {...props} />}
+      {...props}
+      render={renderProps => (
+        <AuthHandler auth={auth} component={component} {...renderProps} />
+      )}
     />
   );
 };
 
 ProtectedRoute.propTypes = {
+  auth: PropTypes.number.isRequired,
   component: PropTypes.any.isRequired,
 };

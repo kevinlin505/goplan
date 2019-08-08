@@ -80,9 +80,9 @@ export default function reducer(state = initialState, action) {
     case types.UPDATE_TRIP: {
       return {
         ...state,
-        trips: {
-          ...state.trips,
-          [action.tripDetail.id]: action.tripDetail,
+        selectedTrip: {
+          ...state.selectedTrip,
+          ...action.tripDetail,
         },
       };
     }
