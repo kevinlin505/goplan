@@ -95,7 +95,9 @@ const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
   }
 
   function constructPayees() {
-    return Object.values(members).map(member => {
+    return Object.keys(members).map(memberId => {
+      const member = members[memberId];
+
       return (
         <MenuItem key={`${member.name}-${member.id}`} value={member}>
           {member.name}
