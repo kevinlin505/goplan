@@ -1,5 +1,8 @@
 import createDeepEqualSelector from '@utils/cacheHelper';
 
+export const getExpenseIdList = state =>
+  state.trip.selectedTrip.expenses.map(ele => ele.id);
+
 export const getTripList = state => state.auth.profile.trips;
 
 export const getParamTripId = (state, props) => props.match.params.tripId;

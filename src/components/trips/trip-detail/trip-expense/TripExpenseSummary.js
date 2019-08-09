@@ -4,15 +4,17 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Collapse, List, ListItem } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { getExpenseIdList } from '@selectors/tripSelector';
 import convertNumberToCurrency from '@utils/convertNumberToCurrency';
 
 const mapStateToProps = state => {
   return {
+    expenseIdList: getExpenseIdList(state),
     tripExpenses: state.trip.tripExpenses,
   };
 };
 
-const TripExpenseSummary = ({ tripExpenses, expenseList, totalExpense }) => {
+const TripExpenseSummary = ({ tripExpenses, expenseIdList, totalExpense }) => {
   const [summaryExpense, setSummaryExpense] = useState([]);
   const [expenseSum, setExpenseSum] = useState(0);
   const [memberPayments, setMemberPayments] = useState({});
@@ -83,7 +85,7 @@ const TripExpenseSummary = ({ tripExpenses, expenseList, totalExpense }) => {
   useEffect(() => {
     const netPayments = {};
     const payments = {};
-    expenseList.forEach(expenseId => {
+    expenseIdList.forEach(expenseId => {
       if (tripExpenses[expenseId]) {
         const { amount, payees, payer } = tripExpenses[expenseId];
         const splitAmount = parseFloat(amount) / payees.length;
@@ -140,7 +142,7 @@ const TripExpenseSummary = ({ tripExpenses, expenseList, totalExpense }) => {
 };
 
 TripExpenseSummary.propTypes = {
-  expenseList: PropTypes.array.isRequired,
+  expenseIdList: PropTypes.array.isRequired,
   totalExpense: PropTypes.object.isRequired,
   tripExpenses: PropTypes.object.isRequired,
 };
