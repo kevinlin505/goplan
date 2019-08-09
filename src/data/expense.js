@@ -6,6 +6,10 @@ export default function expense() {
   const db = firebase.firestore();
 
   return {
+    deleteReceipts: options => {
+      return firebase.functions().httpsCallable('deleteReceipts')(options);
+    },
+
     getExpenseReports: (expensesRefs = []) => {
       return Promise.all(expensesRefs.map(expensesRef => expensesRef.get()));
     },

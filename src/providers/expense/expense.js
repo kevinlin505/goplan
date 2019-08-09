@@ -1,6 +1,5 @@
 import expense from '@data/expense';
 import compressFile from '@utils/compressFile';
-import awsRemoveFunction from '@utils/awsRemoveFunction';
 
 export const types = {
   REMOVE_EXPENSE: 'EXPENSE/REMOVE_EXPENSE',
@@ -88,7 +87,10 @@ export const expenseActions = {
     expense()
       .removeExpense(expenseId, expenseObject)
       .then(() => {
-        awsRemoveFunction(expenseObject.receipts);
+        const urls = expenseObject.receipts.map(receipt => {
+          return receipt.url;
+        });
+        expense().deleteReceipts({ urls });
         dispatch({ type: types.REMOVE_EXPENSE });
       })
       .catch(err => {
@@ -97,7 +99,6 @@ export const expenseActions = {
   },
 
   uploadReceipts: file => (dispatch, getState) => {
-    console.log('upload called');
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
