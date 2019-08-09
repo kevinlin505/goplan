@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Divider, withStyles } from '@material-ui/core';
+import { Button, withStyles } from '@material-ui/core';
 import { expenseActions } from '@providers/expense/expense';
 import { userActions } from '@providers/user/user';
 import { tripActions } from '@providers/trip/trip';
@@ -52,7 +52,6 @@ const TripDetail = ({
   match,
 }) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
-  const [expenseList, setExpenseList] = useState(null);
   const [inviteEmail, setInviteEmail] = useState('');
   const [validEmail, setValidEmail] = useState(false);
   const google = googleMapsApi();
@@ -99,8 +98,6 @@ const TripDetail = ({
   useEffect(() => {
     actions.user.getAllMembers(trip.selectedTrip.members);
     actions.trip.getTripExpenses(trip.selectedTrip.expenses);
-
-    setExpenseList(trip.selectedTrip.expenses.map(ele => ele.id));
 
     actions.trip.subscribeToTripChange(tripId);
 
@@ -174,12 +171,9 @@ const TripDetail = ({
             </CardContainer>
           </TopMiddlePanel>
           <TopRightPanel>
-            {expenseList && (
+            {trip.selectedTrip && (
               <CardContainer>
-                <TripExpenseSummary
-                  expenseList={expenseList}
-                  totalExpense={trip.selectedTrip.costs}
-                />
+                <TripExpenseSummary totalExpense={trip.selectedTrip.costs} />
               </CardContainer>
             )}
             {showTripMap && (
@@ -188,15 +182,12 @@ const TripDetail = ({
           </TopRightPanel>
         </TopPanel>
         <BottomPanel>
-          {expenseList && (
+          {trip.selectedTrip && (
             <div>
               <TripExpenseDetailsHeader>
                 Detail expense by receipts
               </TripExpenseDetailsHeader>
-              <TripExpenseDetails
-                expenseList={expenseList}
-                totalExpense={trip.selectedTrip.costs}
-              />
+              <TripExpenseDetails totalExpense={trip.selectedTrip.costs} />
             </div>
           )}
         </BottomPanel>

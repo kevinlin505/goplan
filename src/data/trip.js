@@ -112,6 +112,20 @@ export default function trip() {
       }
     },
 
+    subscribeToTripExpenseChange: (tripId, callback) => {
+      if (!unsubscribe && tripId && callback) {
+        unsubscribe = db
+          .collection('trips')
+          .doc(tripId)
+          .onSnapshot(
+            {
+              includeMetadataChanges: true,
+            },
+            callback,
+          );
+      }
+    },
+
     unsubscribeToTripChange: () => {
       if (unsubscribe) {
         unsubscribe();
