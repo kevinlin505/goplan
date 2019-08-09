@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { expenseActions } from '@providers/expense/expense';
+import { tripActions } from '@providers/trip/trip';
+import { getExpenseIdList } from '@selectors/tripSelector';
 import convertNumberToCurrency from '@utils/convertNumberToCurrency';
 import { Button, Collapse, List } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 const mapStateToProps = state => {
   return {
+    expenseIdList: getExpenseIdList(state),
+    selectedTrip: state.trip.selectedTrip,
     tripExpenses: state.trip.tripExpenses,
   };
 };
@@ -18,12 +22,20 @@ const mapDispatchToProps = dispatch => {
   return {
     actions: {
       expense: bindActionCreators(expenseActions, dispatch),
+      trip: bindActionCreators(tripActions, dispatch),
     },
   };
 };
 
-const TripExpenseSummary = ({ actions, tripExpenses, expenseList }) => {
-  const defaultExpenseExpandList = expenseList.reduce((obj, expenseId) => {
+const TripExpenseDetails = ({
+  actions,
+  expenseIdList,
+  selectedTrip,
+  tripExpenses,
+}) => {
+  const expenseCount = selectedTrip.expenses.length;
+
+  const defaultExpenseExpandList = expenseIdList.reduce((obj, expenseId) => {
     obj[expenseId] = false;
 
     return obj;
@@ -31,6 +43,12 @@ const TripExpenseSummary = ({ actions, tripExpenses, expenseList }) => {
   const [isExpenseExpanded, setExpenseExpanded] = useState(
     defaultExpenseExpandList,
   );
+
+  useEffect(() => {
+    if (expenseCount !== Object.keys(tripExpenses).length) {
+      actions.trip.getTripExpenses(selectedTrip.expenses);
+    }
+  }, [expenseCount]);
 
   function handleRemoveExpense(expenseId) {
     return () => {
@@ -104,7 +122,7 @@ const TripExpenseSummary = ({ actions, tripExpenses, expenseList }) => {
   }
 
   function renderExpenseList() {
-    return expenseList.map((expenseId, idx) => {
+    return expenseIdList.map((expenseId, idx) => {
       return (
         <DetailExpenseContent key={`trip-expense-detail-${idx}`}>
           <DetailContentListHeader onClick={toggleExpenseDetail(expenseId)}>
@@ -130,9 +148,10 @@ const TripExpenseSummary = ({ actions, tripExpenses, expenseList }) => {
   );
 };
 
-TripExpenseSummary.propTypes = {
+TripExpenseDetails.propTypes = {
   actions: PropTypes.object.isRequired,
-  expenseList: PropTypes.array.isRequired,
+  expenseIdList: PropTypes.array.isRequired,
+  selectedTrip: PropTypes.object.isRequired,
   totalExpense: PropTypes.object.isRequired,
   tripExpenses: PropTypes.object.isRequired,
 };
@@ -195,4 +214,4 @@ const DetailContentListHeader = styled.div`
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(TripExpenseSummary);
+)(TripExpenseDetails);
