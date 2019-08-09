@@ -88,7 +88,6 @@ const DestinationPhoto = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  opacity: 0.8;
 `;
 
 const DestinationWeather = styled.div`

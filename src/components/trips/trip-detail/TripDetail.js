@@ -23,7 +23,7 @@ import TripDestinations from './trip-destinations/TripDestinations';
 
 const mapStateToProps = (state, props) => {
   return {
-    selectedTrip: state.selectedTrip,
+    selectedTrip: state.trip.selectedTrip,
     tripId: getParamTripId(state, props),
     userInTrip: getTripStatus(state, props),
   };
@@ -110,17 +110,31 @@ const TripDetail = ({
       <Contents>
         <TopPanel>
           <TopLeftPanel>
-            <CardContainer>
+            <TripInfoCard>
               <TripName>{selectedTrip && selectedTrip.name}</TripName>
               <TripDates>{`${tripStartDate} - ${tripEndDate}`}</TripDates>
+              <TripNotes>{selectedTrip.notes}</TripNotes>
+              <Input
+                label="Invite email"
+                onChange={handleInviteEmail}
+                value={inviteEmail}
+              />
               <Wrapper>
-                <Input
-                  label="Invite email"
-                  onChange={handleInviteEmail}
-                  value={inviteEmail}
-                />
                 <Button
-                  className={classes.greyButton}
+                  color="primary"
+                  onClick={handleLeaveTrip}
+                  variant="contained"
+                >
+                  Leave
+                </Button>
+                <Button
+                  color="primary"
+                  onClick={toggleCreateExpenseModal}
+                  variant="contained"
+                >
+                  New Expense
+                </Button>
+                <Button
                   color="primary"
                   disabled={!validEmail}
                   onClick={handleInvite}
@@ -129,23 +143,7 @@ const TripDetail = ({
                   Invite
                 </Button>
               </Wrapper>
-              <Button
-                className={classes.blueButton}
-                color="primary"
-                onClick={handleLeaveTrip}
-                variant="contained"
-              >
-                Leave
-              </Button>
-              <Button
-                className={classes.blueButton}
-                color="primary"
-                onClick={toggleCreateExpenseModal}
-                variant="contained"
-              >
-                New Expense
-              </Button>
-            </CardContainer>
+            </TripInfoCard>
             <TripMembers members={selectedTrip.members} />
           </TopLeftPanel>
           <TopMiddlePanel>
@@ -160,9 +158,10 @@ const TripDetail = ({
           </TopMiddlePanel>
           <TopRightPanel>
             {selectedTrip && (
-              <CardContainer>
-                <TripExpenseSummary totalExpense={selectedTrip.costs} />
-              </CardContainer>
+              <TripExpenseSummary
+                members={selectedTrip.members}
+                totalExpense={selectedTrip.costs}
+              />
             )}
             {showTripMap && (
               <TripMap destinations={selectedTrip.destinations} />
@@ -241,19 +240,24 @@ const TopRightPanel = styled.div`
   padding: 15px 10px;
 `;
 
+const TripInfoCard = styled(CardContainer)`
+  padding: 16px;
+`;
+
 const TripName = styled.div`
   font-size: 30px;
-  margin: 8px 16px;
 `;
 
 const TripDates = styled.div`
   font-size: 18px;
-  margin: 8px 16px;
+`;
+
+const TripNotes = styled.div`
+  font-size: 16px;
 `;
 
 const Wrapper = styled.div`
-  padding: 5px 0;
-  margin: 5px 16px;
+  display: flex;
 `;
 
 const TripExpenseDetailsHeader = styled.div`
@@ -263,4 +267,4 @@ const TripExpenseDetailsHeader = styled.div`
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withStyles(styles)(withRouter(TripDetail)));
+)(withRouter(TripDetail));
