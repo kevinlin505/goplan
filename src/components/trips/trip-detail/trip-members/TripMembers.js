@@ -1,77 +1,91 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import CardContainer from '@styles/card/CardContainer';
 
-const mapStateToProp = state => {
-  return {
-    users: state.user.users,
-  };
-};
-
-const TripMembers = ({ users, members }) => {
+const TripMembers = ({ members }) => {
   function renderMemberList() {
     return Object.keys(members).map((memberId, idx) => {
-      const user = users[memberId];
-      const divider =
-        idx === members.length - 1 ? null : (
-          <Divider component="li" variant="inset" />
-        );
+      const member = members[memberId];
 
       return (
-        <div key={`trip-member-${idx}`}>
-          <ListItem alignItems="flex-start">
-            <ListItemAvatar>
-              <Avatar alt={user.name} src={user.profile_url} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={user.name}
-              secondary={
-                <MemberInfoText>
-                  <MemberPaymentInfo>
-                    <MemberPaymentLabel>Venmo:</MemberPaymentLabel>
-                    <span>{user.venmo}</span>
-                  </MemberPaymentInfo>
-                  <MemberPaymentInfo>
-                    <MemberPaymentLabel>Quickpay:</MemberPaymentLabel>
-                    <span>{user.quickpay}</span>
-                  </MemberPaymentInfo>
-                </MemberInfoText>
-              }
-            />
-          </ListItem>
-          {divider}
-        </div>
+        <ListItem key={`trip-member-${idx}`}>
+          <AvatarWrapper>
+            <Avatar alt={member.name} src={member.profile_url} />
+          </AvatarWrapper>
+          <ListItemDetails>
+            <MemberName>{member.name}</MemberName>
+            <MemberInfoText>
+              <MemberPaymentInfo>
+                <MemberPaymentLabel>email:</MemberPaymentLabel>
+                <span>{member.email}</span>
+              </MemberPaymentInfo>
+              <MemberPaymentInfo>
+                <MemberPaymentLabel>vm:</MemberPaymentLabel>
+                <span>{member.venmo}</span>
+              </MemberPaymentInfo>
+              <MemberPaymentInfo>
+                <MemberPaymentLabel>qp:</MemberPaymentLabel>
+                <span>{member.quickpay}</span>
+              </MemberPaymentInfo>
+            </MemberInfoText>
+          </ListItemDetails>
+        </ListItem>
       );
     });
   }
 
-  return <List>{renderMemberList()}</List>;
+  return (
+    <CardContainer>
+      <MemberList>{renderMemberList()}</MemberList>
+    </CardContainer>
+  );
 };
 
 TripMembers.propTypes = {
   members: PropTypes.object.isRequired,
-  users: PropTypes.object.isRequired,
 };
 
-const MemberInfoText = styled.span`
+const MemberList = styled(List)`
+  padding: 10px 0;
+`;
+
+const ListItem = styled.li`
+  display: flex;
+  padding: 8px 16px;
+`;
+
+const AvatarWrapper = styled(ListItemAvatar)`
+  margin-top: 2px;
+`;
+
+const ListItemDetails = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const MemberPaymentInfo = styled.span`
-  line-height: 1.5em;
+const MemberName = styled.div`
+  font-size: 16px;
+  line-height: 1.5;
+`;
+
+const MemberInfoText = styled.div`
+  display: flex;
+  flex-direction: column;
+  color: ${({ theme }) => theme.colors.textLight};
+`;
+
+const MemberPaymentInfo = styled.div`
+  line-height: 1.5;
   display: flex;
 `;
 
-const MemberPaymentLabel = styled.span`
-  width: 80px;
+const MemberPaymentLabel = styled.div`
+  display: inline-block;
+  margin-right: 5px;
 `;
 
-export default connect(mapStateToProp)(TripMembers);
+export default TripMembers;

@@ -42,7 +42,7 @@ export default function user() {
     },
 
     // fetch all members from an array of member details
-    getAllMembers: members => {
+    getMembers: members => {
       return Promise.all(
         Object.keys(members).map(memberId => {
           return db

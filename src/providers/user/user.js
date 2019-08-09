@@ -2,7 +2,6 @@ import user from '@data/user';
 import expense from '@data/expense';
 
 export const types = {
-  GET_ALL_MEMBERS: 'USER/GET_ALL_MEMBERS',
   GET_USER_EXPENSE_REPORTS: 'EXPENSE/GET_USER_EXPENSE_REPORTS',
   SUMMARIZE_EXPENSE_REPORT: 'EXPENSE/SUMMARIZE_EXPENSE_REPORT',
   UPDATE_USER_DETAILS: 'USER/UPDATE_USER_DETAILS',
@@ -19,13 +18,6 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case types.GET_ALL_MEMBERS: {
-      return {
-        ...state,
-        users: action.members,
-      };
-    }
-
     case types.GET_USER_EXPENSE_REPORTS: {
       return {
         ...state,
@@ -54,25 +46,6 @@ export default function reducer(state = initialState, action) {
 }
 
 export const userActions = {
-  // fetch all members of a trip and dispatch it to the store
-  getAllMembers: memberList => dispatch => {
-    user()
-      .getAllMembers(memberList)
-      .then(docs => {
-        const members = docs.reduce((obj, doc) => {
-          const data = doc.data();
-          data.id = doc.id;
-          obj[doc.id] = data;
-          return obj;
-        }, {});
-
-        dispatch({
-          type: types.GET_ALL_MEMBERS,
-          members,
-        });
-      });
-  },
-
   getUserExpenseReports: () => (dispatch, getState) => {
     const { profile } = getState().auth;
 
