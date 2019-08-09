@@ -1,11 +1,13 @@
 import auth from '@data/auth';
 import trip from '@data/trip';
 import expense from '@data/expense';
+import user from '@data/user';
 import getTravelDates from '@utils/calculateTravelDates';
 
 export const types = {
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
   GET_DESTINATION_PHOTO: 'TRIP/GET_DESTINATION_PHOTO',
+  GET_MEMBERS: 'TRIP/GET_MEMBERS',
   GET_TRIP_EXPENSE_REPORTS: 'TRIP/GET_TRIP_EXPENSE_REPORTS',
   GET_WEATHER_INFO: 'TRIP/GET_WEATHER_INFO',
   INVITE_TRIP: 'TRIP/INVITE_TRIP',
@@ -160,17 +162,43 @@ export const tripActions = {
       });
   },
 
+  getMembers: memberList => dispatch => {
+    return user()
+      .getMembers(memberList)
+      .then(docs => {
+        const members = docs.reduce((obj, doc) => {
+          const data = doc.data();
+          obj[data.id] = data;
+
+          return obj;
+        }, {});
+
+        dispatch({
+          type: types.GET_MEMBERS,
+        });
+
+        return Promise.resolve(members);
+      });
+  },
+
   getTrip: tripRef => dispatch => {
     return trip()
       .getTrip(tripRef)
-      .then(tripDetails => {
-        const tripData = tripDetails.data();
-        tripData.travelDates = getTravelDates(tripData);
+      .then(tripDoc => {
+        const tripDetails = tripDoc.data();
 
-        return dispatch({
-          type: types.SET_SELECTED_TRIP,
-          selectedTrip: tripData,
-        });
+        return dispatch(tripActions.getMembers(tripDetails.members)).then(
+          membersList => {
+            tripDetails.members = membersList;
+
+            tripDetails.travelDates = getTravelDates(tripDetails);
+
+            return dispatch({
+              type: types.SET_SELECTED_TRIP,
+              selectedTrip: tripDetails,
+            });
+          },
+        );
       });
   },
 
@@ -315,12 +343,24 @@ export const tripActions = {
       });
   },
 
-  subscribeToTripChange: tripId => dispatch => {
+  subscribeToTripChange: tripId => (dispatch, getState) => {
     trip().subscribeToTripChange(tripId, tripSnapshot => {
       if (tripSnapshot.exists && !tripSnapshot.metadata.hasPendingWrites) {
+        const { selectedTrip } = getState().trip;
+        const { members, ...tripDetail } = tripSnapshot.data();
+
+        tripDetail.members = Object.keys(members).reduce((obj, memberId) => {
+          obj[memberId] = {
+            ...selectedTrip.members[memberId],
+            ...members[memberId],
+          };
+
+          return obj;
+        }, {});
+
         dispatch({
           type: types.UPDATE_TRIP,
-          tripDetail: tripSnapshot.data(),
+          tripDetail,
         });
       }
     });

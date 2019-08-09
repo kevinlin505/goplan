@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Collapse, List, ListItem, ListSubheader } from '@material-ui/core';
+import { Collapse, List, ListItem } from '@material-ui/core';
 import {
   AttachMoney,
   ExpandLess,

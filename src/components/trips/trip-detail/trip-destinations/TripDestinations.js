@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Divider } from '@material-ui/core';
 
 const TripDestinations = ({ actions, destinations }) => {
   const [weatherObject, setWeatherObject] = useState({});
@@ -28,40 +27,36 @@ const TripDestinations = ({ actions, destinations }) => {
 
     return destinationWeather ? (
       <DestinationWeather>
-        <div>Current weather condition</div>
+        <WeatherIcon>
+          <WeatherIconImage
+            alt={destinationWeather.condition}
+            src={destinationWeather.icon}
+          ></WeatherIconImage>
+        </WeatherIcon>
         <WeatherInfo>
-          <WeatherIcon>
-            <WeatherIconImage
-              alt={destinationWeather.condition}
-              src={destinationWeather.icon}
-            ></WeatherIconImage>
-          </WeatherIcon>
           <WeatherTemperature>
             {destinationWeather.temperature.toFixed(1)} &#176;F
           </WeatherTemperature>
+          <WeatherCondition>{destinationWeather.condition}</WeatherCondition>
         </WeatherInfo>
-        <div>{destinationWeather.condition}</div>
       </DestinationWeather>
     ) : null;
   }
 
   return destinations.map((destination, idx) => {
+    const sizedImageUrl = `${destination.photo.imageSourceUrl}&w600`;
+
     return (
       <DestinationContainer key={`trip-destination-${idx}`}>
-        <div>
-          <DestinationHeader>
-            {`${new Date(destination.startAt).toLocaleDateString()} - ${
-              destination.location
-            }`}
-          </DestinationHeader>
-          <Divider component="div" />
-          <DestinationInfo>
-            <DestinationPhoto
-              destinationPhoto={destination.photo.imageSourceUrl}
-            ></DestinationPhoto>
-            {renderWeatherObject(destination.placeId)}
-          </DestinationInfo>
-        </div>
+        <DestinationHeader>
+          {`${new Date(destination.startAt).toLocaleDateString()} - ${
+            destination.location
+          }`}
+        </DestinationHeader>
+        <DestinationPhoto destinationPhoto={sizedImageUrl} />
+        <DestinationInfo>
+          {renderWeatherObject(destination.placeId)}
+        </DestinationInfo>
       </DestinationContainer>
     );
   });
@@ -78,9 +73,7 @@ const DestinationContainer = styled.div`
 `;
 
 const DestinationHeader = styled.div`
-  padding: 5px 0;
   font-size: 18px;
-  font-weight: 500;
 `;
 
 const DestinationInfo = styled.div`
@@ -89,42 +82,47 @@ const DestinationInfo = styled.div`
 `;
 
 const DestinationPhoto = styled.div`
-  padding: 10px;
-  margin: 10px;
+  width: 100%;
+  height: 150px;
   background-image: url(${({ destinationPhoto }) => destinationPhoto});
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover, contain;
-  width: 50%;
-  height: 100px;
-  opacity: 0.8;
+  background-size: cover;
 `;
 
 const DestinationWeather = styled.div`
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
   font-size: 16px;
 `;
 
 const WeatherInfo = styled.div`
-  margin: 5px 0;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  font-size: 14px;
 `;
 
 const WeatherIcon = styled.div`
-  width: 30px;
-  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  margin-right: 5px;
   overflow: hidden;
-  margin: 0 10px 0 5px;
 `;
 
 const WeatherIconImage = styled.img`
-  transform: scale(1.4);
-  width: 30px;
+  width: 55px;
 `;
 
 const WeatherTemperature = styled.div`
-  font-size: 20px;
+  font-size: 18px;
+`;
+
+const WeatherCondition = styled.div`
+  color: ${({ theme }) => theme.colors.textLight};
 `;
 
 export default TripDestinations;
