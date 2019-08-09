@@ -36,8 +36,8 @@ const AppRouter = ({ actions, auth }) => {
   return (
     <HashRouter>
       <AuthRoute auth={auth} component={SignIn} exact path="/" />
-      <ProtectedRoute component={UserPage} path="/home" />
-      <ProtectedRoute component={TripDetail} path="/trip/:tripId" />
+      <ProtectedRoute auth={auth} component={UserPage} path="/home" />
+      <ProtectedRoute auth={auth} component={TripDetail} path="/trip/:tripId" />
     </HashRouter>
   );
 };
