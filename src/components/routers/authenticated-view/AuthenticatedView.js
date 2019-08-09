@@ -33,7 +33,7 @@ const AuthenticatedView = ({
     if (
       match.params &&
       match.params.tripId &&
-      (!selectedTrip || !selectedTrip[match.params.tripId])
+      (!selectedTrip || selectedTrip.id !== match.params.tripId)
     ) {
       actions.trip.getTrip(match.params.tripId);
     }
