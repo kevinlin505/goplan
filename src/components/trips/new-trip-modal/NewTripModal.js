@@ -54,7 +54,7 @@ function getStepContent(step) {
   }
 }
 
-const NewTripModal = ({ actions, trip }) => {
+const NewTripModal = ({ actions, editModal, trip }) => {
   const steps = getSteps();
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -80,14 +80,17 @@ const NewTripModal = ({ actions, trip }) => {
   }
 
   function handleModalClose() {
-    actions.trip.toggleNewTripModal();
+    if (trip.isNewTripModalOpen) actions.trip.toggleNewTripModal();
+    else if (trip.isEditTripModalOpen) actions.trip.toggleEditTripModal();
   }
 
   function handleFormSubmit(event) {
     event.preventDefault();
 
     setLoading(true);
-    actions.trip.createTrip();
+
+    if (editModal) actions.trip.updateTrip();
+    else actions.trip.createTrip();
   }
 
   // Create all the steps
@@ -146,8 +149,11 @@ const NewTripModal = ({ actions, trip }) => {
 NewTripModal.propTypes = {
   actions: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  editModal: PropTypes.bool,
   trip: PropTypes.object.isRequired,
 };
+
+NewTripModal.defaultProps = { editModal: false };
 
 const BackButton = styled(Button)`
   margin-right: 10px;

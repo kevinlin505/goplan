@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import auth from '@data/auth';
 import trip from '@data/trip';
 import expense from '@data/expense';
@@ -13,8 +14,10 @@ export const types = {
   INVITE_TRIP: 'TRIP/INVITE_TRIP',
   JOIN_TRIP: 'TRIP/JOIN_TRIP',
   LEAVE_TRIP: 'TRIP/LEAVE_TRIP',
+  POPULATE_TRIP_FORM: 'TRIP/POPULATE_TRIP_FORM',
   RETRIEVE_ALL_TRIPS: 'TRIP/RETRIEVE_ALL_TRIPS',
   SET_SELECTED_TRIP: 'TRIP/SET_SELECTED_TRIP',
+  TOGGLE_EDIT_TRIP_MODAL: 'TRIP/TOGGLE_EDIT_TRIP_MODAL',
   TOGGLE_NEW_TRIP_MODAL: 'TRIP/TOGGLE_NEW_TRIP_MODAL',
   UPDATE_FORM: 'TRIP/UPDATE_FORM',
   UPDATE_TRIP: 'TRIP/UPDATE_TRIP',
@@ -31,6 +34,7 @@ const initialState = {
     notes: '',
   },
   isNewTripModalOpen: false,
+  isEditTripModalOpen: false,
   selectedTrip: null,
   tripExpenses: {},
   trips: {},
@@ -51,6 +55,13 @@ export default function reducer(state = initialState, action) {
       };
     }
 
+    case types.POPULATE_TRIP_FORM: {
+      return {
+        ...state,
+        form: action.form,
+      };
+    }
+
     case types.RETRIEVE_ALL_TRIPS: {
       return {
         ...state,
@@ -62,6 +73,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         selectedTrip: action.selectedTrip,
+      };
+    }
+
+    case types.TOGGLE_EDIT_TRIP_MODAL: {
+      return {
+        ...state,
+        isEditTripModalOpen: action.isEditTripModalOpen,
       };
     }
 
@@ -276,6 +294,15 @@ export const tripActions = {
     return trip().leaveTrip(tripId);
   },
 
+  toggleEditTripModal: () => (dispatch, getState) => {
+    const { isEditTripModalOpen } = getState().trip;
+
+    return dispatch({
+      type: types.TOGGLE_EDIT_TRIP_MODAL,
+      isEditTripModalOpen: !isEditTripModalOpen,
+    });
+  },
+
   toggleNewTripModal: () => (dispatch, getState) => {
     const { isNewTripModalOpen } = getState().trip;
 
@@ -333,15 +360,15 @@ export const tripActions = {
     });
   },
 
-  updateTrip: (tripId, tripDetail) => dispatch => {
-    trip()
-      .updateTrip(tripId, tripDetail)
-      .then(() => {
-        dispatch({
-          type: types.UPDATE_TRIP,
-        });
-      });
-  },
+  // updateTrip: (tripId, tripDetail) => dispatch => {
+  //   trip()
+  //     .updateTrip(tripId, tripDetail)
+  //     .then(() => {
+  //       dispatch({
+  //         type: types.UPDATE_TRIP,
+  //       });
+  //     });
+  // },
 
   subscribeToTripChange: tripId => (dispatch, getState) => {
     trip().subscribeToTripChange(tripId, tripSnapshot => {
@@ -368,5 +395,70 @@ export const tripActions = {
 
   unsubscribeToTripChange: () => () => {
     trip().unsubscribeToTripChange();
+  },
+
+  updateTrip: () => (dispatch, getState) => {
+    const {
+      auth: { profile },
+      trip: {
+        form,
+        selectedTrip: { members },
+      },
+    } = getState();
+
+    const memberEmails = Object.values(members).map(member => member.email);
+
+    const organizer = {
+      email: profile.email,
+      id: profile.id,
+      name: profile.name,
+    };
+    const tripDetail = {
+      ...form,
+      members: {
+        [profile.id]: organizer,
+      },
+    };
+
+    return trip()
+      .updateTrip(tripDetail)
+      .then(() => {
+        Promise.all(
+          form.invites.map(memberEmail => {
+            if (!memberEmails.includes(memberEmail)) {
+              return auth().sendInviteEmail(
+                memberEmail,
+                tripDetail.id,
+                tripDetail.name,
+                getTravelDates(tripDetail),
+              );
+            }
+
+            return undefined;
+          }),
+        );
+
+        dispatch({
+          type: types.UPDATE_TRIP,
+        });
+
+        return dispatch(tripActions.toggleEditTripModal());
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
+
+  populateTripForm: () => (dispatch, getState) => {
+    const {
+      trip: { selectedTrip },
+    } = getState();
+
+    dispatch({
+      type: types.POPULATE_TRIP_FORM,
+      form: cloneDeep(selectedTrip),
+    });
+
+    return dispatch(tripActions.toggleEditTripModal());
   },
 };
