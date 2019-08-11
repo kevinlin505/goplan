@@ -1,14 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button } from '@material-ui/core';
-import { AddPhotoAlternate } from '@material-ui/icons';
+import { AddPhotoAlternate, Edit } from '@material-ui/icons';
 import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
-import NewTripModal from '@components/trips/new-trip-modal/NewTripModal';
+import TripModal from '@components/trips/trip-modal/TripModal';
 import Logo from '@components/icons/Logo';
 
 const mapStateToProps = state => {
@@ -27,7 +27,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const NavigationBar = ({ actions, profile, trip }) => {
+const NavigationBar = ({ actions, match, profile, trip }) => {
   return (
     <Container>
       <NavBar>
@@ -37,10 +37,16 @@ const NavigationBar = ({ actions, profile, trip }) => {
           </LogoLink>
         </Brand>
         <RightNavBarItems>
-          <NewTripButton onClick={actions.trip.toggleNewTripModal}>
+          <NewTripButton onClick={actions.trip.clearTripForm}>
             <NewTripIcon />
             New Trip
           </NewTripButton>
+          {match.params.tripId && (
+            <NewTripButton onClick={actions.trip.populateTripForm}>
+              <EditTripIcon />
+              Edit Trip
+            </NewTripButton>
+          )}
           <HomeLink to="/home">Home</HomeLink>
           {profile.id && (
             <SignOutButton onClick={actions.auth.signOut}>
@@ -54,13 +60,15 @@ const NavigationBar = ({ actions, profile, trip }) => {
           )}
         </RightNavBarItems>
       </NavBar>
-      {trip.isNewTripModalOpen && <NewTripModal />}
+      {trip.isNewTripModalOpen && <TripModal />}
+      {trip.isEditTripModalOpen && <TripModal editModal={true} />}
     </Container>
   );
 };
 
 NavigationBar.propTypes = {
   actions: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
   trip: PropTypes.object.isRequired,
 };
@@ -108,6 +116,10 @@ const NewTripButton = styled(Button)`
   &:hover {
     color: ${({ theme }) => theme.colors.primaryDark};
   }
+`;
+
+const EditTripIcon = styled(Edit)`
+  margin-right: 3px;
 `;
 
 const NewTripIcon = styled(AddPhotoAlternate)`
@@ -170,4 +182,4 @@ const HomeLink = styled(Link)`
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(NavigationBar);
+)(withRouter(NavigationBar));

@@ -54,7 +54,7 @@ function getStepContent(step) {
   }
 }
 
-const NewTripModal = ({ actions, trip }) => {
+const TripModal = ({ actions, editModal, trip }) => {
   const steps = getSteps();
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -80,14 +80,17 @@ const NewTripModal = ({ actions, trip }) => {
   }
 
   function handleModalClose() {
-    actions.trip.toggleNewTripModal();
+    if (trip.isNewTripModalOpen) actions.trip.toggleNewTripModal();
+    else if (trip.isEditTripModalOpen) actions.trip.toggleEditTripModal();
   }
 
   function handleFormSubmit(event) {
     event.preventDefault();
 
     setLoading(true);
-    actions.trip.createTrip();
+
+    if (editModal) actions.trip.updateTrip();
+    else actions.trip.createTrip();
   }
 
   // Create all the steps
@@ -133,7 +136,7 @@ const NewTripModal = ({ actions, trip }) => {
           <CloseIcon />
         </CloseButton>
         <FormHeaderWrapper>
-          <FormHeader>New trip</FormHeader>
+          <FormHeader>{editModal ? 'Edit trip' : 'New trip'}</FormHeader>
         </FormHeaderWrapper>
         <Stepper activeStep={activeStep} orientation="vertical">
           {constructStepForm()}
@@ -143,11 +146,14 @@ const NewTripModal = ({ actions, trip }) => {
   );
 };
 
-NewTripModal.propTypes = {
+TripModal.propTypes = {
   actions: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  editModal: PropTypes.bool,
   trip: PropTypes.object.isRequired,
 };
+
+TripModal.defaultProps = { editModal: false };
 
 const BackButton = styled(Button)`
   margin-right: 10px;
@@ -156,4 +162,4 @@ const BackButton = styled(Button)`
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(NewTripModal);
+)(TripModal);
