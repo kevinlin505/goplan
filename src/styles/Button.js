@@ -1,10 +1,44 @@
 import styled, { css } from 'styled-components';
-import { Button } from '@material-ui/core';
 import ButtonStyles from '@constants/ButtonStyles';
 
-export default styled(Button)`
-  ${({ buttonstyle, theme }) => {
-    switch (buttonstyle) {
+export default styled.button`
+  position: relative;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-transform: capitalize;
+  line-height: 1.1;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:active,
+  &:focus,
+  &:hover {
+    border: none;
+    outline: none;
+  }
+
+  &:active,
+  &:focus {
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      right: 4px;
+      bottom: 4px;
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 1;
+    }
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+
+  ${({ variant, theme }) => {
+    switch (variant) {
       case ButtonStyles.BORDERED: {
         return css`
           background-color: transparent;
@@ -17,20 +51,12 @@ export default styled(Button)`
             color: ${theme.colors.primaryDark};
             border: 1px solid ${theme.colors.primaryDark};
           }
-        `;
-      }
-
-      case ButtonStyles.FILL: {
-        return css`
-          background-color: ${theme.colors.primary};
-          color: ${theme.colors.white};
-          border: 1px solid ${theme.colors.primary};
 
           &:active,
-          &:focus,
-          &:hover {
-            background-color: ${theme.colors.primaryDark};
-            border: 1px solid ${theme.colors.primaryDark};
+          &:focus {
+            &::after {
+              border: 2px solid ${theme.colors.white};
+            }
           }
         `;
       }
@@ -46,22 +72,35 @@ export default styled(Button)`
           &:hover {
             background-color: transparent;
             color: ${theme.colors.primaryDark};
-            border: none;
+          }
+
+          &:active,
+          &:focus {
+            &::after {
+              border: 2px solid ${theme.colors.primaryDark};
+            }
           }
         `;
       }
 
       default: {
         return css`
-          background-color: ${theme.colors.primary};
+          background: ${theme.colors.primary};
           color: ${theme.colors.white};
           border: 1px solid ${theme.colors.primary};
 
           &:active,
           &:focus,
           &:hover {
-            background-color: ${theme.colors.primaryDark};
+            background: ${theme.colors.primaryDark};
             border: 1px solid ${theme.colors.primaryDark};
+          }
+
+          &:active,
+          &:focus {
+            &::after {
+              border: 2px solid ${theme.colors.white};
+            }
           }
         `;
       }

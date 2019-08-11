@@ -4,22 +4,20 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, withStyles } from '@material-ui/core';
+import ActivePanel from '@constants/ActivePanel';
 import { expenseActions } from '@providers/expense/expense';
 import { tripActions } from '@providers/trip/trip';
 import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
-import googleMapsApi from '@utils/googleMapsApi';
-import validateEmail from '@utils/validateEmail';
-import getTravelDates from '@utils/calculateTravelDates';
 import TripMembers from '@components/trips/trip-detail/trip-members/TripMembers';
 import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
 import TripExpenseSummary from '@components/trips/trip-detail/trip-expense/TripExpenseSummary';
-import TripExpenseDetails from '@components/trips/trip-detail/trip-expense/TripExpenseDetails';
 import NewExpenseModal from '@components/trips/trip-detail/new-expense-modal/NewExpenseModal';
-import { Input } from '@styles/forms/Forms';
+import ControlPanel from '@components/trips/trip-detail/control-panel/ControlPanel';
+import TripDestinations from '@components/trips/trip-detail/trip-destinations/TripDestinations';
+import TripExpenseList from '@components/trips/trip-detail/trip-expense/TripExpenseList';
+import Loading from '@components/loading/Loading';
+import Button from '@styles/Button';
 import CardContainer from '@styles/card/CardContainer';
-import styles from '@styles/theme/theme';
-import TripDestinations from './trip-destinations/TripDestinations';
 
 const mapStateToProps = (state, props) => {
   return {
@@ -40,7 +38,6 @@ const mapDispatchToProps = dispatch => {
 
 const TripDetail = ({
   actions,
-  classes,
   history,
   selectedTrip,
   tripId,
@@ -48,11 +45,7 @@ const TripDetail = ({
   match,
 }) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState('');
-  const [validEmail, setValidEmail] = useState(false);
-  const google = googleMapsApi();
-  const showTripCard = selectedTrip.id === match.params.tripId;
-  const showTripMap = showTripCard && google;
+  const [activePanel, setActivePanel] = useState(ActivePanel.EXPENSES);
   const tripStartDate = new Date(
     selectedTrip.travelDates.startAt,
   ).toLocaleDateString();
@@ -70,25 +63,9 @@ const TripDetail = ({
     });
   }
 
-  function handleInviteEmail(event) {
-    setInviteEmail(event.target.value);
+  function handleActivePanelChange(event) {
+    setActivePanel(event.target.name);
   }
-
-  function handleInvite() {
-    if (inviteEmail) {
-      actions.trip.inviteTrip(
-        inviteEmail,
-        tripId,
-        selectedTrip.name,
-        getTravelDates(selectedTrip),
-      );
-      setInviteEmail('');
-    }
-  }
-
-  useEffect(() => {
-    setValidEmail(validateEmail(inviteEmail));
-  }, [inviteEmail]);
 
   useEffect(() => {
     // actions.trip.getMembers(selectedTrip.members);
@@ -108,70 +85,58 @@ const TripDetail = ({
   return (
     <Container>
       <Contents>
-        <TopPanel>
-          <TopLeftPanel>
-            <TripInfoCard>
-              <TripName>{selectedTrip.name}</TripName>
-              <TripDates>{`${tripStartDate} - ${tripEndDate}`}</TripDates>
-              <TripNotes>{selectedTrip.notes}</TripNotes>
-              <Input
-                label="Invite email"
-                onChange={handleInviteEmail}
-                value={inviteEmail}
-              />
-              <Wrapper>
-                <Button
-                  color="primary"
-                  onClick={handleLeaveTrip}
-                  variant="contained"
-                >
-                  Leave
-                </Button>
-                <Button
-                  color="primary"
-                  onClick={toggleCreateExpenseModal}
-                  variant="contained"
-                >
-                  New Expense
-                </Button>
-                <Button
-                  color="primary"
-                  disabled={!validEmail}
-                  onClick={handleInvite}
-                  variant="contained"
-                >
-                  Invite
-                </Button>
-              </Wrapper>
-            </TripInfoCard>
-            <TripMembers members={selectedTrip.members} />
-          </TopLeftPanel>
-          <TopMiddlePanel>
-            <CardContainer>
-              {selectedTrip.destinations && (
-                <TripDestinations
-                  actions={actions}
-                  destinations={selectedTrip.destinations}
+        <LeftPanel>
+          <TripInfoCard>
+            <TripName>{selectedTrip.name}</TripName>
+            <TripDates>{`${tripStartDate} - ${tripEndDate}`}</TripDates>
+            <TripNotes>{selectedTrip.notes}</TripNotes>
+            <Wrapper>
+              <Button
+                color="primary"
+                onClick={handleLeaveTrip}
+                variant="contained"
+              >
+                Leave
+              </Button>
+            </Wrapper>
+          </TripInfoCard>
+          <TripMembers members={selectedTrip.members} />
+        </LeftPanel>
+        <MainPanel>
+          <CardContainer>
+            {selectedTrip ? (
+              <React.Fragment>
+                <ControlPanel
+                  activePanel={activePanel}
+                  handleActivePanelChange={handleActivePanelChange}
+                  selectedTrip={selectedTrip}
                 />
-              )}
-            </CardContainer>
-          </TopMiddlePanel>
-          <TopRightPanel>
-            <TripExpenseSummary
-              members={selectedTrip.members}
-              totalExpense={selectedTrip.costs}
-            />
-            <TripMap destinations={selectedTrip.destinations} />
-          </TopRightPanel>
-        </TopPanel>
-        <BottomPanel>
-          <div>
-            <TripExpenseDetailsHeader>
-              Detail expense by receipts
-            </TripExpenseDetailsHeader>
-            <TripExpenseDetails totalExpense={selectedTrip.costs} />
-          </div>
-        </BottomPanel>
+                {selectedTrip.destinations &&
+                  activePanel === ActivePanel.DESTINATIONS && (
+                    <TripDestinations
+                      actions={actions}
+                      destinations={selectedTrip.destinations}
+                    />
+                  )}
+                {activePanel === ActivePanel.EXPENSES && (
+                  <TripExpenseList
+                    selectedTrip={selectedTrip}
+                    toggleCreateExpenseModal={toggleCreateExpenseModal}
+                  />
+                )}
+              </React.Fragment>
+            ) : (
+              <Loading />
+            )}
+          </CardContainer>
+        </MainPanel>
+        <RightPanel>
+          <TripExpenseSummary
+            members={selectedTrip.members}
+            totalExpense={selectedTrip.costs}
+          />
+          <TripMap destinations={selectedTrip.destinations} />
+        </RightPanel>
       </Contents>
       {isExpenseModal && (
         <NewExpenseModal toggleCreateExpenseModal={toggleCreateExpenseModal} />
@@ -182,7 +147,6 @@ const TripDetail = ({
 
 TripDetail.propTypes = {
   actions: PropTypes.object.isRequired,
-  classes: PropTypes.any,
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   selectedTrip: PropTypes.object.isRequired,
@@ -196,42 +160,23 @@ const Container = styled.div`
 
 const Contents = styled.div`
   display: flex;
-  flex-direction: column;
   justify-content: center;
   width: 100%;
   max-width: ${({ theme }) => theme.sizes.colossal}px;
   margin: 0 auto;
 `;
 
-const TopPanel = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 15px;
+const LeftPanel = styled.div`
+  width: 300px;
 `;
 
-const BottomPanel = styled.div`
-  width: 100%;
-  padding: 15px;
+const MainPanel = styled.div`
+  width: 550px;
+  margin: 0 15px;
 `;
 
-const TopLeftPanel = styled.div`
-  flex: 1 1 auto;
-  width: 100%;
-  max-width: 320px;
-  padding: 15px 10px;
-`;
-
-const TopMiddlePanel = styled.div`
-  flex: 1 1 auto;
-  padding: 15px 10px;
-`;
-
-const TopRightPanel = styled.div`
-  flex: 1 1 auto;
-  width: 100%;
-  min-width: 250px;
-  max-width: 320px;
-  padding: 15px 10px;
+const RightPanel = styled.div`
+  width: 300px;
 `;
 
 const TripInfoCard = styled(CardContainer)`
@@ -252,10 +197,6 @@ const TripNotes = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
-`;
-
-const TripExpenseDetailsHeader = styled.div`
-  font-size: 18px;
 `;
 
 export default connect(
