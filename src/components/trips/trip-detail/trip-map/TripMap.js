@@ -70,6 +70,7 @@ const TripMap = ({ destinations }) => {
         fullscreenControl={true}
         google={google}
         initialCenter={defaultProps.center}
+        maxZoom={12}
         zoom={defaultProps.zoom}
         zoomControl={true}
       >
