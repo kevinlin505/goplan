@@ -65,7 +65,7 @@ const TripMap = ({ destinations }) => {
   return (
     <Container>
       <Map
-        bounds={destinations.length > 1 ? mapBounds : null}
+        bounds={destinations.length ? mapBounds : null}
         disableDefaultUI={true}
         fullscreenControl={true}
         google={google}

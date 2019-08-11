@@ -356,9 +356,9 @@ export const tripActions = {
 
     const updatedForm = {
       ...form,
-      members: [
-        ...form.members.slice(0, position),
-        ...form.members.slice(position + 1),
+      invites: [
+        ...form.invites.slice(0, position),
+        ...form.invites.slice(position + 1),
       ],
     };
 

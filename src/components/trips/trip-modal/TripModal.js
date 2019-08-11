@@ -54,7 +54,7 @@ function getStepContent(step) {
   }
 }
 
-const NewTripModal = ({ actions, editModal, trip }) => {
+const TripModal = ({ actions, editModal, trip }) => {
   const steps = getSteps();
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -146,14 +146,14 @@ const NewTripModal = ({ actions, editModal, trip }) => {
   );
 };
 
-NewTripModal.propTypes = {
+TripModal.propTypes = {
   actions: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   editModal: PropTypes.bool,
   trip: PropTypes.object.isRequired,
 };
 
-NewTripModal.defaultProps = { editModal: false };
+TripModal.defaultProps = { editModal: false };
 
 const BackButton = styled(Button)`
   margin-right: 10px;
@@ -162,4 +162,4 @@ const BackButton = styled(Button)`
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(NewTripModal);
+)(TripModal);

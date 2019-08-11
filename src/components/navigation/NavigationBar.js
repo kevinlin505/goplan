@@ -8,7 +8,7 @@ import { Button } from '@material-ui/core';
 import { AddPhotoAlternate, Edit } from '@material-ui/icons';
 import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
-import NewTripModal from '@components/trips/new-trip-modal/NewTripModal';
+import TripModal from '@components/trips/trip-modal/TripModal';
 import Logo from '@components/icons/Logo';
 
 const mapStateToProps = state => {
@@ -60,8 +60,8 @@ const NavigationBar = ({ actions, match, profile, trip }) => {
           )}
         </RightNavBarItems>
       </NavBar>
-      {trip.isNewTripModalOpen && <NewTripModal />}
-      {trip.isEditTripModalOpen && <NewTripModal editModal={true} />}
+      {trip.isNewTripModalOpen && <TripModal />}
+      {trip.isEditTripModalOpen && <TripModal editModal={true} />}
     </Container>
   );
 };
