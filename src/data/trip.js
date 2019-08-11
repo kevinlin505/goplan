@@ -91,11 +91,12 @@ export default function trip() {
       return batch.commit();
     },
 
-    updateTrip: (tripId, tripDetail) => {
+    updateTrip: tripDetail => {
       return db
         .collection('trips')
-        .doc(tripId)
-        .update(tripDetail);
+        .doc(tripDetail.id)
+        .update(tripDetail)
+        .then(() => Promise.resolve());
     },
 
     subscribeToTripChange: (tripId, callback) => {

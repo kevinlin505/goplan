@@ -20,7 +20,6 @@ const TripMap = ({ destinations }) => {
     },
     zoom: 12,
   };
-
   const endDate =
     (activeLocation && new Date(activeLocation.endAt).toDateString()) || '';
   const startDate =
@@ -66,11 +65,12 @@ const TripMap = ({ destinations }) => {
   return (
     <Container>
       <Map
-        bounds={destinations.length > 1 ? mapBounds : null}
+        bounds={destinations.length ? mapBounds : null}
         disableDefaultUI={true}
         fullscreenControl={true}
         google={google}
         initialCenter={defaultProps.center}
+        maxZoom={12}
         zoom={defaultProps.zoom}
         zoomControl={true}
       >

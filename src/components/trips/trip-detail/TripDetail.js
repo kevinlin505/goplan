@@ -51,7 +51,7 @@ const TripDetail = ({
   const [inviteEmail, setInviteEmail] = useState('');
   const [validEmail, setValidEmail] = useState(false);
   const google = googleMapsApi();
-  const showTripCard = selectedTrip && selectedTrip.id === match.params.tripId;
+  const showTripCard = selectedTrip.id === match.params.tripId;
   const showTripMap = showTripCard && google;
   const tripStartDate = new Date(
     selectedTrip.travelDates.startAt,
@@ -111,7 +111,7 @@ const TripDetail = ({
         <TopPanel>
           <TopLeftPanel>
             <TripInfoCard>
-              <TripName>{selectedTrip && selectedTrip.name}</TripName>
+              <TripName>{selectedTrip.name}</TripName>
               <TripDates>{`${tripStartDate} - ${tripEndDate}`}</TripDates>
               <TripNotes>{selectedTrip.notes}</TripNotes>
               <Input
@@ -148,7 +148,7 @@ const TripDetail = ({
           </TopLeftPanel>
           <TopMiddlePanel>
             <CardContainer>
-              {selectedTrip && selectedTrip.destinations && (
+              {selectedTrip.destinations && (
                 <TripDestinations
                   actions={actions}
                   destinations={selectedTrip.destinations}
@@ -157,26 +157,20 @@ const TripDetail = ({
             </CardContainer>
           </TopMiddlePanel>
           <TopRightPanel>
-            {selectedTrip && (
-              <TripExpenseSummary
-                members={selectedTrip.members}
-                totalExpense={selectedTrip.costs}
-              />
-            )}
-            {showTripMap && (
-              <TripMap destinations={selectedTrip.destinations} />
-            )}
+            <TripExpenseSummary
+              members={selectedTrip.members}
+              totalExpense={selectedTrip.costs}
+            />
+            <TripMap destinations={selectedTrip.destinations} />
           </TopRightPanel>
         </TopPanel>
         <BottomPanel>
-          {selectedTrip && (
-            <div>
-              <TripExpenseDetailsHeader>
-                Detail expense by receipts
-              </TripExpenseDetailsHeader>
-              <TripExpenseDetails totalExpense={selectedTrip.costs} />
-            </div>
-          )}
+          <div>
+            <TripExpenseDetailsHeader>
+              Detail expense by receipts
+            </TripExpenseDetailsHeader>
+            <TripExpenseDetails totalExpense={selectedTrip.costs} />
+          </div>
         </BottomPanel>
       </Contents>
       {isExpenseModal && (
