@@ -20,7 +20,6 @@ const TripMap = ({ destinations }) => {
     },
     zoom: 12,
   };
-
   const endDate =
     (activeLocation && new Date(activeLocation.endAt).toDateString()) || '';
   const startDate =

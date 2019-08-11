@@ -136,7 +136,7 @@ const NewTripModal = ({ actions, editModal, trip }) => {
           <CloseIcon />
         </CloseButton>
         <FormHeaderWrapper>
-          <FormHeader>New trip</FormHeader>
+          <FormHeader>{editModal ? 'Edit trip' : 'New trip'}</FormHeader>
         </FormHeaderWrapper>
         <Stepper activeStep={activeStep} orientation="vertical">
           {constructStepForm()}

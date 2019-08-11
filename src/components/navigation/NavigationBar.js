@@ -37,7 +37,7 @@ const NavigationBar = ({ actions, match, profile, trip }) => {
           </LogoLink>
         </Brand>
         <RightNavBarItems>
-          <NewTripButton onClick={actions.trip.toggleNewTripModal}>
+          <NewTripButton onClick={actions.trip.clearTripForm}>
             <NewTripIcon />
             New Trip
           </NewTripButton>

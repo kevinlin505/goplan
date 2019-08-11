@@ -6,6 +6,7 @@ import user from '@data/user';
 import getTravelDates from '@utils/calculateTravelDates';
 
 export const types = {
+  CLEAR_TRIP_FORM: 'TRIP/CLEAR_TRIP_FORM',
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
   GET_DESTINATION_PHOTO: 'TRIP/GET_DESTINATION_PHOTO',
   GET_MEMBERS: 'TRIP/GET_MEMBERS',
@@ -42,6 +43,13 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case types.CLEAR_TRIP_FORM: {
+      return {
+        ...state,
+        form: action.form,
+      };
+    }
+
     case types.CREATE_TRIP: {
       return {
         ...state,
@@ -460,5 +468,14 @@ export const tripActions = {
     });
 
     return dispatch(tripActions.toggleEditTripModal());
+  },
+
+  clearTripForm: () => dispatch => {
+    dispatch({
+      type: types.CLEAR_TRIP_FORM,
+      form: initialState.form,
+    });
+
+    return dispatch(tripActions.toggleNewTripModal());
   },
 };
