@@ -23,10 +23,10 @@ export default styled.button`
       content: '';
       display: block;
       position: absolute;
-      top: 4px;
-      left: 4px;
-      right: 4px;
-      bottom: 4px;
+      top: 2px;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
       border-radius: 4px;
       pointer-events: none;
       z-index: 1;
