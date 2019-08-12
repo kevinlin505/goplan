@@ -3,12 +3,14 @@ const theme = {
   colors: {
     primary: '#e91e63',
     primaryDark: '#c2185b',
-    primaryLight: '#f8bbd0',
+    primaryLight: '#ffcdd2',
     accent: '#607d8b',
+    contrast: '#b0bec5',
+    contrastLight: '#f5f8fa',
     text: '#212121',
     textLight: '#757575',
     divider: '#bdbdbd',
-    background: '#eeeeee',
+    background: '#e6ecf0',
     white: '#ffffff',
     black: '#000000',
     transparent: 'transparent',
@@ -18,7 +20,7 @@ const theme = {
 
   // Fonts
   fonts: {
-    primary: 'Roboto, sans-serif',
+    primary: '"Helvetica Neue", Helvetica, Arial, sans-serif',
   },
 
   sizes: {
@@ -35,10 +37,6 @@ const theme = {
     margin: '20px',
     padding: '20px',
   },
-
-  greyButton: { margin: '10px 0' },
-
-  blueButton: { margin: '0 40px 20px 16px' },
 };
 
 export default theme;

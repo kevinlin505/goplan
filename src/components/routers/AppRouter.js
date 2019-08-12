@@ -9,8 +9,8 @@ import {
   ProtectedRoute,
 } from '@components/routers/router-utils/RouterUtils';
 import SignIn from '@components/auth/SignIn';
-import UserPage from '@components/user-page/UserPage';
-import TripDetail from '@components/trips/trip-detail/TripDetail';
+import TripDetailRenderHandler from '@components/routers/component-handlers/TripDetailRenderHandler';
+import UserPageRenderHandler from '@components/routers/component-handlers/UserPageRenderHandler';
 import googleMapsApi from '@utils/googleMapsApi';
 
 const mapStateToProps = state => {
@@ -36,8 +36,16 @@ const AppRouter = ({ actions, auth }) => {
   return (
     <HashRouter>
       <AuthRoute auth={auth} component={SignIn} exact path="/" />
-      <ProtectedRoute auth={auth} component={UserPage} path="/home" />
-      <ProtectedRoute auth={auth} component={TripDetail} path="/trip/:tripId" />
+      <ProtectedRoute
+        auth={auth}
+        component={UserPageRenderHandler}
+        path="/home"
+      />
+      <ProtectedRoute
+        auth={auth}
+        component={TripDetailRenderHandler}
+        path="/trip/:tripId"
+      />
     </HashRouter>
   );
 };
