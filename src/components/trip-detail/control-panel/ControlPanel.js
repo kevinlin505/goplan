@@ -103,7 +103,7 @@ const TripInviteContainer = styled.div`
   height: 60px;
   padding: 10px 16px;
   background: ${({ theme }) => theme.colors.contrast};
-  border-bottom: ${({ theme }) => theme.colors.divider};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.divider};
 `;
 
 const InviteInput = styled.input`
@@ -121,7 +121,7 @@ const ContentControlPanel = styled.div`
   height: 40px;
   background: ${({ theme }) => theme.colors.contrastLight};
   color: ${({ theme }) => theme.colors.white};
-  border: ${({ theme }) => theme.colors.divider};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.divider};
 `;
 
 const ControlButton = styled(Button)`
