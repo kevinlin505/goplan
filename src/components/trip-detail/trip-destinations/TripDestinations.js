@@ -63,15 +63,13 @@ const TripDestinations = ({ actions, destinations }) => {
     });
   }
 
-  return <Container>{constructDestinations()}</Container>;
+  return constructDestinations();
 };
 
 TripDestinations.propTypes = {
   actions: PropTypes.object.isRequired,
   destinations: PropTypes.array.isRequired,
 };
-
-const Container = styled.div``;
 
 const DestinationContainer = styled.div`
   position: relative;
