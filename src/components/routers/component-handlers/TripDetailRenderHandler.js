@@ -8,7 +8,6 @@ import Loading from '@components/loading/Loading';
 import TripDetail from '@components/trip-detail/TripDetail';
 
 const mapStateToProps = (state, props) => {
-  // console.log(props.math.params);
   return {
     tripId: getParamTripId(state, props),
     userInTrip: getTripStatus(state, props),

@@ -32,8 +32,8 @@ const Render = ({ auth, match, component: Component, ...props }) => {
 
 Render.propTypes = {
   auth: PropTypes.number.isRequired,
-  match: PropTypes.object.isRequired,
   component: PropTypes.any.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 export default Render;
