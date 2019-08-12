@@ -35,6 +35,14 @@ export default styled.button`
 
   &:disabled {
     cursor: default;
+
+    &:active,
+    &:focus,
+    &:hover {
+      color: rgba(0, 0, 0, 0.1);
+      background-color: rgba(0, 0, 0, 0.04);
+      border: none;
+    }
   }
 
   ${({ variant, theme }) => {

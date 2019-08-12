@@ -106,7 +106,7 @@ const NewTripButton = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 15px;
+  padding: 3px 15px;
   font-size: 14px;
   color: ${({ theme }) => theme.colors.primary};
 

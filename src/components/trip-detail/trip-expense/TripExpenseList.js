@@ -56,7 +56,9 @@ export const TripExpenseList = ({
 
       return (
         <ExpensePayee key={`payee-name-${payee.name}-${index}`}>
-          {payee.name}
+          {`${payee.name}${
+            index === Object.keys(payees).length - 1 ? '' : ','
+          }`}
         </ExpensePayee>
       );
     });
