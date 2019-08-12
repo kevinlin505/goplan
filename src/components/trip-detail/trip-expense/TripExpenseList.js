@@ -92,19 +92,23 @@ export const TripExpenseList = ({
           <List>
             <DetailContentListItem>
               <ListItemText>Date</ListItemText>
-              <ItemCost>{date.toDate().toLocaleDateString()}</ItemCost>
+              <ListItemValue>
+                {date.toDate().toLocaleDateString()}
+              </ListItemValue>
             </DetailContentListItem>
             <DetailContentListItem>
               <ListItemText>Amount</ListItemText>
-              <ItemCost>{convertNumberToCurrency(parseFloat(amount))}</ItemCost>
+              <ListItemValue>
+                {convertNumberToCurrency(parseFloat(amount))}
+              </ListItemValue>
             </DetailContentListItem>
             <DetailContentListItem>
               <ListItemText>Who paid</ListItemText>
-              <ItemCost>{payer.name}</ItemCost>
+              <ListItemValue>{payer.name}</ListItemValue>
             </DetailContentListItem>
             <DetailContentListItem>
               <ListItemText>Who needs to pay?</ListItemText>
-              <ItemCost>{constructPayeeList(payees)}</ItemCost>
+              <ListItemValue>{constructPayeeList(payees)}</ListItemValue>
             </DetailContentListItem>
             <DetailContentListItem>
               {receipts[0] ? (
@@ -181,7 +185,7 @@ const ListItemText = styled.div`
   text-transform: capitalize;
 `;
 
-const ItemCost = styled.div`
+const ListItemValue = styled.div`
   display: inline-block;
 `;
 

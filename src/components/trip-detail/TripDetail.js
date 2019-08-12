@@ -86,13 +86,12 @@ const TripDetail = ({ actions, history, selectedTrip }) => {
                   handleActivePanelChange={handleActivePanelChange}
                   selectedTrip={selectedTrip}
                 />
-                {selectedTrip.destinations &&
-                  activePanel === ActivePanel.DESTINATIONS && (
-                    <TripDestinations
-                      actions={actions}
-                      destinations={selectedTrip.destinations}
-                    />
-                  )}
+                {activePanel === ActivePanel.DESTINATIONS && (
+                  <TripDestinations
+                    actions={actions}
+                    destinations={selectedTrip.destinations}
+                  />
+                )}
                 {activePanel === ActivePanel.EXPENSES && (
                   <TripExpenseList
                     selectedTrip={selectedTrip}
