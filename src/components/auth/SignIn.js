@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
 import GoogleAuthButton from '@components/auth/auth-buttons/GoogleAuthButton';
 import FacebookAuthButton from '@components/auth/auth-buttons/FacebookAuthButton';
+import PhotoAttribution from '@components/photo-attribution/PhotoAttribution';
 import CardContainer from '@styles/card/CardContainer';
 
 const mapDispatchToProps = dispatch => {
@@ -57,8 +58,6 @@ const SignIn = ({ actions }) => {
     },
   ];
   const background = backgrounds[RANDOM_NUMBER];
-  const photographer = `https://unsplash.com/${background.handle}?utm_source=GoPlan&utm_medium=referral`;
-  const source = `https://unsplash.com/?utm_source=GoPlan&utm_medium=referral`;
 
   return (
     <Background imageSource={background.url}>
@@ -86,16 +85,7 @@ const SignIn = ({ actions }) => {
           />
         </LoginButtonContainer>
       </ContentContainer>
-      <Attribution>
-        {'Photo by '}
-        <ReferenceLink href={photographer} target="_blank">
-          {background.name}
-        </ReferenceLink>
-        {' on '}
-        <ReferenceLink href={source} target="_blank">
-          Unsplash
-        </ReferenceLink>
-      </Attribution>
+      <PhotoAttribution photo={background} splashPage={true}></PhotoAttribution>
     </Background>
   );
 };
@@ -135,24 +125,6 @@ const Logo = styled.div`
 
   svg {
     width: 100%;
-  }
-`;
-
-const Attribution = styled.div`
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-  color: ${({ theme }) => theme.colors.white};
-  text-shadow: 1px 1px 2px ${({ theme }) => theme.colors.black};
-`;
-
-const ReferenceLink = styled.a`
-  color: ${({ theme }) => theme.colors.white};
-
-  &:active,
-  &:focus,
-  &:hover {
-    color: ${({ theme }) => theme.colors.white};
   }
 `;
 
