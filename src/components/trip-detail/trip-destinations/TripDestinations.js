@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import PhotoAttribution from '@components/photo-attribution/PhotoAttribution';
 
 const TripDestinations = ({ actions, destinations }) => {
   const [weatherObject, setWeatherObject] = useState({});
@@ -45,6 +46,7 @@ const TripDestinations = ({ actions, destinations }) => {
 
   function constructDestinations() {
     return destinations.map((destination, idx) => {
+      const { photo } = destination;
       const sizedImageUrl = `${destination.photo.imageSourceUrl}&w600`;
 
       return (
@@ -54,7 +56,12 @@ const TripDestinations = ({ actions, destinations }) => {
               destination.location
             }`}
           </DestinationHeader>
-          <DestinationPhoto destinationPhoto={sizedImageUrl} />
+          <DestinationPhoto destinationPhoto={sizedImageUrl}>
+            <PhotoAttribution
+              photo={photo}
+              splashPage={false}
+            ></PhotoAttribution>
+          </DestinationPhoto>
           <DestinationInfo>
             {renderWeatherObject(destination.placeId)}
           </DestinationInfo>
@@ -87,6 +94,7 @@ const DestinationInfo = styled.div`
 `;
 
 const DestinationPhoto = styled.div`
+  position: relative;
   width: 100%;
   height: 150px;
   background-image: url(${({ destinationPhoto }) => destinationPhoto});

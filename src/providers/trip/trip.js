@@ -254,7 +254,7 @@ export const tripActions = {
         dispatch({
           type: types.GET_DESTINATION_PHOTO,
         });
-
+        debugger;
         return Promise.resolve(response.data);
       })
       .catch(() => {
