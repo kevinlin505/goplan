@@ -37,10 +37,6 @@ const theme = {
     margin: '20px',
     padding: '20px',
   },
-
-  greyButton: { margin: '10px 0' },
-
-  blueButton: { margin: '0 40px 20px 16px' },
 };
 
 export default theme;
