@@ -7,23 +7,20 @@ import styled from 'styled-components';
 import ActivePanel from '@constants/ActivePanel';
 import { expenseActions } from '@providers/expense/expense';
 import { tripActions } from '@providers/trip/trip';
-import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
-import TripMembers from '@components/trips/trip-detail/trip-members/TripMembers';
-import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
-import TripExpenseSummary from '@components/trips/trip-detail/trip-expense/TripExpenseSummary';
-import NewExpenseModal from '@components/trips/trip-detail/new-expense-modal/NewExpenseModal';
-import ControlPanel from '@components/trips/trip-detail/control-panel/ControlPanel';
-import TripDestinations from '@components/trips/trip-detail/trip-destinations/TripDestinations';
-import TripExpenseList from '@components/trips/trip-detail/trip-expense/TripExpenseList';
+import ControlPanel from '@components/trip-detail/control-panel/ControlPanel';
+import TripMembers from '@components/trip-detail/trip-members/TripMembers';
+import TripDestinations from '@components/trip-detail/trip-destinations/TripDestinations';
+import TripExpenseList from '@components/trip-detail/trip-expense/TripExpenseList';
+import TripExpenseSummary from '@components/trip-detail/trip-expense/TripExpenseSummary';
+import NewExpenseModal from '@components/trip-detail/new-expense-modal/NewExpenseModal';
+import TripMap from '@components/trip-map/TripMap';
 import Loading from '@components/loading/Loading';
 import Button from '@styles/Button';
 import CardContainer from '@styles/card/CardContainer';
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = state => {
   return {
     selectedTrip: state.trip.selectedTrip,
-    tripId: getParamTripId(state, props),
-    userInTrip: getTripStatus(state, props),
   };
 };
 
@@ -36,16 +33,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TripDetail = ({
-  actions,
-  history,
-  selectedTrip,
-  tripId,
-  userInTrip,
-  match,
-}) => {
+const TripDetail = ({ actions, history, selectedTrip }) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
-  const [activePanel, setActivePanel] = useState(ActivePanel.EXPENSES);
+  const [activePanel, setActivePanel] = useState(ActivePanel.DESTINATIONS);
   const tripStartDate = new Date(
     selectedTrip.travelDates.startAt,
   ).toLocaleDateString();
@@ -58,7 +48,7 @@ const TripDetail = ({
   }
 
   function handleLeaveTrip() {
-    actions.trip.leaveTrip(tripId).then(() => {
+    actions.trip.leaveTrip(selectedTrip.id).then(() => {
       history.push('/home');
     });
   }
@@ -66,21 +56,6 @@ const TripDetail = ({
   function handleActivePanelChange(event) {
     setActivePanel(event.target.name);
   }
-
-  useEffect(() => {
-    // actions.trip.getMembers(selectedTrip.members);
-    actions.trip.getTripExpenses(selectedTrip.expenses);
-
-    actions.trip.subscribeToTripChange(tripId);
-
-    if (!userInTrip) {
-      actions.trip.joinTrip(tripId);
-    }
-
-    return () => {
-      actions.trip.unsubscribeToTripChange();
-    };
-  }, []);
 
   return (
     <Container>
@@ -148,10 +123,7 @@ const TripDetail = ({
 TripDetail.propTypes = {
   actions: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
   selectedTrip: PropTypes.object.isRequired,
-  tripId: PropTypes.string.isRequired,
-  userInTrip: PropTypes.bool.isRequired,
 };
 
 const Container = styled.div`

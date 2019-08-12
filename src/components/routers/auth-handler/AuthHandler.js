@@ -3,15 +3,18 @@ import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import AuthState from '@constants/AuthState';
 import Loading from '@components/loading/Loading';
-import AuthenticatedView from '@components/routers/authenticated-view/AuthenticatedView';
+import NavigationBar from '@components/navigation/NavigationBar';
 
-const Render = ({ auth, match, ...props }) => {
+const Render = ({ auth, match, component: Component, ...props }) => {
   if (auth === AuthState.UNKNOWN) {
     return <Loading />;
   }
 
   return auth === AuthState.AUTHENTICATED ? (
-    <AuthenticatedView match={match} {...props} />
+    <React.Fragment>
+      <NavigationBar />
+      <Component match={match} {...props} />
+    </React.Fragment>
   ) : (
     <Redirect
       to={{
@@ -30,6 +33,7 @@ const Render = ({ auth, match, ...props }) => {
 Render.propTypes = {
   auth: PropTypes.number.isRequired,
   match: PropTypes.object.isRequired,
+  component: PropTypes.any.isRequired,
 };
 
 export default Render;

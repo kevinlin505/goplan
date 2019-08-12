@@ -9,7 +9,7 @@ import { tripActions } from '@providers/trip/trip';
 import 'firebase/firestore';
 import firebase from '@data/_db';
 import googleMapsApi from '@utils/googleMapsApi';
-import TripMap from '@components/trips/trip-detail/trip-map/TripMap';
+import TripMap from '@components/trip-map/TripMap';
 import {
   ButtonWrapper,
   FieldWrapper,
