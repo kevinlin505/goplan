@@ -43,23 +43,27 @@ const TripDestinations = ({ actions, destinations }) => {
     ) : null;
   }
 
-  return destinations.map((destination, idx) => {
-    const sizedImageUrl = `${destination.photo.imageSourceUrl}&w600`;
+  function constructDestinations() {
+    return destinations.map((destination, idx) => {
+      const sizedImageUrl = `${destination.photo.imageSourceUrl}&w600`;
 
-    return (
-      <DestinationContainer key={`trip-destination-${idx}`}>
-        <DestinationHeader>
-          {`${new Date(destination.startAt).toLocaleDateString()} - ${
-            destination.location
-          }`}
-        </DestinationHeader>
-        <DestinationPhoto destinationPhoto={sizedImageUrl} />
-        <DestinationInfo>
-          {renderWeatherObject(destination.placeId)}
-        </DestinationInfo>
-      </DestinationContainer>
-    );
-  });
+      return (
+        <DestinationContainer key={`trip-destination-${idx}`}>
+          <DestinationHeader>
+            {`${new Date(destination.startAt).toLocaleDateString()} - ${
+              destination.location
+            }`}
+          </DestinationHeader>
+          <DestinationPhoto destinationPhoto={sizedImageUrl} />
+          <DestinationInfo>
+            {renderWeatherObject(destination.placeId)}
+          </DestinationInfo>
+        </DestinationContainer>
+      );
+    });
+  }
+
+  return constructDestinations();
 };
 
 TripDestinations.propTypes = {
@@ -69,7 +73,8 @@ TripDestinations.propTypes = {
 
 const DestinationContainer = styled.div`
   position: relative;
-  padding: 8px 16px;
+  padding: 16px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.background};
 `;
 
 const DestinationHeader = styled.div`

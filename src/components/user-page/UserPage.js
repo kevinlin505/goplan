@@ -108,18 +108,16 @@ const Contents = styled.div`
 `;
 
 const LeftPanel = styled.div`
-  width: 25%;
-  padding: 15px;
+  width: 300px;
 `;
 
 const MainPanel = styled.div`
-  width: 50%;
-  padding: 15px;
+  width: 550px;
+  margin: 0 15px;
 `;
 
 const RightPanel = styled.div`
-  width: 25%;
-  padding: 15px;
+  width: 300px;
 `;
 
 const TripList = styled.div`

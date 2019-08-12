@@ -219,10 +219,12 @@ export const tripActions = {
 
             tripDetails.travelDates = getTravelDates(tripDetails);
 
-            return dispatch({
+            dispatch({
               type: types.SET_SELECTED_TRIP,
               selectedTrip: tripDetails,
             });
+
+            return Promise.resolve(tripDetails);
           },
         );
       });

@@ -78,7 +78,6 @@ const Container = styled.div`
   width: 100%;
   height: 60px;
   background: ${({ theme }) => theme.colors.white};
-  box-shadow: 0 0 5px ${({ theme }) => theme.colors.accent};
 `;
 
 const NavBar = styled.div`
@@ -107,7 +106,7 @@ const NewTripButton = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 15px;
+  padding: 3px 15px;
   font-size: 14px;
   color: ${({ theme }) => theme.colors.primary};
 
