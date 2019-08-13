@@ -39,9 +39,10 @@ export default styled.button`
     &:active,
     &:focus,
     &:hover {
-      color: rgba(0, 0, 0, 0.1);
-      background-color: rgba(0, 0, 0, 0.04);
-      border: none;
+      color: ${({ theme }) => theme.colors.textLight};
+      background-color: ${({ theme }) => theme.colors.contrastLight};
+      border-color: ${({ theme }) => theme.colors.contrastLight};
+      opacity: 0.8;
     }
   }
 

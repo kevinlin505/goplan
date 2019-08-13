@@ -1,4 +1,6 @@
 import expense from '@data/expense';
+import activity from '@data/activity';
+import ActivityType from '@constants/ActivityType';
 import compressFile from '@utils/compressFile';
 
 export const types = {
@@ -56,10 +58,16 @@ export const expenseActions = {
             }
           });
 
+          activity().updateActivity(
+            ActivityType.SUBMIT_EXPENSE,
+            selectedTrip.id,
+            expenseForm,
+          );
+
           return expense()
             .submitExpense(expenseForm)
             .then(() => {
-              dispatch({
+              return dispatch({
                 type: types.SUBMIT_EXPENSE,
               });
             });
@@ -70,10 +78,16 @@ export const expenseActions = {
         });
     }
 
+    activity().updateActivity(
+      ActivityType.SUBMIT_EXPENSE,
+      selectedTrip.id,
+      expenseForm,
+    );
+
     return expense()
       .submitExpense(expenseForm)
       .then(() => {
-        dispatch({
+        return dispatch({
           type: types.SUBMIT_EXPENSE,
         });
       })
@@ -83,15 +97,25 @@ export const expenseActions = {
       });
   },
 
-  removeExpense: (expenseId, expenseObject) => dispatch => {
+  removeExpense: (expenseId, expenseObject) => (dispatch, getState) => {
+    const { selectedTrip } = getState().trip;
+
     expense()
       .removeExpense(expenseId, expenseObject)
       .then(() => {
+        activity().updateActivity(
+          ActivityType.DELETE_EXPENSE,
+          selectedTrip.id,
+          expenseObject,
+        );
+
         const urls = expenseObject.receipts.map(receipt => {
           return receipt.url;
         });
+
         expense().deleteReceipts({ urls });
-        dispatch({ type: types.REMOVE_EXPENSE });
+
+        return dispatch({ type: types.REMOVE_EXPENSE });
       })
       .catch(err => {
         console.log(err);

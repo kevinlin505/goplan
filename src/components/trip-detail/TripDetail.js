@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -9,13 +8,13 @@ import { expenseActions } from '@providers/expense/expense';
 import { tripActions } from '@providers/trip/trip';
 import ControlPanel from '@components/trip-detail/control-panel/ControlPanel';
 import TripMembers from '@components/trip-detail/trip-members/TripMembers';
+import TripActivities from '@components/trip-detail/trip-activities/TripActivities';
 import TripDestinations from '@components/trip-detail/trip-destinations/TripDestinations';
 import TripExpenseList from '@components/trip-detail/trip-expense/TripExpenseList';
 import TripExpenseSummary from '@components/trip-detail/trip-expense/TripExpenseSummary';
 import NewExpenseModal from '@components/trip-detail/new-expense-modal/NewExpenseModal';
 import TripMap from '@components/trip-map/TripMap';
 import Loading from '@components/loading/Loading';
-import Button from '@styles/Button';
 import CardContainer from '@styles/card/CardContainer';
 
 const mapStateToProps = state => {
@@ -33,9 +32,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TripDetail = ({ actions, history, selectedTrip }) => {
+const TripDetail = ({ actions, selectedTrip }) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
-  const [activePanel, setActivePanel] = useState(ActivePanel.DESTINATIONS);
+  const [activePanel, setActivePanel] = useState(ActivePanel.ACTIVITIES);
   const tripStartDate = new Date(
     selectedTrip.travelDates.startAt,
   ).toLocaleDateString();
@@ -45,12 +44,6 @@ const TripDetail = ({ actions, history, selectedTrip }) => {
 
   function toggleCreateExpenseModal() {
     setExpenseModal(prevExpenseModal => !prevExpenseModal);
-  }
-
-  function handleLeaveTrip() {
-    actions.trip.leaveTrip(selectedTrip.id).then(() => {
-      history.push('/home');
-    });
   }
 
   function handleActivePanelChange(event) {
@@ -65,20 +58,11 @@ const TripDetail = ({ actions, history, selectedTrip }) => {
             <TripName>{selectedTrip.name}</TripName>
             <TripDates>{`${tripStartDate} - ${tripEndDate}`}</TripDates>
             <TripNotes>{selectedTrip.notes}</TripNotes>
-            <Wrapper>
-              <Button
-                color="primary"
-                onClick={handleLeaveTrip}
-                variant="contained"
-              >
-                Leave
-              </Button>
-            </Wrapper>
           </TripInfoCard>
           <TripMembers members={selectedTrip.members} />
         </LeftPanel>
         <MainPanel>
-          <CardContainer>
+          <MainContentArea>
             {selectedTrip ? (
               <React.Fragment>
                 <ControlPanel
@@ -86,6 +70,12 @@ const TripDetail = ({ actions, history, selectedTrip }) => {
                   handleActivePanelChange={handleActivePanelChange}
                   selectedTrip={selectedTrip}
                 />
+                {activePanel === ActivePanel.ACTIVITIES && (
+                  <TripActivities
+                    actions={actions}
+                    destinations={selectedTrip.destinations}
+                  />
+                )}
                 {activePanel === ActivePanel.DESTINATIONS && (
                   <TripDestinations
                     actions={actions}
@@ -102,7 +92,7 @@ const TripDetail = ({ actions, history, selectedTrip }) => {
             ) : (
               <Loading />
             )}
-          </CardContainer>
+          </MainContentArea>
         </MainPanel>
         <RightPanel>
           <TripExpenseSummary
@@ -121,7 +111,6 @@ const TripDetail = ({ actions, history, selectedTrip }) => {
 
 TripDetail.propTypes = {
   actions: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
   selectedTrip: PropTypes.object.isRequired,
 };
 
@@ -150,6 +139,10 @@ const RightPanel = styled.div`
   width: 300px;
 `;
 
+const MainContentArea = styled(CardContainer)`
+  min-height: 500px;
+`;
+
 const TripInfoCard = styled(CardContainer)`
   padding: 16px;
 `;
@@ -166,11 +159,7 @@ const TripNotes = styled.div`
   font-size: 16px;
 `;
 
-const Wrapper = styled.div`
-  display: flex;
-`;
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withRouter(TripDetail));
+)(TripDetail);
