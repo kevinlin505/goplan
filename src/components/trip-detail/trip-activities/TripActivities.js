@@ -143,7 +143,6 @@ const MessageContainer = styled.div`
   width: 100%;
   height: 60px;
   padding: 10px 16px;
-  /* background: ${({ theme }) => theme.colors.contrast}; */
   border-top: 1px solid ${({ theme }) => theme.colors.background};
 `;
 

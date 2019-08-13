@@ -187,6 +187,8 @@ const ListItemText = styled.div`
 
 const ListItemValue = styled.div`
   display: inline-block;
+  width: 50%;
+  text-align: right;
 `;
 
 const ExpensePayee = styled.div`
