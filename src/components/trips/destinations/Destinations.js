@@ -10,6 +10,7 @@ import 'firebase/firestore';
 import firebase from '@data/_db';
 import googleMapsApi from '@utils/googleMapsApi';
 import TripMap from '@components/trip-map/TripMap';
+import DestinationDates from '@components/trips/destination-dates/DestinationDates';
 import {
   ButtonWrapper,
   FieldWrapper,
@@ -215,7 +216,7 @@ const Destinations = ({ actions, destinations }) => {
         />
       </FieldWrapper>
       <GroupFieldWrapper>
-        <DateInput
+        {/* <DateInput
           InputLabelProps={{
             shrink: true,
           }}
@@ -234,7 +235,8 @@ const Destinations = ({ actions, destinations }) => {
           onChange={updateField}
           type="date"
           value={destination.endAt}
-        />
+        /> */}
+        <DestinationDates handleUpdate={updateField}></DestinationDates>
       </GroupFieldWrapper>
       <FieldWrapper>{constructDestinationList()}</FieldWrapper>
       <ButtonWrapper>
