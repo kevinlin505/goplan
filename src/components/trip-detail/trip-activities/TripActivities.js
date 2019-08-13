@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
-import ButtonStyles from '@constants/ButtonStyles';
+import ActivityType from '@constants/ActivityType';
 import { activityActions } from '@providers/activity/activity';
 import { tripActions } from '@providers/trip/trip';
 import Loading from '@components/loading/Loading';
 import formAcitivityString from '@utils/formAcitivityString';
+import formatTimestamp from '@utils/formatTimestamp';
 import Button from '@styles/Button';
 
 const getTripActivity = state =>
@@ -30,7 +30,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TripActivities = ({ actions, activity, history, selectedTrip }) => {
+const TripActivities = ({ actions, activity, selectedTrip }) => {
   const [message, setMessage] = useState('');
   const boardRef = useRef(null);
 
@@ -66,18 +66,27 @@ const TripActivities = ({ actions, activity, history, selectedTrip }) => {
     }
   }
 
-  function handleLeaveTrip() {
-    actions.trip.leaveTrip(selectedTrip.id).then(() => {
-      history.push('/home');
-    });
-  }
-
   function constructActivityBoard() {
     return activity.actions.map((action, index) => {
+      if (action.type !== ActivityType.MESSAGE) {
+        return (
+          <Activity key={`activity-${index}`}>
+            {formAcitivityString(action)}
+          </Activity>
+        );
+      }
+
       return (
-        <Activity key={`activity-${index}`}>
-          {formAcitivityString(action)}
-        </Activity>
+        <MessageWrapper key={`activity-${index}`}>
+          <Avatar alt={action.creator.name} src={action.creator.avatar} />
+          <DetailWrapper>
+            <CreatorInfo>
+              <Name>{action.creator.name}</Name>
+              <Time>{formatTimestamp(action.timestamp)}</Time>
+            </CreatorInfo>
+            <div>{action.data.message}</div>
+          </DetailWrapper>
+        </MessageWrapper>
       );
     });
   }
@@ -88,11 +97,6 @@ const TripActivities = ({ actions, activity, history, selectedTrip }) => {
 
   return (
     <Container>
-      <LeaveTripWrapper>
-        <Button onClick={handleLeaveTrip} variant={ButtonStyles.BORDERED}>
-          Leave
-        </Button>
-      </LeaveTripWrapper>
       <BoardContainer>
         <ActivityBoard ref={boardRef}>{constructActivityBoard()}</ActivityBoard>
       </BoardContainer>
@@ -112,7 +116,6 @@ const TripActivities = ({ actions, activity, history, selectedTrip }) => {
 TripActivities.propTypes = {
   actions: PropTypes.object.isRequired,
   activity: PropTypes.object,
-  history: PropTypes.object.isRequired,
   selectedTrip: PropTypes.object.isRequired,
 };
 
@@ -124,20 +127,12 @@ const Container = styled.div`
   position: relative;
 `;
 
-const LeaveTripWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px 16px 0;
-`;
-
 const BoardContainer = styled.div`
-  padding: 16px;
+  padding: 0 20px;
 `;
 
 const ActivityBoard = styled.div`
   height: 500px;
-  padding: 16px;
-  background: ${({ theme }) => theme.colors.contrastLight};
   overflow-y: auto;
 `;
 
@@ -166,7 +161,40 @@ const MessageInput = styled.input`
   border-radius: 4px;
 `;
 
+const MessageWrapper = styled.div`
+  display: flex;
+  padding: 10px 0;
+`;
+
+const Avatar = styled.img`
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+`;
+
+const DetailWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const CreatorInfo = styled.div`
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 5px;
+`;
+
+const Name = styled.div`
+  font-size: 13px;
+  font-weight: 500;
+  margin-right: 5px;
+`;
+
+const Time = styled.div`
+  color: ${({ theme }) => theme.colors.textLight};
+  font-size: 11px;
+`;
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withRouter(TripActivities));
+)(TripActivities);
