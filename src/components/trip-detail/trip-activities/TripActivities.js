@@ -97,9 +97,7 @@ const TripActivities = ({ actions, activity, selectedTrip }) => {
 
   return (
     <Container>
-      <BoardContainer>
-        <ActivityBoard ref={boardRef}>{constructActivityBoard()}</ActivityBoard>
-      </BoardContainer>
+      <ActivityBoard ref={boardRef}>{constructActivityBoard()}</ActivityBoard>
       <MessageContainer>
         <MessageInput
           onChange={handleMessageInput}
@@ -127,12 +125,9 @@ const Container = styled.div`
   position: relative;
 `;
 
-const BoardContainer = styled.div`
-  padding: 0 20px;
-`;
-
 const ActivityBoard = styled.div`
   height: 500px;
+  padding: 0 25px;
   overflow-y: auto;
 `;
 
@@ -148,8 +143,8 @@ const MessageContainer = styled.div`
   width: 100%;
   height: 60px;
   padding: 10px 16px;
-  background: ${({ theme }) => theme.colors.contrast};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.background};
+  /* background: ${({ theme }) => theme.colors.contrast}; */
+  border-top: 1px solid ${({ theme }) => theme.colors.background};
 `;
 
 const MessageInput = styled.input`
@@ -169,7 +164,8 @@ const MessageWrapper = styled.div`
 const Avatar = styled.img`
   width: 30px;
   height: 30px;
-  margin-right: 10px;
+  margin-right: 8px;
+  border-radius: 4px;
 `;
 
 const DetailWrapper = styled.div`
@@ -184,9 +180,10 @@ const CreatorInfo = styled.div`
 `;
 
 const Name = styled.div`
-  font-size: 13px;
-  font-weight: 500;
   margin-right: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
 `;
 
 const Time = styled.div`
