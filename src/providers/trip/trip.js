@@ -156,11 +156,9 @@ export const tripActions = {
             );
           }),
         ).then(() => {
-          activity().updateActivity(
-            ActivityType.INVITE_TRIP,
-            tripId,
-            form.invites,
-          );
+          activity().updateActivity(ActivityType.INVITE_TRIP, tripId, {
+            emails: form.invites,
+          });
         });
 
         dispatch({
@@ -308,7 +306,9 @@ export const tripActions = {
     return trip()
       .sendInviteEmail(email, tripId, tripName, tripDates)
       .then(() => {
-        activity().updateActivity(ActivityType.INVITE_TRIP, tripId, [email]);
+        activity().updateActivity(ActivityType.INVITE_TRIP, tripId, {
+          emails: [email],
+        });
       });
   },
 
@@ -459,11 +459,9 @@ export const tripActions = {
             return undefined;
           }),
         ).then(() => {
-          activity().updateActivity(
-            ActivityType.INVITE_TRIP,
-            tripDetail.id,
-            form.invites,
-          );
+          activity().updateActivity(ActivityType.INVITE_TRIP, tripDetail.id, {
+            emails: form.invites,
+          });
         });
 
         dispatch({
