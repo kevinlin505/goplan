@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ActivePanel from '@constants/ActivePanel';
@@ -21,6 +22,7 @@ export const ControlPanel = ({
   actions,
   activePanel,
   handleActivePanelChange,
+  history,
   selectedTrip,
 }) => {
   const [inviteEmail, setInviteEmail] = useState('');
@@ -42,6 +44,12 @@ export const ControlPanel = ({
     }
   }
 
+  function handleLeaveTrip() {
+    actions.trip.leaveTrip(selectedTrip.id).then(() => {
+      history.push('/home');
+    });
+  }
+
   useEffect(() => {
     setValidEmail(validateEmail(inviteEmail));
   }, [inviteEmail]);
@@ -49,6 +57,7 @@ export const ControlPanel = ({
   return (
     <React.Fragment>
       <TripInviteContainer>
+        <Button onClick={handleLeaveTrip}>Leave</Button>
         <InviteInput
           onChange={handleInviteEmail}
           placeholder="Enter an email to invite"
@@ -92,6 +101,7 @@ ControlPanel.propTypes = {
   actions: PropTypes.object.isRequired,
   activePanel: PropTypes.string.isRequired,
   handleActivePanelChange: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
   selectedTrip: PropTypes.object.isRequired,
 };
 
@@ -108,7 +118,7 @@ const TripInviteContainer = styled.div`
 
 const InviteInput = styled.input`
   flex: 1 1 auto;
-  margin-right: 10px;
+  margin: 0 10px;
   padding: 10px;
   font-size: 16px;
   border: 1px solid ${({ theme }) => theme.colors.divider};
@@ -154,4 +164,4 @@ const ControlButton = styled(Button)`
 export default connect(
   null,
   mapDispatchToProps,
-)(ControlPanel);
+)(withRouter(ControlPanel));

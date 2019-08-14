@@ -91,6 +91,32 @@ export default function trip() {
       return batch.commit();
     },
 
+    sendInviteEmail: (inviteeEmail, tripId, tripName, tripDates) => {
+      const addMessage = firebase
+        .functions()
+        .httpsCallable('sendInvitationEmail');
+      const startDate = new Date(tripDates.startAt).toDateString();
+      const endDate = new Date(tripDates.endAt).toDateString();
+      const formattedDates = `${startDate} - ${endDate}`;
+
+      return db
+        .collection('trips')
+        .doc(tripId)
+        .update({
+          invites: firebase.firestore.FieldValue.arrayUnion(inviteeEmail),
+        })
+        .then(() =>
+          addMessage({
+            inviteeEmail,
+            invitationLink: `https://goplan-3b4b1.web.app/#/trip/${tripId}`,
+            inviterName: currentUser.displayName,
+            inviterEmail: currentUser.email,
+            tripName,
+            tripDates: formattedDates,
+          }),
+        );
+    },
+
     updateTrip: tripDetail => {
       return db
         .collection('trips')

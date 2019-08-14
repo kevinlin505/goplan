@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { activityActions } from '@providers/activity/activity';
 import { tripActions } from '@providers/trip/trip';
 import { getParamTripId, getTripStatus } from '@selectors/tripSelector';
 import Loading from '@components/loading/Loading';
@@ -17,6 +18,7 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => {
   return {
     actions: {
+      activity: bindActionCreators(activityActions, dispatch),
       trip: bindActionCreators(tripActions, dispatch),
     },
   };
@@ -30,6 +32,7 @@ export const TripDetailRenderHandler = ({ actions, tripId, userInTrip }) => {
       actions.trip.getTrip(tripId).then(tripDetail => {
         actions.trip.getTripExpenses(tripDetail.expenses);
         actions.trip.subscribeToTripChange(tripId);
+        actions.activity.subscribeToActivityChange(tripId);
 
         setShowTrip(true);
       });
@@ -41,6 +44,7 @@ export const TripDetailRenderHandler = ({ actions, tripId, userInTrip }) => {
 
     return () => {
       actions.trip.unsubscribeToTripChange();
+      actions.activity.unsubscribeToActivityChange();
     };
   }, []);
 

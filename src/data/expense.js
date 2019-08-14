@@ -51,7 +51,7 @@ export default function expense() {
             });
           });
 
-          expenseRef.delete();
+          return expenseRef.delete();
         });
       });
     },
