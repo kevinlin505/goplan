@@ -142,8 +142,8 @@ const Destinations = ({ actions, destinations }) => {
                 photo: url,
                 placeId: destinationSearchResult.place_id,
                 types: destinationSearchResult.types,
-                endAt: new Date(destination.endAt).getTime() + 14400000,
-                startAt: new Date(destination.startAt).getTime() + 14400000,
+                endAt: new Date(destination.endAt).getTime(),
+                startAt: new Date(destination.startAt).getTime(),
               };
 
               actions.trip.updateForm('destinations', [
@@ -172,8 +172,8 @@ const Destinations = ({ actions, destinations }) => {
             {
               ...destination,
               photo: url,
-              endAt: new Date(destination.endAt).getTime() + 14400000,
-              startAt: new Date(destination.startAt).getTime() + 14400000,
+              endAt: new Date(destination.endAt).getTime(),
+              startAt: new Date(destination.startAt).getTime(),
             },
           ]);
 

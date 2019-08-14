@@ -7,24 +7,21 @@ import PropTypes from 'prop-types';
 const DestinationDates = ({ destination, handleUpdate }) => {
   const minDate = new Date();
   const startDate =
-    destination.startAt &&
-    new Date(new Date(destination.startAt).getTime() + 14400000);
-  const endDate =
-    destination.endAt &&
-    new Date(new Date(destination.endAt).getTime() + 14400000);
+    destination.startAt && new Date(destination.startAt).getTime();
+  const endDate = destination.endAt && new Date(destination.endAt).getTime();
 
   function handleChangeStart(date) {
-    handleUpdate('startAt', date.toISOString().split('T')[0]);
+    handleUpdate('startAt', date.toString());
   }
 
   function handleChangeEnd(date) {
-    handleUpdate('endAt', date.toISOString().split('T')[0]);
+    handleUpdate('endAt', date.toString());
   }
 
   return (
     <React.Fragment>
       <DateInput
-        dateFormat="yyyy-MM-dd"
+        dateFormat="MM-dd-yyyy"
         endDate={endDate}
         minDate={minDate}
         name="startAt"
@@ -36,7 +33,7 @@ const DestinationDates = ({ destination, handleUpdate }) => {
       />
 
       <DateInput
-        dateFormat="yyyy-MM-dd"
+        dateFormat="MM-dd-yyyy"
         endDate={endDate}
         minDate={startDate}
         name="endAt"
