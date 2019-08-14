@@ -40,6 +40,7 @@ const initialState = {
   selectedTrip: null,
   tripExpenses: {},
   trips: {},
+  weatherCache: {},
 };
 
 export default function reducer(state = initialState, action) {
@@ -269,10 +270,32 @@ export const tripActions = {
       });
   },
 
-  getWeather: (latitude, longitude) => dispatch => {
+  getWeather: (latitude, longitude) => (dispatch, getState) => {
+    const { weatherCache } = getState().trip;
+    const cacheKey = `${latitude}, ${longitude}`;
+
+    if (weatherCache[cacheKey] !== undefined) {
+      const cachedWeather = weatherCache[cacheKey];
+      const now = new Date().getTime();
+      const thirtyMin = 1000 * 60 * 30;
+      const diff = now - cachedWeather.time.getTime();
+      if (diff < thirtyMin) {
+        dispatch({
+          type: types.GET_WEATHER_INFO,
+        });
+
+        return Promise.resolve(cachedWeather.data);
+      }
+    }
+
     return trip()
       .getWeather(latitude, longitude)
       .then(response => {
+        weatherCache[cacheKey] = {
+          data: response.data,
+          time: new Date(),
+        };
+
         dispatch({
           type: types.GET_WEATHER_INFO,
         });
