@@ -9,15 +9,18 @@ const TripDestinations = ({ actions, destinations }) => {
   useEffect(() => {
     const weather = { ...weatherObject };
     destinations.forEach(destination => {
+      const createWeatherObject = data => {
+        return {
+          condition: data.weather[0].main,
+          icon: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
+          temperature: data.main.temp,
+        };
+      };
+
       actions.trip
         .getWeather(destination.geo.latitude, destination.geo.longitude)
-        .then(resp => {
-          weather[destination.placeId] = {
-            condition: resp.weather[0].main,
-            icon: `http://openweathermap.org/img/wn/${resp.weather[0].icon}@2x.png`,
-            temperature: resp.main.temp,
-          };
-
+        .then(data => {
+          weather[destination.placeId] = createWeatherObject(data);
           setWeatherObject(weather);
         });
     });
