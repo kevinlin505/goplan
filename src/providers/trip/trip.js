@@ -1,8 +1,9 @@
 import { cloneDeep } from 'lodash';
-import auth from '@data/auth';
+import activity from '@data/activity';
 import trip from '@data/trip';
 import expense from '@data/expense';
 import user from '@data/user';
+import ActivityType from '@constants/ActivityType';
 import getTravelDates from '@utils/calculateTravelDates';
 
 export const types = {
@@ -143,16 +144,22 @@ export const tripActions = {
     return trip()
       .createTrip(tripDetail)
       .then(tripId => {
+        activity().createActivity(tripId);
+
         Promise.all(
           form.invites.map(member => {
-            return auth().sendInviteEmail(
+            return trip().sendInviteEmail(
               member,
               tripId,
               tripDetail.name,
               getTravelDates(tripDetail),
             );
           }),
-        );
+        ).then(() => {
+          activity().updateActivity(ActivityType.INVITE_TRIP, tripId, {
+            emails: form.invites,
+          });
+        });
 
         dispatch({
           type: types.CREATE_TRIP,
@@ -279,10 +286,13 @@ export const tripActions = {
 
   joinTrip: tripId => (dispatch, getState) => {
     const { profile } = getState().auth;
-    trip()
+
+    return trip()
       .joinTrip(tripId, profile)
       .then(() => {
-        dispatch({
+        activity().updateActivity(ActivityType.JOIN_TRIP, tripId);
+
+        return dispatch({
           type: types.JOIN_TRIP,
         });
       });
@@ -293,15 +303,25 @@ export const tripActions = {
       type: types.INVITE_TRIP,
     });
 
-    return auth().sendInviteEmail(email, tripId, tripName, tripDates);
+    return trip()
+      .sendInviteEmail(email, tripId, tripName, tripDates)
+      .then(() => {
+        activity().updateActivity(ActivityType.INVITE_TRIP, tripId, {
+          emails: [email],
+        });
+      });
   },
 
   leaveTrip: tripId => dispatch => {
-    dispatch({
-      type: types.LEAVE_TRIP,
-    });
+    return trip()
+      .leaveTrip(tripId)
+      .then(() => {
+        activity().updateActivity(ActivityType.LEAVE_TRIP, tripId);
 
-    return trip().leaveTrip(tripId);
+        return dispatch({
+          type: types.LEAVE_TRIP,
+        });
+      });
   },
 
   toggleEditTripModal: () => (dispatch, getState) => {
@@ -370,16 +390,6 @@ export const tripActions = {
     });
   },
 
-  // updateTrip: (tripId, tripDetail) => dispatch => {
-  //   trip()
-  //     .updateTrip(tripId, tripDetail)
-  //     .then(() => {
-  //       dispatch({
-  //         type: types.UPDATE_TRIP,
-  //       });
-  //     });
-  // },
-
   subscribeToTripChange: tripId => (dispatch, getState) => {
     trip().subscribeToTripChange(tripId, tripSnapshot => {
       if (tripSnapshot.exists && !tripSnapshot.metadata.hasPendingWrites) {
@@ -433,10 +443,12 @@ export const tripActions = {
     return trip()
       .updateTrip(tripDetail)
       .then(() => {
+        activity().updateActivity(ActivityType.UPDATE_TRIP, tripDetail.id);
+
         Promise.all(
           form.invites.map(memberEmail => {
             if (!memberEmails.includes(memberEmail)) {
-              return auth().sendInviteEmail(
+              return trip().sendInviteEmail(
                 memberEmail,
                 tripDetail.id,
                 tripDetail.name,
@@ -446,7 +458,11 @@ export const tripActions = {
 
             return undefined;
           }),
-        );
+        ).then(() => {
+          activity().updateActivity(ActivityType.INVITE_TRIP, tripDetail.id, {
+            emails: form.invites,
+          });
+        });
 
         dispatch({
           type: types.UPDATE_TRIP,

@@ -3,9 +3,6 @@ import 'firebase/functions';
 import firebase from '@data/_db';
 
 export default function auth() {
-  const db = firebase.firestore();
-  const { currentUser } = firebase.auth();
-
   return {
     fetchSignInMethod: email => {
       return firebase.auth().fetchSignInMethodsForEmail(email);
@@ -13,32 +10,6 @@ export default function auth() {
 
     getUnsplashImage: query => {
       return firebase.functions().httpsCallable('getUnsplashImage')(query);
-    },
-
-    sendInviteEmail: (inviteeEmail, tripId, tripName, tripDates) => {
-      const addMessage = firebase
-        .functions()
-        .httpsCallable('sendInvitationEmail');
-      const startDate = new Date(tripDates.startAt).toDateString();
-      const endDate = new Date(tripDates.endAt).toDateString();
-      const formattedDates = `${startDate} - ${endDate}`;
-
-      return db
-        .collection('trips')
-        .doc(tripId)
-        .update({
-          invites: firebase.firestore.FieldValue.arrayUnion(inviteeEmail),
-        })
-        .then(() =>
-          addMessage({
-            inviteeEmail,
-            invitationLink: `https://goplan-3b4b1.web.app/#/trip/${tripId}`,
-            inviterName: currentUser.displayName,
-            inviterEmail: currentUser.email,
-            tripName,
-            tripDates: formattedDates,
-          }),
-        );
     },
 
     // register/login with google auth
