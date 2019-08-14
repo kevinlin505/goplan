@@ -1,40 +1,47 @@
-import React, { useState } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
+import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
 import PropTypes from 'prop-types';
 
-const DestinationDates = ({ handleUpdate }) => {
+const DestinationDates = ({ destination, handleUpdate }) => {
   const minDate = new Date();
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const startDate =
+    destination.startAt &&
+    new Date(new Date(destination.startAt).getTime() + 14400000);
+  const endDate =
+    destination.endAt &&
+    new Date(new Date(destination.endAt).getTime() + 14400000);
 
   function handleChangeStart(date) {
-    setStartDate(date);
+    handleUpdate('startAt', date.toISOString().split('T')[0]);
   }
 
   function handleChangeEnd(date) {
-    setEndDate(date);
+    handleUpdate('endAt', date.toISOString().split('T')[0]);
   }
 
   return (
     <React.Fragment>
-      <DatePicker
+      <DateInput
+        dateFormat="yyyy-MM-dd"
         endDate={endDate}
         minDate={minDate}
         name="startAt"
         onChange={handleChangeStart}
-        onChange={handleUpdate}
+        placeholderText="Start Date"
         selected={startDate}
         selectsStart
         startDate={startDate}
       />
 
-      <DatePicker
+      <DateInput
+        dateFormat="yyyy-MM-dd"
         endDate={endDate}
         minDate={startDate}
         name="endAt"
         onChange={handleChangeEnd}
-        onChange={handleUpdate}
+        placeholderText="End Date"
         selected={endDate}
         selectsEnd
         startDate={startDate}
@@ -44,7 +51,18 @@ const DestinationDates = ({ handleUpdate }) => {
 };
 
 DestinationDates.propTypes = {
-  handleUpdate: PropTypes.object.isRequired,
+  destination: PropTypes.object.isRequired,
+  handleUpdate: PropTypes.any.isRequired,
 };
+
+const DateInput = styled(DatePicker)`
+  width: 100%;
+  flex: 1 1 auto;
+  margin-right: 1px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+`;
 
 export default DestinationDates;

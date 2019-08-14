@@ -104,6 +104,13 @@ const Destinations = ({ actions, destinations }) => {
     });
   }
 
+  function updateDateField(name, value) {
+    setDestination({
+      ...destination,
+      [name]: value,
+    });
+  }
+
   function handleAddDestination() {
     setLoading(true);
 
@@ -135,8 +142,8 @@ const Destinations = ({ actions, destinations }) => {
                 photo: url,
                 placeId: destinationSearchResult.place_id,
                 types: destinationSearchResult.types,
-                endAt: new Date(destination.endAt).getTime(),
-                startAt: new Date(destination.startAt).getTime(),
+                endAt: new Date(destination.endAt).getTime() + 14400000,
+                startAt: new Date(destination.startAt).getTime() + 14400000,
               };
 
               actions.trip.updateForm('destinations', [
@@ -165,8 +172,8 @@ const Destinations = ({ actions, destinations }) => {
             {
               ...destination,
               photo: url,
-              endAt: new Date(destination.endAt).getTime(),
-              startAt: new Date(destination.startAt).getTime(),
+              endAt: new Date(destination.endAt).getTime() + 14400000,
+              startAt: new Date(destination.startAt).getTime() + 14400000,
             },
           ]);
 
@@ -216,27 +223,10 @@ const Destinations = ({ actions, destinations }) => {
         />
       </FieldWrapper>
       <GroupFieldWrapper>
-        {/* <DateInput
-          InputLabelProps={{
-            shrink: true,
-          }}
-          label="Start Date"
-          name="startAt"
-          onChange={updateField}
-          type="date"
-          value={destination.startAt}
-        />
-        <DateInput
-          InputLabelProps={{
-            shrink: true,
-          }}
-          label="End Date"
-          name="endAt"
-          onChange={updateField}
-          type="date"
-          value={destination.endAt}
-        /> */}
-        <DestinationDates handleUpdate={updateField}></DestinationDates>
+        <DestinationDates
+          destination={destination}
+          handleUpdate={updateDateField}
+        ></DestinationDates>
       </GroupFieldWrapper>
       <FieldWrapper>{constructDestinationList()}</FieldWrapper>
       <ButtonWrapper>
@@ -260,10 +250,6 @@ Destinations.propTypes = {
   actions: PropTypes.object.isRequired,
   destinations: PropTypes.array.isRequired,
 };
-
-const DateInput = styled(Input)`
-  width: 49%;
-`;
 
 const DestinationChip = styled(Chip)`
   margin: 5px;

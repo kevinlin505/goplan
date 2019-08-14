@@ -25,7 +25,7 @@
     "file-loader": "4.0.0",
     "firebase": "6.2.4",
     "google-maps-react": "2.0.2",
-    "lodash": "^4.17.15",
+    "lodash": "4.17.15",
     "prop-types": "15.7.2",
     "react": "16.8.6",
     "react-datepicker": "2.8.0",
