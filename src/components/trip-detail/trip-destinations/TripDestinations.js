@@ -3,21 +3,53 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import PhotoAttribution from '@components/photo-attribution/PhotoAttribution';
 
+var weatherCache = {};
+
 const TripDestinations = ({ actions, destinations }) => {
   const [weatherObject, setWeatherObject] = useState({});
 
   useEffect(() => {
     const weather = { ...weatherObject };
     destinations.forEach(destination => {
+      const createWeatherObject = data => {
+        return {
+          condition: data.weather[0].main,
+          icon: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
+          temperature: data.main.temp,
+        };
+      };
+
+      if (
+        weatherCache[
+          `${destination.geo.latitude}, ${destination.geo.longitude}`
+        ] !== undefined
+      ) {
+        const cachedWeather =
+          weatherCache[
+            `${destination.geo.latitude}, ${destination.geo.longitude}`
+          ];
+        const now = new Date().getTime();
+        const thirtyMin = 1000 * 60 * 30;
+        const diff = now - cachedWeather.time.getTime();
+        if (diff < thirtyMin) {
+          weather[destination.placeId] = createWeatherObject(
+            cachedWeather.data,
+          );
+          setWeatherObject(weather);
+          return;
+        }
+      }
+
       actions.trip
         .getWeather(destination.geo.latitude, destination.geo.longitude)
-        .then(resp => {
-          weather[destination.placeId] = {
-            condition: resp.weather[0].main,
-            icon: `http://openweathermap.org/img/wn/${resp.weather[0].icon}@2x.png`,
-            temperature: resp.main.temp,
+        .then(data => {
+          weatherCache[
+            `${destination.geo.latitude}, ${destination.geo.longitude}`
+          ] = {
+            data,
+            time: new Date(),
           };
-
+          weather[destination.placeId] = createWeatherObject(data);
           setWeatherObject(weather);
         });
     });
