@@ -65,6 +65,16 @@ export default function reducer(state = initialState, action) {
       };
     }
 
+    case types.GET_WEATHER_INFO: {
+      return {
+        ...state,
+        weatherCache: {
+          ...state.weatherCache,
+          ...action.weather,
+        },
+      };
+    }
+
     case types.POPULATE_TRIP_FORM: {
       return {
         ...state,
@@ -282,25 +292,29 @@ export const tripActions = {
       if (diff < thirtyMin) {
         dispatch({
           type: types.GET_WEATHER_INFO,
+          weather: {},
         });
 
-        return Promise.resolve(cachedWeather.data);
+        return Promise.resolve();
       }
     }
 
     return trip()
       .getWeather(latitude, longitude)
       .then(response => {
-        weatherCache[cacheKey] = {
-          data: response.data,
-          time: new Date(),
+        const weather = {
+          [cacheKey]: {
+            data: response.data,
+            time: new Date(),
+          },
         };
 
         dispatch({
           type: types.GET_WEATHER_INFO,
+          weather,
         });
 
-        return Promise.resolve(response.data);
+        return Promise.resolve();
       })
       .catch(() => {
         return Promise.resolve('');
