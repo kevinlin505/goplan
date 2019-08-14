@@ -10,6 +10,7 @@ import 'firebase/firestore';
 import firebase from '@data/_db';
 import googleMapsApi from '@utils/googleMapsApi';
 import TripMap from '@components/trip-map/TripMap';
+import DestinationDates from '@components/trips/destination-dates/DestinationDates';
 import {
   ButtonWrapper,
   FieldWrapper,
@@ -100,6 +101,13 @@ const Destinations = ({ actions, destinations }) => {
     setDestination({
       ...destination,
       [event.target.name]: event.target.value,
+    });
+  }
+
+  function updateDateField(name, value) {
+    setDestination({
+      ...destination,
+      [name]: value,
     });
   }
 
@@ -215,26 +223,10 @@ const Destinations = ({ actions, destinations }) => {
         />
       </FieldWrapper>
       <GroupFieldWrapper>
-        <DateInput
-          InputLabelProps={{
-            shrink: true,
-          }}
-          label="Start Date"
-          name="startAt"
-          onChange={updateField}
-          type="date"
-          value={destination.startAt}
-        />
-        <DateInput
-          InputLabelProps={{
-            shrink: true,
-          }}
-          label="End Date"
-          name="endAt"
-          onChange={updateField}
-          type="date"
-          value={destination.endAt}
-        />
+        <DestinationDates
+          destination={destination}
+          handleUpdate={updateDateField}
+        ></DestinationDates>
       </GroupFieldWrapper>
       <FieldWrapper>{constructDestinationList()}</FieldWrapper>
       <ButtonWrapper>
@@ -258,10 +250,6 @@ Destinations.propTypes = {
   actions: PropTypes.object.isRequired,
   destinations: PropTypes.array.isRequired,
 };
-
-const DateInput = styled(Input)`
-  width: 49%;
-`;
 
 const DestinationChip = styled(Chip)`
   margin: 5px;

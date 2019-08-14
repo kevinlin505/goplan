@@ -55,6 +55,10 @@ module.exports = function returnConfig(env) {
               },
             ],
           },
+          {
+            test: /\.css$/i,
+            use: ['style-loader', 'css-loader'],
+          },
         ],
       },
     },
