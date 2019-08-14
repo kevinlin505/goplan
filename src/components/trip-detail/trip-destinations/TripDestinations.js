@@ -9,12 +9,13 @@ const TripDestinations = ({ actions, destinations, weatherCache }) => {
       actions.trip.getWeather(
         destination.geo.latitude,
         destination.geo.longitude,
+        destination.placeId,
       );
     });
   }, []);
 
-  function renderWeatherObject(key) {
-    const destinationWeather = weatherCache[key];
+  function renderWeatherObject(placeId) {
+    const destinationWeather = weatherCache[placeId];
 
     if (destinationWeather) {
       const condition = destinationWeather.data.weather[0].main;
@@ -22,7 +23,7 @@ const TripDestinations = ({ actions, destinations, weatherCache }) => {
       const temperature = destinationWeather.data.main.temp;
 
       return (
-        <DestinationWeather key={`destination-weather-${key}`}>
+        <DestinationWeather>
           <WeatherIcon>
             <WeatherIconImage alt={condition} src={icon}></WeatherIconImage>
           </WeatherIcon>
@@ -58,7 +59,7 @@ const TripDestinations = ({ actions, destinations, weatherCache }) => {
             ></PhotoAttribution>
           </DestinationPhoto>
           <DestinationInfo>
-            {renderWeatherObject(`${geo.latitude}, ${geo.longitude}`)}
+            {renderWeatherObject(destination.placeId)}
           </DestinationInfo>
         </DestinationContainer>
       );

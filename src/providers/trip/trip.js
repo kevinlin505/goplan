@@ -280,12 +280,12 @@ export const tripActions = {
       });
   },
 
-  getWeather: (latitude, longitude) => (dispatch, getState) => {
+  getWeather: (latitude, longitude, placedId) => (dispatch, getState) => {
     const { weatherCache } = getState().trip;
-    const cacheKey = `${latitude}, ${longitude}`;
+    // const cacheKey = `${latitude}, ${longitude}`;
 
-    if (weatherCache[cacheKey] !== undefined) {
-      const cachedWeather = weatherCache[cacheKey];
+    if (weatherCache[placedId] !== undefined) {
+      const cachedWeather = weatherCache[placedId];
       const now = new Date().getTime();
       const thirtyMin = 1000 * 60 * 30;
       const diff = now - cachedWeather.time.getTime();
@@ -303,7 +303,7 @@ export const tripActions = {
       .getWeather(latitude, longitude)
       .then(response => {
         const weather = {
-          [cacheKey]: {
+          [placedId]: {
             data: response.data,
             time: new Date(),
           },
