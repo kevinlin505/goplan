@@ -75,6 +75,36 @@ export default function trip() {
       return batch.commit();
     },
 
+    deleteTrip: (tripDetail, tripExpenses) => {
+      const batch = db.batch();
+      const { id } = tripDetail;
+      const currentUserRef = db.collection('users').doc(currentUser.uid);
+      const tripRef = db.collection('trips').doc(id);
+      const activityRef = db.collection('activities').doc(id);
+
+      Object.keys(tripExpenses).forEach(expenseId => {
+        const expenseRef = db.collection('trips').doc(expenseId);
+        debugger;
+
+        tripExpenses[expenseId].payees.forEach(payee => {
+          const userRef = db.collection('users').doc(payee.id);
+          debugger;
+          batch.update(userRef, {
+            expenses: firebase.firestore.FieldValue.arrayRemove(expenseRef),
+          });
+        });
+
+        // batch.delete(expenseRef);
+      });
+      batch.update(currentUserRef, {
+        trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
+      });
+      batch.delete(tripRef);
+      batch.delete(activityRef);
+      debugger;
+      return batch.commit();
+    },
+
     leaveTrip: tripId => {
       const batch = db.batch();
 

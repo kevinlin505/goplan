@@ -9,6 +9,7 @@ import getTravelDates from '@utils/calculateTravelDates';
 export const types = {
   CLEAR_TRIP_FORM: 'TRIP/CLEAR_TRIP_FORM',
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
+  DELETE_TRIP: 'TRIP/DELETE_TRIP',
   GET_DESTINATION_PHOTO: 'TRIP/GET_DESTINATION_PHOTO',
   GET_MEMBERS: 'TRIP/GET_MEMBERS',
   GET_TRIP_EXPENSE_REPORTS: 'TRIP/GET_TRIP_EXPENSE_REPORTS',
@@ -335,7 +336,20 @@ export const tripActions = {
       });
   },
 
-  leaveTrip: tripId => dispatch => {
+  leaveTrip: tripId => (dispatch, getState) => {
+    const { selectedTrip, tripExpenses } = getState().trip;
+
+    if (Object.keys(selectedTrip.members).length === 1) {
+      return trip()
+        .deleteTrip(selectedTrip, tripExpenses)
+        .then(() => {
+          debugger;
+          return dispatch({
+            type: types.DELETE_TRIP,
+          });
+        });
+    }
+
     return trip()
       .leaveTrip(tripId)
       .then(() => {
