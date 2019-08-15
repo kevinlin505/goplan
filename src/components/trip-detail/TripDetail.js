@@ -20,6 +20,7 @@ import CardContainer from '@styles/card/CardContainer';
 const mapStateToProps = state => {
   return {
     selectedTrip: state.trip.selectedTrip,
+    weatherCache: state.trip.weatherCache,
   };
 };
 
@@ -32,7 +33,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TripDetail = ({ actions, selectedTrip }) => {
+const TripDetail = ({ actions, selectedTrip, weatherCache }) => {
   const [isExpenseModal, setExpenseModal] = useState(false);
   const [activePanel, setActivePanel] = useState(ActivePanel.ACTIVITIES);
   const tripStartDate = new Date(
@@ -80,6 +81,7 @@ const TripDetail = ({ actions, selectedTrip }) => {
                   <TripDestinations
                     actions={actions}
                     destinations={selectedTrip.destinations}
+                    weatherCache={weatherCache}
                   />
                 )}
                 {activePanel === ActivePanel.EXPENSES && (
@@ -112,6 +114,7 @@ const TripDetail = ({ actions, selectedTrip }) => {
 TripDetail.propTypes = {
   actions: PropTypes.object.isRequired,
   selectedTrip: PropTypes.object.isRequired,
+  weatherCache: PropTypes.object.isRequired,
 };
 
 const Container = styled.div`
