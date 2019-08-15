@@ -176,12 +176,12 @@ const CheckIcon = styled(Check)`
 
 const UserName = styled.div`
   margin: 2px 0;
-  font-size: 16px;
+  font-size: 18px;
   color: ${({ theme }) => theme.colors.text};
 `;
 
 const InfoField = styled.div`
-  margin: 2px 0 5px;
+  margin: 3px 0 3px;
   color: ${({ theme }) => theme.colors.textLight};
 `;
 

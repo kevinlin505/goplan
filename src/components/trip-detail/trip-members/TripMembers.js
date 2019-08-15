@@ -72,8 +72,8 @@ const ListItemDetails = styled.div`
 `;
 
 const MemberName = styled.div`
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 18px;
+  padding-bottom: 3px;
 `;
 
 const MemberInfoText = styled.div`
@@ -83,7 +83,7 @@ const MemberInfoText = styled.div`
 `;
 
 const MemberPaymentInfo = styled.div`
-  line-height: 1.5;
+  padding-bottom: 3px;
   display: flex;
 `;
 

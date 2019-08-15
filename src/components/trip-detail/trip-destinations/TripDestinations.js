@@ -54,11 +54,14 @@ const TripDestinations = ({ actions, destinations }) => {
 
       return (
         <DestinationContainer key={`trip-destination-${idx}`}>
-          <DestinationHeader>
-            {`${new Date(destination.startAt).toLocaleDateString()} - ${
-              destination.location
-            }`}
-          </DestinationHeader>
+          <DestinationHeader>{`${destination.location}`}</DestinationHeader>
+          <DestinationDates>
+            {`${new Date(
+              destination.startAt,
+            ).toLocaleDateString()} - ${new Date(
+              destination.endAt,
+            ).toLocaleDateString()}`}
+          </DestinationDates>
           <DestinationPhoto destinationPhoto={sizedImageUrl}>
             <PhotoAttribution
               photo={photo}
@@ -89,6 +92,13 @@ const DestinationContainer = styled.div`
 
 const DestinationHeader = styled.div`
   font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 5px;
+`;
+
+const DestinationDates = styled.div`
+  font-size: 18px;
+  padding-bottom: 5px;
 `;
 
 const DestinationInfo = styled.div`
