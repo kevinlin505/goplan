@@ -282,7 +282,6 @@ export const tripActions = {
 
   getWeather: (latitude, longitude, placedId) => (dispatch, getState) => {
     const { weatherCache } = getState().trip;
-    // const cacheKey = `${latitude}, ${longitude}`;
 
     if (weatherCache[placedId] !== undefined) {
       const cachedWeather = weatherCache[placedId];

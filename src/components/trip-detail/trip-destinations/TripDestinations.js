@@ -42,15 +42,18 @@ const TripDestinations = ({ actions, destinations, weatherCache }) => {
 
   function constructDestinations() {
     return destinations.map((destination, idx) => {
-      const { geo, photo } = destination;
-      const sizedImageUrl = `${destination.photo.imageSourceUrl}&w600`;
+      const { endAt, location, photo, placeId, startAt } = destination;
+      const sizedImageUrl = `${photo.imageSourceUrl}&w600`;
 
       return (
         <DestinationContainer key={`trip-destination-${idx}`}>
           <DestinationHeader>
-            {`${new Date(destination.startAt).toLocaleDateString()} - ${
-              destination.location
-            }`}
+            <div>
+              {`${new Date(startAt).toLocaleDateString()} - ${new Date(
+                endAt,
+              ).toLocaleDateString()}`}
+            </div>
+            <div>{location}</div>
           </DestinationHeader>
           <DestinationPhoto destinationPhoto={sizedImageUrl}>
             <PhotoAttribution
@@ -58,9 +61,7 @@ const TripDestinations = ({ actions, destinations, weatherCache }) => {
               splashPage={false}
             ></PhotoAttribution>
           </DestinationPhoto>
-          <DestinationInfo>
-            {renderWeatherObject(destination.placeId)}
-          </DestinationInfo>
+          <DestinationInfo>{renderWeatherObject(placeId)}</DestinationInfo>
         </DestinationContainer>
       );
     });
