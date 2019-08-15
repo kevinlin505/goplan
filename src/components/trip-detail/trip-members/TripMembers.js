@@ -20,15 +20,19 @@ const TripMembers = ({ members }) => {
             <MemberName>{member.name}</MemberName>
             <MemberInfoText>
               <MemberPaymentInfo>
-                <MemberPaymentLabel>email:</MemberPaymentLabel>
+                <MemberPaymentLabel>Email:</MemberPaymentLabel>
                 <span>{member.email}</span>
               </MemberPaymentInfo>
               <MemberPaymentInfo>
-                <MemberPaymentLabel>vm:</MemberPaymentLabel>
+                <MemberPaymentLabel>Phone:</MemberPaymentLabel>
+                <span>{member.phone_number}</span>
+              </MemberPaymentInfo>
+              <MemberPaymentInfo>
+                <MemberPaymentLabel>Venmo:</MemberPaymentLabel>
                 <span>{member.venmo}</span>
               </MemberPaymentInfo>
               <MemberPaymentInfo>
-                <MemberPaymentLabel>qp:</MemberPaymentLabel>
+                <MemberPaymentLabel>QuickPay:</MemberPaymentLabel>
                 <span>{member.quickpay}</span>
               </MemberPaymentInfo>
             </MemberInfoText>
