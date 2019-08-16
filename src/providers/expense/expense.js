@@ -98,28 +98,35 @@ export const expenseActions = {
   },
 
   removeExpense: (expenseId, expenseObject) => (dispatch, getState) => {
-    const { selectedTrip } = getState().trip;
+    const {
+      auth: { profile },
+      trip: { selectedTrip },
+    } = getState();
 
-    expense()
-      .removeExpense(expenseId, expenseObject)
-      .then(() => {
-        activity().updateActivity(
-          ActivityType.DELETE_EXPENSE,
-          selectedTrip.id,
-          expenseObject,
-        );
+    if (expenseObject.payer.id === profile.id) {
+      return expense()
+        .removeExpense(expenseId, expenseObject)
+        .then(() => {
+          activity().updateActivity(
+            ActivityType.DELETE_EXPENSE,
+            selectedTrip.id,
+            expenseObject,
+          );
 
-        const urls = expenseObject.receipts.map(receipt => {
-          return receipt.url;
+          const urls = expenseObject.receipts.map(receipt => {
+            return receipt.url;
+          });
+
+          expense().deleteReceipts({ urls });
+
+          return dispatch({ type: types.REMOVE_EXPENSE });
+        })
+        .catch(err => {
+          console.log(err);
         });
-
-        expense().deleteReceipts({ urls });
-
-        return dispatch({ type: types.REMOVE_EXPENSE });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    }
+    console.log('You are not the payer of this expense.');
+    return new Error('You are not the payer of this expense.');
   },
 
   uploadReceipts: file => (dispatch, getState) => {

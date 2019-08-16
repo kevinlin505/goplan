@@ -69,14 +69,17 @@ export const userActions = {
   summarizeAllExpenses: reports => dispatch => {
     const { expenseCategories, expenseTotal, expenseTrips } = reports.reduce(
       (expenseSummary, report) => {
-        const cost = report.amount / report.payees.length;
-        const categoryCost =
-          expenseSummary.expenseCategories[report.category] || 0;
-        const tripCost = expenseSummary.expenseTrips[report.tripId] || 0;
+        if (report !== undefined) {
+          const cost = report.amount / report.payees.length;
+          const categoryCost =
+            expenseSummary.expenseCategories[report.category] || 0;
+          const tripCost = expenseSummary.expenseTrips[report.tripId] || 0;
 
-        expenseSummary.expenseCategories[report.category] = categoryCost + cost;
-        expenseSummary.expenseTrips[report.tripId] = tripCost + cost;
-        expenseSummary.expenseTotal += cost;
+          expenseSummary.expenseCategories[report.category] =
+            categoryCost + cost;
+          expenseSummary.expenseTrips[report.tripId] = tripCost + cost;
+          expenseSummary.expenseTotal += cost;
+        }
 
         return expenseSummary;
       },

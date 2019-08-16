@@ -78,6 +78,7 @@ export default function trip() {
     deleteTrip: (tripDetail, tripExpenses) => {
       const batch = db.batch();
       const { id } = tripDetail;
+      debugger;
       const currentUserRef = db.collection('users').doc(currentUser.uid);
       const tripRef = db.collection('trips').doc(id);
       const activityRef = db.collection('activities').doc(id);
@@ -87,7 +88,6 @@ export default function trip() {
 
         tripExpenses[expenseId].payees.forEach(payee => {
           const userRef = db.collection('users').doc(payee.id);
-
           batch.update(userRef, {
             expenses: firebase.firestore.FieldValue.arrayRemove(expenseRef),
           });
