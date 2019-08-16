@@ -343,7 +343,6 @@ export const tripActions = {
       return trip()
         .deleteTrip(selectedTrip, tripExpenses)
         .then(() => {
-          debugger;
           return dispatch({
             type: types.DELETE_TRIP,
           });
