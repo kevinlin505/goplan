@@ -1,6 +1,5 @@
 {
   "projects": {
-    "default": "goplan-3b4b1",
-    "dev": "goplan-3b4b1",
+    "staging": "goplan-3b4b1"
   }
 }
