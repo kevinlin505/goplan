@@ -13,7 +13,7 @@ const leaveTrip = options => {
     const activityRef = db.collection('activities').doc(id);
 
     Object.keys(tripExpenses).forEach(expenseId => {
-    const expenseRef = db.collection('trips').doc(expenseId);
+        const expenseRef = db.collection('expenses').doc(expenseId);    
         tripExpenses[expenseId].payees.forEach(payee => {
             const userRef = db.collection('users').doc(payee.id);        
             batch.update(userRef, {
@@ -29,6 +29,7 @@ const leaveTrip = options => {
     
     batch.commit();
     console.log('leave trip done');
+    return null;
 }
 
 module.exports = functions.https.onCall(options => {
