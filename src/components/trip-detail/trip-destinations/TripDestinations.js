@@ -1,65 +1,56 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import PhotoAttribution from '@components/photo-attribution/PhotoAttribution';
 
-const TripDestinations = ({ actions, destinations }) => {
-  const [weatherObject, setWeatherObject] = useState({});
-
+const TripDestinations = ({ actions, destinations, weatherCache }) => {
   useEffect(() => {
-    const weather = { ...weatherObject };
     destinations.forEach(destination => {
-      const createWeatherObject = data => {
-        return {
-          condition: data.weather[0].main,
-          icon: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
-          temperature: data.main.temp,
-        };
-      };
-
-      actions.trip
-        .getWeather(destination.geo.latitude, destination.geo.longitude)
-        .then(data => {
-          weather[destination.placeId] = createWeatherObject(data);
-          setWeatherObject(weather);
-        });
+      actions.trip.getWeather(
+        destination.geo.latitude,
+        destination.geo.longitude,
+        destination.placeId,
+      );
     });
   }, []);
 
   function renderWeatherObject(placeId) {
-    const destinationWeather = weatherObject[placeId];
+    const destinationWeather = weatherCache[placeId];
 
-    return destinationWeather ? (
-      <DestinationWeather>
-        <WeatherIcon>
-          <WeatherIconImage
-            alt={destinationWeather.condition}
-            src={destinationWeather.icon}
-          ></WeatherIconImage>
-        </WeatherIcon>
-        <WeatherInfo>
-          <WeatherTemperature>
-            {destinationWeather.temperature.toFixed(1)} &#176;F
-          </WeatherTemperature>
-          <WeatherCondition>{destinationWeather.condition}</WeatherCondition>
-        </WeatherInfo>
-      </DestinationWeather>
-    ) : null;
+    if (destinationWeather) {
+      const condition = destinationWeather.data.weather[0].main;
+      const icon = `http://openweathermap.org/img/wn/${destinationWeather.data.weather[0].icon}@2x.png`;
+      const temperature = destinationWeather.data.main.temp;
+
+      return (
+        <DestinationWeather>
+          <WeatherIcon>
+            <WeatherIconImage alt={condition} src={icon}></WeatherIconImage>
+          </WeatherIcon>
+          <WeatherInfo>
+            <WeatherTemperature>
+              {temperature.toFixed(1)} &#176;F
+            </WeatherTemperature>
+            <WeatherCondition>{condition}</WeatherCondition>
+          </WeatherInfo>
+        </DestinationWeather>
+      );
+    }
+
+    return null;
   }
 
   function constructDestinations() {
     return destinations.map((destination, idx) => {
-      const { photo } = destination;
-      const sizedImageUrl = `${destination.photo.imageSourceUrl}&w600`;
+      const { endAt, location, photo, placeId, startAt } = destination;
+      const sizedImageUrl = `${photo.imageSourceUrl}&w600`;
 
       return (
         <DestinationContainer key={`trip-destination-${idx}`}>
-          <DestinationHeader>{`${destination.location}`}</DestinationHeader>
+          <DestinationHeader>{`${location}`}</DestinationHeader>
           <DestinationDates>
-            {`${new Date(
-              destination.startAt,
-            ).toLocaleDateString()} - ${new Date(
-              destination.endAt,
+            {`${new Date(startAt).toLocaleDateString()} - ${new Date(
+              endAt,
             ).toLocaleDateString()}`}
           </DestinationDates>
           <DestinationPhoto destinationPhoto={sizedImageUrl}>
@@ -68,9 +59,7 @@ const TripDestinations = ({ actions, destinations }) => {
               splashPage={false}
             ></PhotoAttribution>
           </DestinationPhoto>
-          <DestinationInfo>
-            {renderWeatherObject(destination.placeId)}
-          </DestinationInfo>
+          <DestinationInfo>{renderWeatherObject(placeId)}</DestinationInfo>
         </DestinationContainer>
       );
     });
@@ -82,6 +71,7 @@ const TripDestinations = ({ actions, destinations }) => {
 TripDestinations.propTypes = {
   actions: PropTypes.object.isRequired,
   destinations: PropTypes.array.isRequired,
+  weatherCache: PropTypes.object.isRequired,
 };
 
 const DestinationContainer = styled.div`
