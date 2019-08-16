@@ -57,14 +57,18 @@ export const ProfileCard = ({ actions, profile }) => {
             {enableEdit ? <CheckIcon /> : <EditIcon />}
           </EditButton>
         </NameWrapper>
-        <InfoField>{profile.email}</InfoField>
+        <InfoField>Email: {profile.email}</InfoField>
         {(profileForm.phone_number || enableEdit) && (
           <EditInput
             disabled={!enableEdit}
             label={enableEdit && 'Phone number'}
             name="phone_number"
             onChange={handleFormUpdate}
-            value={profileForm.phone_number}
+            value={
+              enableEdit
+                ? `${profileForm.phone_number}`
+                : `Phone: ${profileForm.phone_number}`
+            }
             variant={enableEdit ? 'filled' : 'standard'}
           />
         )}
@@ -74,7 +78,11 @@ export const ProfileCard = ({ actions, profile }) => {
             label={enableEdit && 'Venmo'}
             name="venmo"
             onChange={handleFormUpdate}
-            value={profileForm.venmo}
+            value={
+              enableEdit
+                ? `${profileForm.venmo}`
+                : `Venmo: ${profileForm.venmo}`
+            }
             variant={enableEdit ? 'filled' : 'standard'}
           />
         )}
@@ -84,7 +92,11 @@ export const ProfileCard = ({ actions, profile }) => {
             label={enableEdit && 'Quickpay'}
             name="quickpay"
             onChange={handleFormUpdate}
-            value={profileForm.quickpay}
+            value={
+              enableEdit
+                ? `${profileForm.quickpay}`
+                : `QuickPay: ${profileForm.quickpay}`
+            }
             variant={enableEdit ? 'filled' : 'standard'}
           />
         )}
@@ -148,6 +160,7 @@ const EditButton = styled(IconButton)`
   left: 100%;
   width: 26px;
   height: 26px;
+  margin-left: 3px;
   padding: 5px;
 `;
 
@@ -163,12 +176,12 @@ const CheckIcon = styled(Check)`
 
 const UserName = styled.div`
   margin: 2px 0;
-  font-size: 16px;
+  font-size: 18px;
   color: ${({ theme }) => theme.colors.text};
 `;
 
 const InfoField = styled.div`
-  margin: 2px 0 5px;
+  margin: 3px 0 3px;
   color: ${({ theme }) => theme.colors.textLight};
 `;
 

@@ -20,15 +20,19 @@ const TripMembers = ({ members }) => {
             <MemberName>{member.name}</MemberName>
             <MemberInfoText>
               <MemberPaymentInfo>
-                <MemberPaymentLabel>email:</MemberPaymentLabel>
+                <MemberPaymentLabel>Email:</MemberPaymentLabel>
                 <span>{member.email}</span>
               </MemberPaymentInfo>
               <MemberPaymentInfo>
-                <MemberPaymentLabel>vm:</MemberPaymentLabel>
+                <MemberPaymentLabel>Phone:</MemberPaymentLabel>
+                <span>{member.phone_number}</span>
+              </MemberPaymentInfo>
+              <MemberPaymentInfo>
+                <MemberPaymentLabel>Venmo:</MemberPaymentLabel>
                 <span>{member.venmo}</span>
               </MemberPaymentInfo>
               <MemberPaymentInfo>
-                <MemberPaymentLabel>qp:</MemberPaymentLabel>
+                <MemberPaymentLabel>QuickPay:</MemberPaymentLabel>
                 <span>{member.quickpay}</span>
               </MemberPaymentInfo>
             </MemberInfoText>
@@ -68,8 +72,8 @@ const ListItemDetails = styled.div`
 `;
 
 const MemberName = styled.div`
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 18px;
+  padding-bottom: 3px;
 `;
 
 const MemberInfoText = styled.div`
@@ -79,7 +83,7 @@ const MemberInfoText = styled.div`
 `;
 
 const MemberPaymentInfo = styled.div`
-  line-height: 1.5;
+  padding-bottom: 3px;
   display: flex;
 `;
 
