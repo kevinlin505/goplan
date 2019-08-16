@@ -47,14 +47,12 @@ const TripDestinations = ({ actions, destinations, weatherCache }) => {
 
       return (
         <DestinationContainer key={`trip-destination-${idx}`}>
-          <DestinationHeader>
-            <div>
-              {`${new Date(startAt).toLocaleDateString()} - ${new Date(
-                endAt,
-              ).toLocaleDateString()}`}
-            </div>
-            <div>{location}</div>
-          </DestinationHeader>
+          <DestinationHeader>{`${location}`}</DestinationHeader>
+          <DestinationDates>
+            {`${new Date(startAt).toLocaleDateString()} - ${new Date(
+              endAt,
+            ).toLocaleDateString()}`}
+          </DestinationDates>
           <DestinationPhoto destinationPhoto={sizedImageUrl}>
             <PhotoAttribution
               photo={photo}
@@ -84,6 +82,13 @@ const DestinationContainer = styled.div`
 
 const DestinationHeader = styled.div`
   font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 5px;
+`;
+
+const DestinationDates = styled.div`
+  font-size: 18px;
+  padding-bottom: 5px;
 `;
 
 const DestinationInfo = styled.div`

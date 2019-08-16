@@ -152,6 +152,8 @@ const TripInfoCard = styled(CardContainer)`
 
 const TripName = styled.div`
   font-size: 30px;
+  font-weight: 500;
+  padding-bottom: 5px;
 `;
 
 const TripDates = styled.div`
