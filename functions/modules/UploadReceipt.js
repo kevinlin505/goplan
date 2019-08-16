@@ -27,7 +27,7 @@ const uploadToS3 = async (options, context) => {
     const buff = UploadHelper.getBase64(options.data).data;
     const params = {
         Bucket: `${keys.AWS.bucketName}/expense/${options.tripId}`,
-        Key: uuidv3(options.name, `${keys.AWS.uuid}${options.tripId}${context.auth.uid}`),
+        Key: uuidv3(`${options.name}${options.tripId}${context.auth.uid}`, keys.AWS.uuid),
         ContentType: options.type,
         Body: buff,
     };
