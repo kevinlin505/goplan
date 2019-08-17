@@ -21,10 +21,10 @@ const Render = ({ auth, match, component: Component, ...props }) => {
         pathname: '/',
         state:
           auth === AuthState.LOGOUT
-            ? {
+            ? {}
+            : {
                 originalMatchUrl: match.url,
-              }
-            : {},
+              },
       }}
     />
   );
