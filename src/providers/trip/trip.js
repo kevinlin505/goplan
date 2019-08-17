@@ -9,6 +9,7 @@ import getTravelDates from '@utils/calculateTravelDates';
 export const types = {
   CLEAR_TRIP_FORM: 'TRIP/CLEAR_TRIP_FORM',
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
+  DELETE_TRIP: 'TRIP/DELETE_TRIP',
   GET_DESTINATION_PHOTO: 'TRIP/GET_DESTINATION_PHOTO',
   GET_MEMBERS: 'TRIP/GET_MEMBERS',
   GET_TRIP_EXPENSE_REPORTS: 'TRIP/GET_TRIP_EXPENSE_REPORTS',
@@ -348,9 +349,37 @@ export const tripActions = {
       });
   },
 
-  leaveTrip: tripId => dispatch => {
+  leaveTrip: tripId => (dispatch, getState) => {
+    const {
+      auth: { profile },
+      trip: { selectedTrip, tripExpenses },
+    } = getState();
+    let newOrganizer;
+
+    if (Object.keys(selectedTrip.members).length === 1) {
+      return trip()
+        .deleteTrip(selectedTrip, tripExpenses)
+        .then(() => {
+          return dispatch({
+            type: types.DELETE_TRIP,
+          });
+        });
+    }
+
+    if (profile.id === selectedTrip.organizer.id) {
+      const memberArray = Object.values(selectedTrip.members);
+
+      if (memberArray[0].id !== selectedTrip.organizer.id) {
+        const { id, name, email } = memberArray[0];
+        newOrganizer = { id, name, email };
+      } else {
+        const { id, name, email } = memberArray[1];
+        newOrganizer = { id, name, email };
+      }
+    }
+
     return trip()
-      .leaveTrip(tripId)
+      .leaveTrip(tripId, newOrganizer)
       .then(() => {
         activity().updateActivity(ActivityType.LEAVE_TRIP, tripId);
 

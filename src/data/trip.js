@@ -75,7 +75,36 @@ export default function trip() {
       return batch.commit();
     },
 
-    leaveTrip: tripId => {
+    deleteTrip: (tripDetail, tripExpenses) => {
+      const batch = db.batch();
+      const { id } = tripDetail;
+      const currentUserRef = db.collection('users').doc(currentUser.uid);
+      const tripRef = db.collection('trips').doc(id);
+      const activityRef = db.collection('activities').doc(id);
+
+      Object.keys(tripExpenses).forEach(expenseId => {
+        const expenseRef = db.collection('expenses').doc(expenseId);
+
+        tripExpenses[expenseId].payees.forEach(payee => {
+          const userRef = db.collection('users').doc(payee.id);
+          batch.update(userRef, {
+            expenses: firebase.firestore.FieldValue.arrayRemove(expenseRef),
+          });
+        });
+
+        batch.delete(expenseRef);
+      });
+
+      batch.update(currentUserRef, {
+        trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
+      });
+      batch.delete(tripRef);
+      batch.delete(activityRef);
+
+      return batch.commit();
+    },
+
+    leaveTrip: (tripId, newOrganizer) => {
       const batch = db.batch();
 
       const tripRef = db.collection('trips').doc(tripId);
@@ -87,6 +116,12 @@ export default function trip() {
       batch.update(userRef, {
         trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
       });
+
+      if (newOrganizer) {
+        batch.update(tripRef, {
+          organizer: newOrganizer,
+        });
+      }
 
       return batch.commit();
     },

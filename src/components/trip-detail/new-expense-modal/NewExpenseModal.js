@@ -37,12 +37,16 @@ const mapDispatchToProps = dispatch => {
 const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
   const [files, setFiles] = useState([]);
   const [previewImageSrcs, setPreviewImageSrcs] = useState([]);
+  const payeesList = Object.values(members).map(member => {
+    const { id, email, name } = member;
+    return { id, email, name };
+  });
   const [form, setValues] = useState({
     category: '',
     date: '',
     merchant: '',
     amount: '',
-    payees: Object.values(members),
+    payees: payeesList,
     description: '',
   });
 
