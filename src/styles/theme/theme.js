@@ -15,7 +15,9 @@ const theme = {
     black: '#000000',
     transparent: 'transparent',
     error: '#d32f2f',
+    information: '#1976d2',
     success: '#4caf50',
+    warning: '#ffa000',
   },
 
   // Fonts

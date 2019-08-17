@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import ActivePanel from '@constants/ActivePanel';
 import { expenseActions } from '@providers/expense/expense';
 import { tripActions } from '@providers/trip/trip';
+import StatusNotification from '@components/status-notification/StatusNotification';
 import ControlPanel from '@components/trip-detail/control-panel/ControlPanel';
 import TripMembers from '@components/trip-detail/trip-members/TripMembers';
 import TripActivities from '@components/trip-detail/trip-activities/TripActivities';
@@ -63,6 +64,7 @@ const TripDetail = ({ actions, selectedTrip, weatherCache }) => {
           <TripMembers members={selectedTrip.members} />
         </LeftPanel>
         <MainPanel>
+          <StatusNotification />
           <MainContentArea>
             {selectedTrip ? (
               <React.Fragment>
