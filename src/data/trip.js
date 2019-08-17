@@ -116,9 +116,8 @@ export default function trip() {
       batch.update(userRef, {
         trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
       });
-      debugger;
+
       if (newOrganizer) {
-        debugger;
         batch.update(tripRef, {
           organizer: newOrganizer,
         });
