@@ -1,5 +1,7 @@
 import user from '@data/user';
 import expense from '@data/expense';
+import Notification from '@constants/Notification';
+import { notificationActions } from '@providers/notification/notification';
 
 export const types = {
   GET_USER_EXPENSE_REPORTS: 'EXPENSE/GET_USER_EXPENSE_REPORTS',
@@ -102,10 +104,24 @@ export const userActions = {
     return user()
       .updateUserProfile(profile)
       .then(() => {
+        dispatch(
+          notificationActions.setNotification(
+            Notification.SUCCESS,
+            `Updated profile successfully!`,
+          ),
+        );
+
         return dispatch({
           type: types.UPDATE_USER_DETAILS,
         });
       })
-      .catch(error => Promise.resolve());
+      .catch(error =>
+        dispatch(
+          notificationActions.setNotification(
+            Notification.ERROR,
+            `Oops! Something is wrong, please try again!`,
+          ),
+        ),
+      );
   },
 };

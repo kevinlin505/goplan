@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Notification from '@constants/Notification';
 import { authActions } from '@providers/auth/auth';
 import { expenseActions } from '@providers/expense/expense';
+import { notificationActions } from '@providers/notification/notification';
 import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
 import { getSortedTrips } from '@selectors/tripSelector';
+import StatusNotification from '@components/status-notification/StatusNotification';
 import TripCard from '@components/user-page/trip-card/TripCard';
 import UserExpense from '@components/user-page/user-expense/UserExpense';
 import ProfileCard from '@components/user-page/profile-card/ProfileCard';
@@ -26,6 +29,7 @@ const mapDispatchToProps = dispatch => {
     actions: {
       auth: bindActionCreators(authActions, dispatch),
       expense: bindActionCreators(expenseActions, dispatch),
+      notification: bindActionCreators(notificationActions, dispatch),
       trip: bindActionCreators(tripActions, dispatch),
       user: bindActionCreators(userActions, dispatch),
     },
@@ -33,9 +37,16 @@ const mapDispatchToProps = dispatch => {
 };
 
 const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
-  const tripCount = profile && profile.trips && profile.trips.length;
+  const tripCount = profile.trips && profile.trips.length;
 
   useEffect(() => {
+    if (!tripCount) {
+      actions.notification.setNotification(
+        Notification.INFORMATION,
+        'To start your next vacation, create a trip and invite friends to join',
+      );
+    }
+
     actions.user.getUserExpenseReports();
   }, []);
 
@@ -66,6 +77,7 @@ const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
           <UserExpense />
         </LeftPanel>
         <MainPanel>
+          <StatusNotification />
           <TripList>
             {sortedTrips.current.length > 0 && (
               <div>{constructCurrentTrips('current')}</div>
