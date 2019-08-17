@@ -78,7 +78,6 @@ export default function trip() {
     deleteTrip: (tripDetail, tripExpenses) => {
       const batch = db.batch();
       const { id } = tripDetail;
-      debugger;
       const currentUserRef = db.collection('users').doc(currentUser.uid);
       const tripRef = db.collection('trips').doc(id);
       const activityRef = db.collection('activities').doc(id);
@@ -105,7 +104,7 @@ export default function trip() {
       return batch.commit();
     },
 
-    leaveTrip: tripId => {
+    leaveTrip: (tripId, newOrganizer) => {
       const batch = db.batch();
 
       const tripRef = db.collection('trips').doc(tripId);
@@ -117,6 +116,13 @@ export default function trip() {
       batch.update(userRef, {
         trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
       });
+      debugger;
+      if (newOrganizer) {
+        debugger;
+        batch.update(tripRef, {
+          organizer: newOrganizer,
+        });
+      }
 
       return batch.commit();
     },

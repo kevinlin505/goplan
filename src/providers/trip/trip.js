@@ -337,7 +337,11 @@ export const tripActions = {
   },
 
   leaveTrip: tripId => (dispatch, getState) => {
-    const { selectedTrip, tripExpenses } = getState().trip;
+    const {
+      auth: { profile },
+      trip: { selectedTrip, tripExpenses },
+    } = getState();
+    let newOrganizer;
 
     if (Object.keys(selectedTrip.members).length === 1) {
       return trip()
@@ -349,8 +353,20 @@ export const tripActions = {
         });
     }
 
+    if (profile.id === selectedTrip.organizer.id) {
+      const memberArray = Object.values(selectedTrip.members);
+
+      if (memberArray[0].id !== selectedTrip.organizer.id) {
+        const { id, name, email } = memberArray[0];
+        newOrganizer = { id, name, email };
+      } else {
+        const { id, name, email } = memberArray[1];
+        newOrganizer = { id, name, email };
+      }
+    }
+
     return trip()
-      .leaveTrip(tripId)
+      .leaveTrip(tripId, newOrganizer)
       .then(() => {
         activity().updateActivity(ActivityType.LEAVE_TRIP, tripId);
 
