@@ -1,6 +1,8 @@
 import expense from '@data/expense';
 import activity from '@data/activity';
 import ActivityType from '@constants/ActivityType';
+import Notification from '@constants/Notification';
+import { notificationActions } from '@providers/notification/notification';
 import compressFile from '@utils/compressFile';
 
 export const types = {
@@ -72,10 +74,14 @@ export const expenseActions = {
               });
             });
         })
-        .catch(err => {
-          // handle form submit error
-          console.log(err);
-        });
+        .catch(err =>
+          dispatch(
+            notificationActions.setNotification(
+              Notification.ERROR,
+              `Oops! Something is wrong, please try again!`,
+            ),
+          ),
+        );
     }
 
     activity().updateActivity(
@@ -91,10 +97,14 @@ export const expenseActions = {
           type: types.SUBMIT_EXPENSE,
         });
       })
-      .catch(err => {
-        // handle form submit error
-        console.log(err);
-      });
+      .catch(err =>
+        dispatch(
+          notificationActions.setNotification(
+            Notification.ERROR,
+            `Oops! Something is wrong, please try again!`,
+          ),
+        ),
+      );
   },
 
   removeExpense: (expenseId, expenseObject) => (dispatch, getState) => {
@@ -121,12 +131,22 @@ export const expenseActions = {
 
           return dispatch({ type: types.REMOVE_EXPENSE });
         })
-        .catch(err => {
-          console.log(err);
-        });
+        .catch(err =>
+          dispatch(
+            notificationActions.setNotification(
+              Notification.WARNING,
+              `Oops! Something is wrong, please try again!`,
+            ),
+          ),
+        );
     }
-    console.log('You are not the payer of this expense.');
-    return new Error('You are not the payer of this expense.');
+
+    return dispatch(
+      notificationActions.setNotification(
+        Notification.WARNING,
+        'You are not the payer of this expense.',
+      ),
+    );
   },
 
   uploadReceipts: file => (dispatch, getState) => {
