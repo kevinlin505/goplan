@@ -119,7 +119,7 @@ export const userActions = {
         dispatch(
           notificationActions.setNotification(
             Notification.ERROR,
-            `Oops! Something is wrong, please try again!`,
+            'Oops! Something is wrong, please try again!',
           ),
         ),
       );

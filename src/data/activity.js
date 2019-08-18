@@ -9,13 +9,16 @@ let unsubscribe = null;
 export default function activity() {
   const db = firebase.firestore();
   const { currentUser } = firebase.auth();
+  let creator;
 
-  const creator = {
-    name: currentUser.displayName,
-    id: currentUser.uid,
-    avatar: currentUser.photoURL,
-    email: currentUser.email,
-  };
+  if (currentUser) {
+    creator = {
+      name: currentUser.displayName,
+      id: currentUser.uid,
+      avatar: currentUser.photoURL,
+      email: currentUser.email,
+    };
+  }
 
   return {
     createActivity: tripId => {

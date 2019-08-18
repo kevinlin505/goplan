@@ -6,6 +6,7 @@ import user from '@data/user';
 import ActivityType from '@constants/ActivityType';
 import Notification from '@constants/Notification';
 import { notificationActions } from '@providers/notification/notification';
+import Trip from '@constants/Trip';
 import getTravelDates from '@utils/calculateTravelDates';
 
 export const types = {
@@ -382,51 +383,25 @@ export const tripActions = {
 
   leaveTrip: tripId => (dispatch, getState) => {
     const {
-      auth: { profile },
-      trip: { selectedTrip, tripExpenses },
+      trip: { tripExpenses },
     } = getState();
-    let newOrganizer;
-
-    if (Object.keys(selectedTrip.members).length === 1) {
-      return trip()
-        .deleteTrip(selectedTrip, tripExpenses)
-        .then(() =>
-          dispatch({
-            type: types.DELETE_TRIP,
-          }),
-        )
-        .catch(() =>
-          dispatch(
-            notificationActions.setNotification(
-              Notification.ERROR,
-              'Oops! Something is wrong, please try again!',
-            ),
-          ),
-        );
-    }
-
-    if (profile.id === selectedTrip.organizer.id) {
-      const memberArray = Object.values(selectedTrip.members);
-
-      if (memberArray[0].id !== selectedTrip.organizer.id) {
-        const { id, name, email } = memberArray[0];
-        newOrganizer = { id, name, email };
-      } else {
-        const { id, name, email } = memberArray[1];
-        newOrganizer = { id, name, email };
-      }
-    }
 
     return trip()
-      .leaveTrip(tripId, newOrganizer)
-      .then(() => {
-        activity().updateActivity(ActivityType.LEAVE_TRIP, tripId);
+      .leaveTrip(tripId, tripExpenses)
+      .then(type => {
+        if (type === Trip.LEAVE_TRIP) {
+          activity().updateActivity(ActivityType.LEAVE_TRIP, tripId);
+
+          return dispatch({
+            type: types.LEAVE_TRIP,
+          });
+        }
 
         return dispatch({
-          type: types.LEAVE_TRIP,
+          type: types.DELETE_TRIP,
         });
       })
-      .catch(() =>
+      .catch(err =>
         dispatch(
           notificationActions.setNotification(
             Notification.ERROR,
@@ -547,29 +522,29 @@ export const tripActions = {
           activity().updateActivity(ActivityType.INVITE_TRIP, tripDetail.id, {
             emails: form.invites,
           });
-
-          dispatch(
-            notificationActions.setNotification(
-              Notification.SUCCESS,
-              'Updated trip successfully!',
-            ),
-          );
-
-          dispatch({
-            type: types.UPDATE_TRIP,
-          });
-
-          return dispatch(tripActions.toggleEditTripModal());
         });
+
+        dispatch(
+          notificationActions.setNotification(
+            Notification.SUCCESS,
+            'Updated trip successfully!',
+          ),
+        );
+
+        dispatch({
+          type: types.UPDATE_TRIP,
+        });
+
+        return dispatch(tripActions.toggleEditTripModal());
       })
-      .catch(err =>
+      .catch(err => {
         dispatch(
           notificationActions.setNotification(
             Notification.ERROR,
             'Oops! Something is wrong, please try again!',
           ),
-        ),
-      );
+        );
+      });
   },
 
   populateTripForm: () => (dispatch, getState) => {

@@ -78,7 +78,7 @@ export const expenseActions = {
           dispatch(
             notificationActions.setNotification(
               Notification.ERROR,
-              `Oops! Something is wrong, please try again!`,
+              'Oops! Something is wrong, please try again!',
             ),
           ),
         );
@@ -101,7 +101,7 @@ export const expenseActions = {
         dispatch(
           notificationActions.setNotification(
             Notification.ERROR,
-            `Oops! Something is wrong, please try again!`,
+            'Oops! Something is wrong, please try again!',
           ),
         ),
       );
@@ -135,7 +135,7 @@ export const expenseActions = {
           dispatch(
             notificationActions.setNotification(
               Notification.WARNING,
-              `Oops! Something is wrong, please try again!`,
+              'Oops! Something is wrong, please try again!',
             ),
           ),
         );
