@@ -4,9 +4,10 @@ import trip from '@data/trip';
 import expense from '@data/expense';
 import user from '@data/user';
 import ActivityType from '@constants/ActivityType';
-import getTravelDates from '@utils/calculateTravelDates';
 import Notification from '@constants/Notification';
 import { notificationActions } from '@providers/notification/notification';
+import Trip from '@constants/Trip';
+import getTravelDates from '@utils/calculateTravelDates';
 
 export const types = {
   CLEAR_TRIP_FORM: 'TRIP/CLEAR_TRIP_FORM',
@@ -170,19 +171,33 @@ export const tripActions = {
             );
           }),
         ).then(() => {
-          activity().updateActivity(ActivityType.INVITE_TRIP, tripId, {
-            emails: form.invites,
-          });
+          if (form.invites.length > 0) {
+            activity().updateActivity(ActivityType.INVITE_TRIP, tripId, {
+              emails: form.invites,
+            });
+          }
         });
 
         dispatch({
           type: types.CREATE_TRIP,
         });
 
+        dispatch(
+          notificationActions.setNotification(
+            Notification.SUCCESS,
+            `Trip ${form.name} successfully created!`,
+          ),
+        );
+
         return dispatch(tripActions.toggleNewTripModal());
       })
       .catch(err => {
-        console.log(err);
+        dispatch(
+          notificationActions.setNotification(
+            Notification.ERROR,
+            'Oops! Something is wrong, please try again!',
+          ),
+        );
       });
   },
 
@@ -338,16 +353,31 @@ export const tripActions = {
   },
 
   inviteTrip: (email, tripId, tripName, tripDates) => dispatch => {
-    dispatch({
-      type: types.INVITE_TRIP,
-    });
-
     return trip()
       .sendInviteEmail(email, tripId, tripName, tripDates)
       .then(() => {
         activity().updateActivity(ActivityType.INVITE_TRIP, tripId, {
           emails: [email],
         });
+
+        dispatch(
+          notificationActions.setNotification(
+            Notification.SUCCESS,
+            `Successfully invited ${email}`,
+          ),
+        );
+
+        return dispatch({
+          type: types.INVITE_TRIP,
+        });
+      })
+      .catch(() => {
+        return dispatch(
+          notificationActions.setNotification(
+            Notification.ERROR,
+            'Oops! Something is wrong, please try again!',
+          ),
+        );
       });
   },
 
@@ -359,7 +389,7 @@ export const tripActions = {
     return trip()
       .leaveTrip(tripId, tripExpenses)
       .then(type => {
-        if (type === 'leave trip') {
+        if (type === Trip.LEAVE_TRIP) {
           activity().updateActivity(ActivityType.LEAVE_TRIP, tripId);
 
           return dispatch({
@@ -375,7 +405,7 @@ export const tripActions = {
         dispatch(
           notificationActions.setNotification(
             Notification.ERROR,
-            `Oops! Something is wrong, please try again!`,
+            'Oops! Something is wrong, please try again!',
           ),
         ),
       );
@@ -447,33 +477,6 @@ export const tripActions = {
     });
   },
 
-  subscribeToTripChange: tripId => (dispatch, getState) => {
-    trip().subscribeToTripChange(tripId, tripSnapshot => {
-      if (tripSnapshot.exists && !tripSnapshot.metadata.hasPendingWrites) {
-        const { selectedTrip } = getState().trip;
-        const { members, ...tripDetail } = tripSnapshot.data();
-
-        tripDetail.members = Object.keys(members).reduce((obj, memberId) => {
-          obj[memberId] = {
-            ...selectedTrip.members[memberId],
-            ...members[memberId],
-          };
-
-          return obj;
-        }, {});
-
-        dispatch({
-          type: types.UPDATE_TRIP,
-          tripDetail,
-        });
-      }
-    });
-  },
-
-  unsubscribeToTripChange: () => () => {
-    trip().unsubscribeToTripChange();
-  },
-
   updateTrip: () => (dispatch, getState) => {
     const {
       auth: { profile },
@@ -521,6 +524,13 @@ export const tripActions = {
           });
         });
 
+        dispatch(
+          notificationActions.setNotification(
+            Notification.SUCCESS,
+            'Updated trip successfully!',
+          ),
+        );
+
         dispatch({
           type: types.UPDATE_TRIP,
         });
@@ -528,7 +538,12 @@ export const tripActions = {
         return dispatch(tripActions.toggleEditTripModal());
       })
       .catch(err => {
-        console.log(err);
+        dispatch(
+          notificationActions.setNotification(
+            Notification.ERROR,
+            'Oops! Something is wrong, please try again!',
+          ),
+        );
       });
   },
 
@@ -552,5 +567,32 @@ export const tripActions = {
     });
 
     return dispatch(tripActions.toggleNewTripModal());
+  },
+
+  subscribeToTripChange: tripId => (dispatch, getState) => {
+    trip().subscribeToTripChange(tripId, tripSnapshot => {
+      if (tripSnapshot.exists && !tripSnapshot.metadata.hasPendingWrites) {
+        const { selectedTrip } = getState().trip;
+        const { members, ...tripDetail } = tripSnapshot.data();
+
+        tripDetail.members = Object.keys(members).reduce((obj, memberId) => {
+          obj[memberId] = {
+            ...selectedTrip.members[memberId],
+            ...members[memberId],
+          };
+
+          return obj;
+        }, {});
+
+        dispatch({
+          type: types.UPDATE_TRIP,
+          tripDetail,
+        });
+      }
+    });
+  },
+
+  unsubscribeToTripChange: () => () => {
+    trip().unsubscribeToTripChange();
   },
 };

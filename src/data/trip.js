@@ -1,6 +1,7 @@
 import 'firebase/auth';
 import 'firebase/firestore';
 import firebase from '@data/_db';
+import Trip from '@constants/Trip';
 
 let unsubscribe = null;
 
@@ -100,7 +101,7 @@ export default function trip() {
       transaction.delete(tripRef);
       transaction.delete(activityRef);
 
-      return 'delete trip';
+      return Promise.resolve(Trip.DELETE_TRIP);
     },
 
     leaveTrip: (tripId, tripExpenses) => {
@@ -143,7 +144,7 @@ export default function trip() {
             trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
           });
 
-          return 'leave trip';
+          return Promise.resolve(Trip.LEAVE_TRIP);
         });
       });
     },
