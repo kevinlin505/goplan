@@ -75,55 +75,77 @@ export default function trip() {
       return batch.commit();
     },
 
-    deleteTrip: (tripDetail, tripExpenses) => {
-      const batch = db.batch();
-      const { id } = tripDetail;
+    deleteTrip: (tripId, tripExpenses, transaction) => {
       const currentUserRef = db.collection('users').doc(currentUser.uid);
-      const tripRef = db.collection('trips').doc(id);
-      const activityRef = db.collection('activities').doc(id);
+      const tripRef = db.collection('trips').doc(tripId);
+      const activityRef = db.collection('activities').doc(tripId);
 
       Object.keys(tripExpenses).forEach(expenseId => {
         const expenseRef = db.collection('expenses').doc(expenseId);
 
         tripExpenses[expenseId].payees.forEach(payee => {
           const userRef = db.collection('users').doc(payee.id);
-          batch.update(userRef, {
+
+          transaction.update(userRef, {
             expenses: firebase.firestore.FieldValue.arrayRemove(expenseRef),
           });
         });
 
-        batch.delete(expenseRef);
+        transaction.delete(expenseRef);
       });
 
-      batch.update(currentUserRef, {
+      transaction.update(currentUserRef, {
         trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
       });
-      batch.delete(tripRef);
-      batch.delete(activityRef);
+      transaction.delete(tripRef);
+      transaction.delete(activityRef);
 
-      return batch.commit();
+      return 'delete trip';
     },
 
-    leaveTrip: (tripId, newOrganizer) => {
-      const batch = db.batch();
-
+    leaveTrip: (tripId, tripExpenses) => {
       const tripRef = db.collection('trips').doc(tripId);
       const userRef = db.collection('users').doc(currentUser.uid);
 
-      batch.update(tripRef, {
-        [`members.${currentUser.uid}`]: firebase.firestore.FieldValue.delete(),
-      });
-      batch.update(userRef, {
-        trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
-      });
+      return db.runTransaction(transaction => {
+        return transaction.get(tripRef).then(tripDoc => {
+          if (!tripDoc.exists) {
+            throw new Error('Document does not exist.');
+          }
 
-      if (newOrganizer) {
-        batch.update(tripRef, {
-          organizer: newOrganizer,
+          const tripData = tripDoc.data();
+
+          if (Object.keys(tripData.members).length === 1) {
+            return trip().deleteTrip(tripId, tripExpenses, transaction);
+          }
+
+          if (currentUser.uid === tripData.organizer.id) {
+            const memberArray = Object.values(tripData.members);
+            let newOrganizer;
+
+            if (memberArray[0].id !== tripData.organizer.id) {
+              const { id, name, email } = memberArray[0];
+              newOrganizer = { id, name, email };
+            } else {
+              const { id, name, email } = memberArray[1];
+              newOrganizer = { id, name, email };
+            }
+
+            transaction.update(tripRef, {
+              organizer: newOrganizer,
+            });
+          }
+
+          transaction.update(tripRef, {
+            [`members.${currentUser.uid}`]: firebase.firestore.FieldValue.delete(),
+          });
+          transaction.update(userRef, {
+            trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
+          });
+
+          return 'leave trip';
         });
-      }
-
-      return batch.commit();
+      });
     },
 
     sendInviteEmail: (inviteeEmail, tripId, tripName, tripDates) => {
