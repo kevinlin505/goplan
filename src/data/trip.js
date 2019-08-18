@@ -143,7 +143,7 @@ export default function trip() {
         .then(() =>
           addMessage({
             inviteeEmail,
-            invitationLink: `https://goplan-3b4b1.web.app/#/trip/${tripId}`,
+            invitationId: tripId,
             inviterName: currentUser.displayName,
             inviterEmail: currentUser.email,
             tripName,
