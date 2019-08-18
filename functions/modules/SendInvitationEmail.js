@@ -35,7 +35,7 @@ const sendInvitationEmail = async options => {
       const replacements = {
         inviterName: options.inviterName,
         inviterEmail: options.inviterEmail,
-        invitationLink: `https://www.goplantravelling.com/#/trip/${options.tripId}`,
+        invitationLink: `https://www.goplantravelling.com/#/trip/${options.invitationId}`,
         tripName: options.tripName,
         tripDates: options.tripDates,
       };
