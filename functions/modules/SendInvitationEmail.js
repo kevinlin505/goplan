@@ -35,7 +35,7 @@ const sendInvitationEmail = async options => {
       const replacements = {
         inviterName: options.inviterName,
         inviterEmail: options.inviterEmail,
-        invitationLink: options.invitationLink,
+        invitationLink: `https://www.goplantravelling.com/#/trip/${options.invitationId}`,
         tripName: options.tripName,
         tripDates: options.tripDates,
       };
@@ -49,7 +49,7 @@ const sendInvitationEmail = async options => {
     return null;
   }
   const mailOptions = {
-    from: `${APP_NAME} <noreply@firebase.com>`,
+    from: `${APP_NAME} <GoPlanApp@gmail.com>`,
     to: options.inviteeEmail,
     subject: `Invitation to join ${APP_NAME}!`,
     html,
