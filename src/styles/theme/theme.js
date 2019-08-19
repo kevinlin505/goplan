@@ -23,6 +23,7 @@ const theme = {
   // Fonts
   fonts: {
     primary: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+    logo: '"Ubuntu", sans-serif',
   },
 
   sizes: {
