@@ -63,19 +63,35 @@ const SignIn = ({ actions }) => {
     <Background imageSource={background.url}>
       <ContentContainer>
         <Logo>
-          <svg height="68" viewBox="0 0 281 68" width="281">
+          <svg height="68" viewBox="0 0 390 68" width="390">
             <text
               fill="#e91e63"
               fillRule="evenodd"
-              fontFamily="JCfg, PilGi"
+              fontFamily="'Ubuntu', sans-serif"
               fontSize="100"
+              fontWeight="400"
             >
-              <tspan x="-3.871" y="67">
+              <tspan x="28.53" y="67">
                 GoPlan
               </tspan>
             </text>
           </svg>
         </Logo>
+        <Slogan>
+          <svg height="30" viewBox="0 0 260 30" width="260">
+            <text
+              fill="#e91e63"
+              fillRule="evenodd"
+              fontFamily="'Ubuntu', sans-serif"
+              fontSize="17.5"
+              fontWeight="400"
+            >
+              <tspan x="2" y="20">
+                Plan trips together with friends
+              </tspan>
+            </text>
+          </svg>
+        </Slogan>
         <LoginButtonContainer>
           <GoogleAuthButton handleSignIn={actions.auth.signInWithGoogleAuth} />
         </LoginButtonContainer>
@@ -109,7 +125,7 @@ const ContentContainer = styled(CardContainer)`
   padding: 40px;
   width: 100%;
   max-width: 400px;
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.85);
   text-align: center;
   overflow: hidden;
   border-radius: 4px;
@@ -120,8 +136,18 @@ const LoginButtonContainer = styled.div`
 `;
 
 const Logo = styled.div`
-  width: 150px;
+  width: 300px;
   margin: 0 auto;
+
+  svg {
+    width: 100%;
+  }
+`;
+
+const Slogan = styled.div`
+  width: 300px;
+  margin: 0 auto;
+  padding-bottom: 30px;
 
   svg {
     width: 100%;
