@@ -9,8 +9,9 @@ export const Logo = () => {
         fillRule="evenodd"
         fontFamily="'Ubuntu', sans-serif"
         fontSize="100"
+        fontWeight="400"
       >
-        <tspan x="-3.871" y="67">
+        <tspan x="-3.871" y="74">
           GoPlan
         </tspan>
       </text>
