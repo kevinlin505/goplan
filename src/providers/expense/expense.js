@@ -70,7 +70,6 @@ export const expenseActions = {
           return expense()
             .submitExpense(expenseForm)
             .then(() => {
-              debugger;
               activity().updateActivity(
                 ActivityType.SUBMIT_EXPENSE,
                 selectedTrip.id,
