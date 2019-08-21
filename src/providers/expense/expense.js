@@ -46,7 +46,7 @@ export const expenseActions = {
       return Promise.all(
         [
           new Promise((resolve, reject) => {
-            if (files.length > 3) reject();
+            if (files.length > 5) reject();
             resolve();
           }),
         ].concat(
@@ -172,7 +172,9 @@ export const expenseActions = {
 
   uploadReceipts: file => (dispatch, getState) => {
     return new Promise((resolve, reject) => {
-      if (file.size > 5 * 1024 * 1024) {
+      // set file size limit to be 5MB
+      const maxFileSize = 5 * 1024 * 1024;
+      if (file.size > maxFileSize) {
         reject();
       }
       const reader = new FileReader();
