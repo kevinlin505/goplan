@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button } from '@material-ui/core';
@@ -10,6 +10,7 @@ import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
 import TripModal from '@components/trips/trip-modal/TripModal';
 import Logo from '@components/icons/Logo';
+import breakpointMin from '@styles/media';
 
 const mapStateToProps = state => {
   return {
@@ -37,15 +38,15 @@ const NavigationBar = ({ actions, match, profile, trip }) => {
           </LogoLink>
         </Brand>
         <RightNavBarItems>
-          <NewTripButton onClick={actions.trip.clearTripForm}>
+          <TripButton onClick={actions.trip.clearTripForm}>
             <NewTripIcon />
             New Trip
-          </NewTripButton>
+          </TripButton>
           {match.params.tripId && (
-            <NewTripButton onClick={actions.trip.populateTripForm}>
+            <TripButton onClick={actions.trip.populateTripForm}>
               <EditTripIcon />
               Edit Trip
-            </NewTripButton>
+            </TripButton>
           )}
           <HomeLink to="/home">Home</HomeLink>
           {profile.id && (
@@ -102,7 +103,7 @@ const RightNavBarItems = styled.div`
   align-items: center;
 `;
 
-const NewTripButton = styled(Button)`
+const TripButton = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -115,14 +116,33 @@ const NewTripButton = styled(Button)`
   &:hover {
     color: ${({ theme }) => theme.colors.primaryDark};
   }
+
+  ${breakpointMin(
+    'small',
+    css`
+      padding: 3px 5px;
+    `,
+  )};
 `;
 
 const EditTripIcon = styled(Edit)`
   margin-right: 3px;
+  ${breakpointMin(
+    'small',
+    css`
+      display: none;
+    `,
+  )};
 `;
 
 const NewTripIcon = styled(AddPhotoAlternate)`
   margin-right: 3px;
+  ${breakpointMin(
+    'small',
+    css`
+      display: none;
+    `,
+  )};
 `;
 
 const ProfileAvatar = styled.div`
@@ -131,6 +151,13 @@ const ProfileAvatar = styled.div`
   margin-right: 10px;
   border-radius: 50%;
   overflow: hidden;
+
+  ${breakpointMin(
+    'small',
+    css`
+      margin-right: 5px;
+    `,
+  )};
 `;
 
 const Avatar = styled.img`
@@ -151,6 +178,14 @@ const SignOutButton = styled(Button)`
   &:hover {
     color: ${({ theme }) => theme.colors.text};
   }
+
+  ${breakpointMin(
+    'small',
+    css`
+      padding-left: 5px;
+      justify-content: space-around;
+    `,
+  )};
 `;
 
 const HomeLink = styled(Link)`
@@ -176,6 +211,13 @@ const HomeLink = styled(Link)`
     color: ${({ theme }) => theme.colors.text};
     background-color: rgba(0, 0, 0, 0.08);
   }
+
+  ${breakpointMin(
+    'small',
+    css`
+      padding: 6px 5px;
+    `,
+  )};
 `;
 
 export default connect(

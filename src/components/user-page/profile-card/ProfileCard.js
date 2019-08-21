@@ -115,6 +115,13 @@ const Container = styled(CardContainer)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media (min-width: 500px) {
+     {
+      ${css`
+        margin-right: 20px;
+      `}
+    }
+  }
 `;
 
 const BackgroundImg = styled(CardMedia)`
@@ -182,6 +189,7 @@ const UserName = styled.div`
 
 const InfoField = styled.div`
   margin: 3px 0 3px;
+  text-align: center;
   color: ${({ theme }) => theme.colors.textLight};
 `;
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Notification from '@constants/Notification';
@@ -14,6 +14,8 @@ import StatusNotification from '@components/status-notification/StatusNotificati
 import TripCard from '@components/user-page/trip-card/TripCard';
 import UserExpense from '@components/user-page/user-expense/UserExpense';
 import ProfileCard from '@components/user-page/profile-card/ProfileCard';
+import breakpointMin from '@styles/media';
+import { flexbox } from '@material-ui/system';
 
 const mapStateToProps = state => {
   return {
@@ -80,7 +82,10 @@ const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
           <StatusNotification />
           <TripList>
             {sortedTrips.current.length > 0 && (
-              <div>{constructCurrentTrips('current')}</div>
+              <div>
+                <TripListLabel>Current trips:</TripListLabel>
+                {constructCurrentTrips('current')}
+              </div>
             )}
 
             {sortedTrips.previous.length > 0 && (
@@ -117,19 +122,54 @@ const Contents = styled.div`
   width: 100%;
   max-width: ${({ theme }) => theme.sizes.giant}px;
   margin: 0 auto;
+  ${breakpointMin(
+    'small',
+    css`
+      flex-direction: column;
+      flex: 1 1 auto;
+    `,
+  )};
 `;
 
 const LeftPanel = styled.div`
   width: 300px;
+
+  ${breakpointMin(
+    'small',
+    css`
+      width: 100%;
+    `,
+  )};
+
+  @media (min-width: 500px) {
+     {
+      ${css`
+        display: flex;
+      `}
+    }
+  }
 `;
 
 const MainPanel = styled.div`
   width: 550px;
   margin: 0 15px;
+  ${breakpointMin(
+    'small',
+    css`
+      width: 100%;
+      margin: 0;
+    `,
+  )};
 `;
 
 const RightPanel = styled.div`
   width: 300px;
+  ${breakpointMin(
+    'small',
+    css`
+      display: hidden;
+    `,
+  )};
 `;
 
 const TripList = styled.div`
