@@ -116,33 +116,14 @@ const TripButton = styled(Button)`
   &:hover {
     color: ${({ theme }) => theme.colors.primaryDark};
   }
-
-  ${breakpointMin(
-    'small',
-    css`
-      padding: 3px 5px;
-    `,
-  )};
 `;
 
 const EditTripIcon = styled(Edit)`
   margin-right: 3px;
-  ${breakpointMin(
-    'small',
-    css`
-      display: none;
-    `,
-  )};
 `;
 
 const NewTripIcon = styled(AddPhotoAlternate)`
   margin-right: 3px;
-  ${breakpointMin(
-    'small',
-    css`
-      display: none;
-    `,
-  )};
 `;
 
 const ProfileAvatar = styled.div`
@@ -151,13 +132,6 @@ const ProfileAvatar = styled.div`
   margin-right: 10px;
   border-radius: 50%;
   overflow: hidden;
-
-  ${breakpointMin(
-    'small',
-    css`
-      margin-right: 5px;
-    `,
-  )};
 `;
 
 const Avatar = styled.img`
@@ -178,14 +152,6 @@ const SignOutButton = styled(Button)`
   &:hover {
     color: ${({ theme }) => theme.colors.text};
   }
-
-  ${breakpointMin(
-    'small',
-    css`
-      padding-left: 5px;
-      justify-content: space-around;
-    `,
-  )};
 `;
 
 const HomeLink = styled(Link)`
@@ -211,13 +177,6 @@ const HomeLink = styled(Link)`
     color: ${({ theme }) => theme.colors.text};
     background-color: rgba(0, 0, 0, 0.08);
   }
-
-  ${breakpointMin(
-    'small',
-    css`
-      padding: 6px 5px;
-    `,
-  )};
 `;
 
 export default connect(

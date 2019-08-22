@@ -129,6 +129,13 @@ const Contents = styled.div`
       flex: 1 1 auto;
     `,
   )};
+  ${breakpointMin(
+    'medium',
+    css`
+      flex-direction: row;
+      flex: 1 1 auto;
+    `,
+  )};
 `;
 
 const LeftPanel = styled.div`
@@ -148,6 +155,15 @@ const LeftPanel = styled.div`
       `}
     }
   }
+
+  ${breakpointMin(
+    'medium',
+    css`
+      flex-direction: column;
+      width: 35%;
+      max-width: 300px;
+    `,
+  )};
 `;
 
 const MainPanel = styled.div`
@@ -160,6 +176,21 @@ const MainPanel = styled.div`
       margin: 0;
     `,
   )};
+  ${breakpointMin(
+    'medium',
+    css`
+      width: 65%;
+      max-width: 650px;
+      margin: 0 0 0 25px;
+    `,
+  )};
+  ${breakpointMin(
+    'large',
+    css`
+      max-width: 650px;
+      margin: 0 0 0 25px;
+    `,
+  )};
 `;
 
 const RightPanel = styled.div`
@@ -167,7 +198,16 @@ const RightPanel = styled.div`
   ${breakpointMin(
     'small',
     css`
-      display: hidden;
+      display: none;
+    `,
+  )};
+  ${breakpointMin(
+    'large',
+    css`
+      display: flex;
+      width: 224px;
+      max-width: 300px;
+      display: none;
     `,
   )};
 `;
