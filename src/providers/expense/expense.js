@@ -44,9 +44,16 @@ export const expenseActions = {
     // TODO: set a max on total file size
     if (files.length) {
       return Promise.all(
-        files.map(file =>
-          compressFile(file).then(reducedFile =>
-            dispatch(expenseActions.uploadReceipts(reducedFile)),
+        [
+          new Promise((resolve, reject) => {
+            if (files.length > 5) reject();
+            resolve();
+          }),
+        ].concat(
+          files.map(file =>
+            compressFile(file).then(reducedFile =>
+              dispatch(expenseActions.uploadReceipts(reducedFile)),
+            ),
           ),
         ),
       )
@@ -60,15 +67,22 @@ export const expenseActions = {
             }
           });
 
-          activity().updateActivity(
-            ActivityType.SUBMIT_EXPENSE,
-            selectedTrip.id,
-            expenseForm,
-          );
-
           return expense()
             .submitExpense(expenseForm)
             .then(() => {
+              activity().updateActivity(
+                ActivityType.SUBMIT_EXPENSE,
+                selectedTrip.id,
+                expenseForm,
+              );
+
+              dispatch(
+                notificationActions.setNotification(
+                  Notification.SUCCESS,
+                  `Successfully created expense.`,
+                ),
+              );
+
               return dispatch({
                 type: types.SUBMIT_EXPENSE,
               });
@@ -84,15 +98,22 @@ export const expenseActions = {
         );
     }
 
-    activity().updateActivity(
-      ActivityType.SUBMIT_EXPENSE,
-      selectedTrip.id,
-      expenseForm,
-    );
-
     return expense()
       .submitExpense(expenseForm)
       .then(() => {
+        activity().updateActivity(
+          ActivityType.SUBMIT_EXPENSE,
+          selectedTrip.id,
+          expenseForm,
+        );
+
+        dispatch(
+          notificationActions.setNotification(
+            Notification.SUCCESS,
+            `Successfully created expense.`,
+          ),
+        );
+
         return dispatch({
           type: types.SUBMIT_EXPENSE,
         });
@@ -151,6 +172,11 @@ export const expenseActions = {
 
   uploadReceipts: file => (dispatch, getState) => {
     return new Promise((resolve, reject) => {
+      // set file size limit to be 5MB
+      const maxFileSize = 5 * 1024 * 1024;
+      if (file.size > maxFileSize) {
+        reject();
+      }
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
@@ -167,7 +193,7 @@ export const expenseActions = {
             dispatch({
               type: types.UPLOAD_RECEIPT,
             });
-            console.log(res.data);
+
             return resolve(res.data);
           });
       };

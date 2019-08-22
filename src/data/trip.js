@@ -2,6 +2,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import firebase from '@data/_db';
 import Trip from '@constants/Trip';
+import expense from '@data/expense';
 
 let unsubscribe = null;
 
@@ -83,14 +84,20 @@ export default function trip() {
 
       Object.keys(tripExpenses).forEach(expenseId => {
         const expenseRef = db.collection('expenses').doc(expenseId);
+        const expenseData = tripExpenses[expenseId];
+        const urls = expenseData.receipts.map(receipt => {
+          return receipt.url;
+        });
 
-        tripExpenses[expenseId].payees.forEach(payee => {
+        expenseData.payees.forEach(payee => {
           const userRef = db.collection('users').doc(payee.id);
 
           transaction.update(userRef, {
             expenses: firebase.firestore.FieldValue.arrayRemove(expenseRef),
           });
         });
+
+        expense().deleteReceipts({ urls });
 
         transaction.delete(expenseRef);
       });
