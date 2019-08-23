@@ -116,13 +116,13 @@ const Container = styled(CardContainer)`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  @media (min-width: 500px) {
-     {
-      ${css`
-        margin-right: 20px;
-      `}
-    }
-  }
+
+  ${breakpointMin(
+    'smallPlus',
+    css`
+      margin-right: 20px;
+    `,
+  )};
 `;
 
 const BackgroundImg = styled(CardMedia)`

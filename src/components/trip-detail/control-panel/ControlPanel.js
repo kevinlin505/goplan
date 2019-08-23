@@ -142,11 +142,14 @@ const InviteInput = styled.input`
     `,
   )};
 
-  @media (min-width: 520px) {
-    order: 0;
-    width: 50%;
-    margin: 0 10px;
-  }
+  ${breakpointMin(
+    'smallPlus',
+    css`
+      order: 0;
+      width: 50%;
+      margin: 0 10px;
+    `,
+  )};
 `;
 
 const ContentControlPanel = styled.div`

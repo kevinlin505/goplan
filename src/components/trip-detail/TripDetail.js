@@ -122,6 +122,7 @@ TripDetail.propTypes = {
 
 const Container = styled.div`
   padding: 20px;
+
   ${breakpointMin(
     'small',
     css`
@@ -144,10 +145,13 @@ const Contents = styled.div`
     `,
   )};
 
-  @media (min-width: 520px) {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
+  ${breakpointMin(
+    'smallPlus',
+    css`
+      flex-direction: row;
+      flex-wrap: wrap;
+    `,
+  )};
 `;
 
 const LeftPanel = styled.div`
@@ -161,11 +165,14 @@ const LeftPanel = styled.div`
     `,
   )};
 
-  @media (min-width: 520px) {
-    width: calc((100% - 20px - 15px) * 0.59);
-    max-width: 300px;
-    margin-right: 10px;
-  }
+  ${breakpointMin(
+    'smallPlus',
+    css`
+      width: 52%;
+      max-width: 300px;
+      margin-right: 10px;
+    `,
+  )};
 `;
 
 const MainPanel = styled.div`
@@ -181,16 +188,19 @@ const MainPanel = styled.div`
     `,
   )};
 
-  @media (min-width: 520px) {
-    width: 95%;
-    max-width: 620px;
-  }
+  ${breakpointMin(
+    'smallPlus',
+    css`
+      width: 95%;
+      max-width: 620px;
+    `,
+  )};
 
   ${breakpointMin(
     'large',
     css`
       order: 0;
-      width: calc(0.65 * (100% - 300px - 20px - 20px));
+      width: 42%;
       max-width: 550px;
     `,
   )};
@@ -208,16 +218,19 @@ const RightPanel = styled.div`
     `,
   )};
 
-  @media (min-width: 520px) {
-    width: 40%;
-    max-width: 300px;
-    margin-left: 10px;
-  }
+  ${breakpointMin(
+    'smallPlus',
+    css`
+      width: 40%;
+      max-width: 300px;
+      margin-left: 10px;
+    `,
+  )};
 
   ${breakpointMin(
     'large',
     css`
-      width: calc(0.35 * (100% - 300px - 20px - 20px));
+      width: 22%;
       max-width: 300px;
     `,
   )};

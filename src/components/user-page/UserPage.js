@@ -148,13 +148,12 @@ const LeftPanel = styled.div`
     `,
   )};
 
-  @media (min-width: 500px) {
-     {
-      ${css`
-        display: flex;
-      `}
-    }
-  }
+  ${breakpointMin(
+    'smallPlus',
+    css`
+      display: flex;
+    `,
+  )};
 
   ${breakpointMin(
     'medium',
