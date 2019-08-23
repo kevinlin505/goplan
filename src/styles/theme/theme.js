@@ -31,7 +31,8 @@ const theme = {
     giant: 1200,
     large: 1024,
     medium: 768,
-    small: 325,
+    smallPlus: 520,
+    small: 375,
   },
 
   styles: {
