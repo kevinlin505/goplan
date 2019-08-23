@@ -8,9 +8,9 @@ import { Button } from '@material-ui/core';
 import { AddPhotoAlternate, Edit } from '@material-ui/icons';
 import { authActions } from '@providers/auth/auth';
 import { tripActions } from '@providers/trip/trip';
+import { breakpointMin } from '@utils/styleUtils';
 import TripModal from '@components/trips/trip-modal/TripModal';
 import Logo from '@components/icons/Logo';
-import breakpointMin from '@styles/media';
 
 const mapStateToProps = state => {
   return {
@@ -90,8 +90,16 @@ const NavBar = styled.div`
 `;
 
 const Brand = styled.div`
-  width: 120px;
+  width: 100px;
   color: ${({ theme }) => theme.colors.primary};
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
+      css`
+        width: 120px;
+      `,
+    )}
 `;
 
 const LogoLink = styled(Link)`
@@ -107,7 +115,7 @@ const TripButton = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 3px 15px;
+  padding: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.colors.primary};
 
@@ -116,6 +124,14 @@ const TripButton = styled(Button)`
   &:hover {
     color: ${({ theme }) => theme.colors.primaryDark};
   }
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
+      css`
+        padding: 5px 15px;
+      `,
+    )}
 `;
 
 const EditTripIcon = styled(Edit)`
@@ -127,11 +143,20 @@ const NewTripIcon = styled(AddPhotoAlternate)`
 `;
 
 const ProfileAvatar = styled.div`
+  display: none;
   width: 30px;
   height: 30px;
   margin-right: 10px;
   border-radius: 50%;
   overflow: hidden;
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
+      css`
+        display: block;
+      `,
+    )}
 `;
 
 const Avatar = styled.img`
@@ -143,7 +168,7 @@ const SignOutButton = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-left: 15px;
+  padding: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.colors.textLight};
 
@@ -152,10 +177,18 @@ const SignOutButton = styled(Button)`
   &:hover {
     color: ${({ theme }) => theme.colors.text};
   }
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
+      css`
+        padding: 15px;
+      `,
+    )}
 `;
 
 const HomeLink = styled(Link)`
-  display: flex;
+  display: none;
   align-items: center;
   height: 30px;
   font-size: 14px;
@@ -177,6 +210,14 @@ const HomeLink = styled(Link)`
     color: ${({ theme }) => theme.colors.text};
     background-color: rgba(0, 0, 0, 0.08);
   }
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
+      css`
+        display: flex;
+      `,
+    )}
 `;
 
 export default connect(

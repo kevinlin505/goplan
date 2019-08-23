@@ -10,12 +10,11 @@ import { notificationActions } from '@providers/notification/notification';
 import { tripActions } from '@providers/trip/trip';
 import { userActions } from '@providers/user/user';
 import { getSortedTrips } from '@selectors/tripSelector';
+import { breakpointMin } from '@utils/styleUtils';
 import StatusNotification from '@components/status-notification/StatusNotification';
 import TripCard from '@components/user-page/trip-card/TripCard';
 import UserExpense from '@components/user-page/user-expense/UserExpense';
 import ProfileCard from '@components/user-page/profile-card/ProfileCard';
-import breakpointMin from '@styles/media';
-import { flexbox } from '@material-ui/system';
 
 const mapStateToProps = state => {
   return {
@@ -124,15 +123,19 @@ const Contents = styled.div`
   width: 100%;
   max-width: ${({ theme }) => theme.sizes.giant}px;
   margin: 0 auto;
-  ${breakpointMin(
-    'small',
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
     css`
       flex-direction: column;
       flex: 1 1 auto;
     `,
   )};
-  ${breakpointMin(
-    'medium',
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
     css`
       flex-direction: row;
       flex: 1 1 auto;
@@ -143,22 +146,25 @@ const Contents = styled.div`
 const LeftPanel = styled.div`
   width: 300px;
 
-  ${breakpointMin(
-    'small',
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
     css`
       width: 100%;
     `,
   )};
 
-  ${breakpointMin(
-    'smallPlus',
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
     css`
       display: flex;
     `,
   )};
 
-  ${breakpointMin(
-    'medium',
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
     css`
       flex-direction: column;
       width: 35%;
@@ -170,23 +176,29 @@ const LeftPanel = styled.div`
 const MainPanel = styled.div`
   width: 550px;
   margin: 0 15px;
-  ${breakpointMin(
-    'small',
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
     css`
       width: 100%;
       margin: 0;
     `,
   )};
-  ${breakpointMin(
-    'medium',
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
     css`
       width: 65%;
       max-width: 650px;
       margin: 0 0 0 25px;
     `,
   )};
-  ${breakpointMin(
-    'large',
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.large,
     css`
       max-width: 650px;
       margin: 0 0 0 25px;
@@ -196,14 +208,18 @@ const MainPanel = styled.div`
 
 const RightPanel = styled.div`
   width: 300px;
-  ${breakpointMin(
-    'small',
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
     css`
       display: none;
     `,
   )};
-  ${breakpointMin(
-    'large',
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.large,
     css`
       display: flex;
       width: 224px;

@@ -6,13 +6,11 @@ import user from '@data/user';
 import ActivityType from '@constants/ActivityType';
 import Notification from '@constants/Notification';
 import { notificationActions } from '@providers/notification/notification';
-import Trip from '@constants/Trip';
 import getTravelDates from '@utils/calculateTravelDates';
 
 export const types = {
   CLEAR_TRIP_FORM: 'TRIP/CLEAR_TRIP_FORM',
   CREATE_TRIP: 'TRIP/CREATE_TRIP',
-  DELETE_TRIP: 'TRIP/DELETE_TRIP',
   GET_DESTINATION_PHOTO: 'TRIP/GET_DESTINATION_PHOTO',
   GET_MEMBERS: 'TRIP/GET_MEMBERS',
   GET_TRIP_EXPENSE_REPORTS: 'TRIP/GET_TRIP_EXPENSE_REPORTS',
@@ -307,7 +305,7 @@ export const tripActions = {
         return Promise.resolve(response.data);
       })
       .catch(() => {
-        return Promise.resolve('');
+        return Promise.reject();
       });
   },
 
@@ -319,14 +317,15 @@ export const tripActions = {
       const now = new Date().getTime();
       const thirtyMin = 1000 * 60 * 30;
       const diff = now - cachedWeather.time.getTime();
+
       if (diff < thirtyMin) {
-        dispatch({
+        return dispatch({
           type: types.GET_WEATHER_INFO,
           weather: {},
         });
-
-        return Promise.resolve();
       }
+
+      return Promise.reject();
     }
 
     return trip()
@@ -339,15 +338,13 @@ export const tripActions = {
           },
         };
 
-        dispatch({
+        return dispatch({
           type: types.GET_WEATHER_INFO,
           weather,
         });
-
-        return Promise.resolve();
       })
       .catch(() => {
-        return Promise.resolve('');
+        return Promise.reject();
       });
   },
 
@@ -401,17 +398,13 @@ export const tripActions = {
 
     return trip()
       .leaveTrip(tripId, tripExpenses)
-      .then(type => {
-        if (type === Trip.LEAVE_TRIP) {
+      .then(isLastMember => {
+        if (!isLastMember) {
           activity().updateActivity(ActivityType.LEAVE_TRIP, tripId);
-
-          return dispatch({
-            type: types.LEAVE_TRIP,
-          });
         }
 
         return dispatch({
-          type: types.DELETE_TRIP,
+          type: types.LEAVE_TRIP,
         });
       })
       .catch(err =>
@@ -529,7 +522,7 @@ export const tripActions = {
               );
             }
 
-            return undefined;
+            return Promise.resolve();
           }),
         ).then(() => {
           activity().updateActivity(ActivityType.INVITE_TRIP, tripDetail.id, {

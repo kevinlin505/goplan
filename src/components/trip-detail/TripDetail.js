@@ -6,6 +6,7 @@ import styled, { css } from 'styled-components';
 import ActivePanel from '@constants/ActivePanel';
 import { expenseActions } from '@providers/expense/expense';
 import { tripActions } from '@providers/trip/trip';
+import { breakpointMin } from '@utils/styleUtils';
 import StatusNotification from '@components/status-notification/StatusNotification';
 import ControlPanel from '@components/trip-detail/control-panel/ControlPanel';
 import TripMembers from '@components/trip-detail/trip-members/TripMembers';
@@ -17,7 +18,6 @@ import NewExpenseModal from '@components/trip-detail/new-expense-modal/NewExpens
 import TripMap from '@components/trip-map/TripMap';
 import Loading from '@components/loading/Loading';
 import CardContainer from '@styles/card/CardContainer';
-import breakpointMin from '@styles/media';
 
 const mapStateToProps = state => {
   return {
@@ -123,12 +123,13 @@ TripDetail.propTypes = {
 const Container = styled.div`
   padding: 20px;
 
-  ${breakpointMin(
-    'small',
-    css`
-      padding: 10px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
+      css`
+        padding: 10px;
+      `,
+    )};
 `;
 
 const Contents = styled.div`
@@ -138,106 +139,115 @@ const Contents = styled.div`
   max-width: ${({ theme }) => theme.sizes.colossal}px;
   margin: 0 auto;
 
-  ${breakpointMin(
-    'small',
-    css`
-      flex-direction: column;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
+      css`
+        flex-direction: column;
+      `,
+    )};
 
-  ${breakpointMin(
-    'smallPlus',
-    css`
-      flex-direction: row;
-      flex-wrap: wrap;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        flex-direction: row;
+        flex-wrap: wrap;
+      `,
+    )};
 `;
 
 const LeftPanel = styled.div`
   width: 300px;
 
-  ${breakpointMin(
-    'small',
-    css`
-      width: 335px;
-      margin: 0 auto;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
+      css`
+        width: 335px;
+        margin: 0 auto;
+      `,
+    )};
 
-  ${breakpointMin(
-    'smallPlus',
-    css`
-      width: 52%;
-      max-width: 300px;
-      margin-right: 10px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        width: 52%;
+        max-width: 300px;
+        margin-right: 10px;
+      `,
+    )};
 `;
 
 const MainPanel = styled.div`
   width: 550px;
   margin: 0 15px;
 
-  ${breakpointMin(
-    'small',
-    css`
-      width: 90%;
-      order: 1;
-      margin: 0 auto;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
+      css`
+        width: 90%;
+        order: 1;
+        margin: 0 auto;
+      `,
+    )};
 
-  ${breakpointMin(
-    'smallPlus',
-    css`
-      width: 95%;
-      max-width: 620px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        width: 95%;
+        max-width: 620px;
+      `,
+    )};
 
-  ${breakpointMin(
-    'large',
-    css`
-      order: 0;
-      width: 42%;
-      max-width: 550px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.large,
+      css`
+        order: 0;
+        width: 42%;
+        max-width: 550px;
+      `,
+    )};
 `;
 
 const RightPanel = styled.div`
   width: 300px;
   margin-bottom: 15px;
 
-  ${breakpointMin(
-    'small',
-    css`
-      width: 335px;
-      margin: 0 auto 15px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
+      css`
+        width: 335px;
+        margin: 0 auto 15px;
+      `,
+    )};
 
-  ${breakpointMin(
-    'smallPlus',
-    css`
-      width: 40%;
-      max-width: 300px;
-      margin-left: 10px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        width: 40%;
+        max-width: 300px;
+        margin-left: 10px;
+      `,
+    )};
 
-  ${breakpointMin(
-    'large',
-    css`
-      width: 22%;
-      max-width: 300px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.large,
+      css`
+        width: 22%;
+        max-width: 300px;
+      `,
+    )};
 `;
 
-const MainContentArea = styled(CardContainer)`
-`;
+const MainContentArea = styled(CardContainer)``;
 
 const TripInfoCard = styled(CardContainer)`
   padding: 16px;
