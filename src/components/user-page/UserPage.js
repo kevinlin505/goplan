@@ -46,7 +46,6 @@ const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
         'To start your next vacation, create a trip and invite friends to join',
       );
     }
-    // actions.user.getUserExpenseReports();
   }, []);
 
   useEffect(() => {

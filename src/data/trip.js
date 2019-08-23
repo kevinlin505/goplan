@@ -108,7 +108,6 @@ export default function trip() {
       transaction.delete(tripRef);
       transaction.delete(activityRef);
 
-      // return Promise.resolve(Trip.DELETE_TRIP);
       return Trip.DELETE_TRIP;
     },
 
@@ -152,7 +151,6 @@ export default function trip() {
             trips: firebase.firestore.FieldValue.arrayRemove(tripRef),
           });
 
-          // return Promise.resolve(Trip.LEAVE_TRIP);
           return Trip.LEAVE_TRIP;
         });
       });
