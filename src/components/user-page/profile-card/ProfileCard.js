@@ -6,6 +6,7 @@ import { CardMedia, IconButton } from '@material-ui/core';
 import { Edit, Check } from '@material-ui/icons';
 import CardContainer from '@styles/card/CardContainer';
 import { Input } from '@styles/forms/Forms';
+import breakpointMin from '@styles/media';
 import profileBackground from '@assets/images/profileBackground.jpg';
 
 export const ProfileCard = ({ actions, profile }) => {
@@ -113,8 +114,15 @@ ProfileCard.propTypes = {
 const Container = styled(CardContainer)`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
+
+  ${breakpointMin(
+    'smallPlus',
+    css`
+      margin-right: 20px;
+    `,
+  )};
 `;
 
 const BackgroundImg = styled(CardMedia)`
@@ -182,6 +190,7 @@ const UserName = styled.div`
 
 const InfoField = styled.div`
   margin: 3px 0 3px;
+  text-align: center;
   color: ${({ theme }) => theme.colors.textLight};
 `;
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -9,6 +9,7 @@ import { tripActions } from '@providers/trip/trip';
 import validateEmail from '@utils/validateEmail';
 import getTravelDates from '@utils/calculateTravelDates';
 import Button from '@styles/Button';
+import breakpointMin from '@styles/media';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -114,6 +115,14 @@ const TripInviteContainer = styled.div`
   padding: 10px 16px;
   background: ${({ theme }) => theme.colors.contrast};
   border-bottom: 1px solid ${({ theme }) => theme.colors.background};
+
+  ${breakpointMin(
+    'small',
+    css`
+      flex-wrap: wrap;
+      height: auto;
+    `,
+  )};
 `;
 
 const InviteInput = styled.input`
@@ -123,6 +132,24 @@ const InviteInput = styled.input`
   font-size: 16px;
   border: 1px solid ${({ theme }) => theme.colors.divider};
   border-radius: 4px;
+
+  ${breakpointMin(
+    'small',
+    css`
+      width: 100%;
+      order: -1;
+      margin: 0px 0 5px;
+    `,
+  )};
+
+  ${breakpointMin(
+    'smallPlus',
+    css`
+      order: 0;
+      width: 50%;
+      margin: 0 10px;
+    `,
+  )};
 `;
 
 const ContentControlPanel = styled.div`
@@ -159,6 +186,13 @@ const ControlButton = styled(Button)`
       border-radius: 0;
     }
   }
+
+  ${breakpointMin(
+    'small',
+    css`
+      padding: 10px;
+    `,
+  )};
 `;
 
 export default connect(

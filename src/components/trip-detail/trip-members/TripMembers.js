@@ -85,6 +85,7 @@ const MemberInfoText = styled.div`
 const MemberPaymentInfo = styled.div`
   padding-bottom: 3px;
   display: flex;
+  flex-wrap: wrap;
 `;
 
 const MemberPaymentLabel = styled.div`
