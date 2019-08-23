@@ -29,16 +29,24 @@ export const TripDetailRenderHandler = ({ actions, tripId, userInTrip }) => {
 
   useEffect(() => {
     if (tripId) {
-      actions.trip.getTrip(tripId).then(tripDetail => {
-        actions.trip.getTripExpenses(tripDetail.expenses);
-        actions.trip.subscribeToTripChange(tripId);
-        actions.activity.subscribeToActivityChange(tripId);
-
-        setShowTrip(true);
-      });
-
       if (!userInTrip) {
-        actions.trip.joinTrip(tripId);
+        actions.trip.joinTrip(tripId).then(() => {
+          actions.trip.getTrip(tripId).then(tripDetail => {
+            actions.trip.getTripExpenses(tripDetail.expenses);
+            actions.trip.subscribeToTripChange(tripId);
+            actions.activity.subscribeToActivityChange(tripId);
+
+            setShowTrip(true);
+          });
+        });
+      } else {
+        actions.trip.getTrip(tripId).then(tripDetail => {
+          actions.trip.getTripExpenses(tripDetail.expenses);
+          actions.trip.subscribeToTripChange(tripId);
+          actions.activity.subscribeToActivityChange(tripId);
+
+          setShowTrip(true);
+        });
       }
     }
 

@@ -221,6 +221,19 @@ export const tripActions = {
           type: types.RETRIEVE_ALL_TRIPS,
           trips,
         });
+      })
+      .catch(err => {
+        // ignore permission-denied errors
+        // occurs when an user leaves a trip but the redux state doesn't update fast enough
+        // so the trip is still in the trips key in the user object
+        if (err.code === 'permission-denied') return null;
+
+        return dispatch(
+          notificationActions.setNotification(
+            Notification.ERROR,
+            'Oops! Something is wrong, please try again!',
+          ),
+        );
       });
   },
 
