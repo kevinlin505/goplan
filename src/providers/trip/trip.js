@@ -223,6 +223,9 @@ export const tripActions = {
         });
       })
       .catch(err => {
+        // ignore permission-denied errors
+        // occurs when an user leaves a trip but the redux state doesn't update fast enough
+        // so the trip is still in the trips key in the user object
         if (err.code !== 'permission-denied') {
           return dispatch(
             notificationActions.setNotification(
