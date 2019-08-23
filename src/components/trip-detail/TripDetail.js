@@ -145,7 +145,6 @@ const RightPanel = styled.div`
 `;
 
 const MainContentArea = styled(CardContainer)`
-  min-height: 500px;
 `;
 
 const TripInfoCard = styled(CardContainer)`
