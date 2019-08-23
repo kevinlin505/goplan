@@ -3,6 +3,7 @@ import activity from '@data/activity';
 import trip from '@data/trip';
 import expense from '@data/expense';
 import user from '@data/user';
+import { authActions } from '@providers/auth/auth';
 import ActivityType from '@constants/ActivityType';
 import Notification from '@constants/Notification';
 import { notificationActions } from '@providers/notification/notification';
@@ -221,6 +222,18 @@ export const tripActions = {
           type: types.RETRIEVE_ALL_TRIPS,
           trips,
         });
+      })
+      .catch(err => {
+        if (err.code !== 'permission-denied') {
+          return dispatch(
+            notificationActions.setNotification(
+              Notification.ERROR,
+              'Oops! Something is wrong, please try again!',
+            ),
+          );
+        }
+
+        return null;
       });
   },
 

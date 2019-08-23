@@ -46,9 +46,12 @@ const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
         'To start your next vacation, create a trip and invite friends to join',
       );
     }
-
-    actions.user.getUserExpenseReports();
+    // actions.user.getUserExpenseReports();
   }, []);
+
+  useEffect(() => {
+    actions.user.getUserExpenseReports();
+  }, [profile.expenses.length]);
 
   useEffect(() => {
     if (tripCount !== Object.keys(trip.trips).length) {
