@@ -6,10 +6,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ActivePanel from '@constants/ActivePanel';
 import { tripActions } from '@providers/trip/trip';
+import { breakpointMin } from '@utils/styleUtils';
 import validateEmail from '@utils/validateEmail';
 import getTravelDates from '@utils/calculateTravelDates';
 import Button from '@styles/Button';
-import breakpointMin from '@styles/media';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -116,13 +116,14 @@ const TripInviteContainer = styled.div`
   background: ${({ theme }) => theme.colors.contrast};
   border-bottom: 1px solid ${({ theme }) => theme.colors.background};
 
-  ${breakpointMin(
-    'small',
-    css`
-      flex-wrap: wrap;
-      height: auto;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
+      css`
+        flex-wrap: wrap;
+        height: auto;
+      `,
+    )};
 `;
 
 const InviteInput = styled.input`
@@ -133,23 +134,25 @@ const InviteInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.divider};
   border-radius: 4px;
 
-  ${breakpointMin(
-    'small',
-    css`
-      width: 100%;
-      order: -1;
-      margin: 0px 0 5px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
+      css`
+        width: 100%;
+        order: -1;
+        margin: 0px 0 5px;
+      `,
+    )};
 
-  ${breakpointMin(
-    'smallPlus',
-    css`
-      order: 0;
-      width: 50%;
-      margin: 0 10px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        order: 0;
+        width: 50%;
+        margin: 0 10px;
+      `,
+    )};
 `;
 
 const ContentControlPanel = styled.div`
@@ -187,12 +190,13 @@ const ControlButton = styled(Button)`
     }
   }
 
-  ${breakpointMin(
-    'small',
-    css`
-      padding: 10px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
+      css`
+        padding: 10px;
+      `,
+    )};
 `;
 
 export default connect(

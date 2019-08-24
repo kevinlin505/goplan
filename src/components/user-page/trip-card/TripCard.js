@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
+import { breakpointMin } from '@utils/styleUtils';
 import convertNumberToCurrency from '@utils/convertNumberToCurrency';
 import defaultBackgroundImage from '@assets/images/profileBackground.jpg';
-import breakpointMin from '@styles/media';
 
 const TripCard = ({ tripDetail }) => {
   const startDate = new Date(tripDetail.travelDates.startAt).toDateString();
@@ -66,12 +66,14 @@ const Container = styled.div`
     0px 1px 1px 0px ${({ theme }) => theme.colors.divider},
     0px 2px 1px -1px ${({ theme }) => theme.colors.divider};
   overflow: hidden;
-  ${breakpointMin(
-    'small',
-    css`
-      margin: 0 auto 10px;
-    `,
-  )};
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.small,
+      css`
+        margin: 0 auto 10px;
+      `,
+    )};
 `;
 
 const TripCardGradient = styled.div`

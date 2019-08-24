@@ -4,10 +4,9 @@ import styled, { css } from 'styled-components';
 import deepEqual from 'fast-deep-equal';
 import { CardMedia, IconButton } from '@material-ui/core';
 import { Edit, Check } from '@material-ui/icons';
+import { breakpointMin } from '@utils/styleUtils';
 import CardContainer from '@styles/card/CardContainer';
 import { Input } from '@styles/forms/Forms';
-import breakpointMin from '@styles/media';
-import profileBackground from '@assets/images/profileBackground.jpg';
 
 export const ProfileCard = ({ actions, profile }) => {
   const [profileForm, setProfileForm] = useState({
@@ -43,11 +42,7 @@ export const ProfileCard = ({ actions, profile }) => {
 
   return (
     <Container>
-      <BackgroundImg
-        alt="Contemplative Reptile"
-        component="img"
-        image={profileBackground}
-      />
+      <BackgroundImg imageUrl={profile.profile_url} />
       <Profile>
         <Avatar src={profile.profile_url} />
       </Profile>
@@ -117,21 +112,28 @@ const Container = styled(CardContainer)`
   justify-content: start;
   align-items: center;
 
-  ${breakpointMin(
-    'smallPlus',
-    css`
-      margin-right: 20px;
-    `,
-  )};
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        margin-right: 20px;
+      `,
+    )};
 `;
 
-const BackgroundImg = styled(CardMedia)`
+const BackgroundImg = styled.div`
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
   width: 100%;
   height: 150px;
+  background-color: ${({ theme }) => theme.colors.accent};
+  background-image: url(${({ imageUrl }) => imageUrl});
+  background-size: cover;
+  filter: blur(4px);
+  border-bottom: 1px solid ${({ theme }) => theme.colors.accent};
+  overflow: hidden;
 `;
 
 const Profile = styled.div`
