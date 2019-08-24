@@ -325,7 +325,7 @@ export const tripActions = {
         });
       }
 
-      return Promise.reject();
+      return Promise.resolve();
     }
 
     return trip()
