@@ -128,11 +128,8 @@ const BackgroundImg = styled.div`
   left: 0;
   width: 100%;
   height: 150px;
-  background-color: ${({ theme }) => theme.colors.accent};
-  background-image: url(${({ imageUrl }) => imageUrl});
-  background-size: cover;
-  filter: blur(4px);
-  border-bottom: 1px solid ${({ theme }) => theme.colors.accent};
+  background-color: ${({ theme }) => theme.colors.contrast};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.contrast};
   overflow: hidden;
 `;
 
