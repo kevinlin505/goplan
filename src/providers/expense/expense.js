@@ -41,11 +41,11 @@ export const expenseActions = {
       tripId: selectedTrip.id,
     };
 
-    // TODO: set a max on total file size
     if (files.length) {
       return Promise.all(
         [
           new Promise((resolve, reject) => {
+            // set a max of 5 files per upload
             if (files.length > 5) reject();
             resolve();
           }),

@@ -55,6 +55,7 @@ const TripDetail = ({ actions, selectedTrip, weatherCache }) => {
 
   return (
     <Container>
+      <StatusNotification currentPage="tripDetail" />
       <Contents>
         <LeftPanel>
           <TripInfoCard>
@@ -65,7 +66,6 @@ const TripDetail = ({ actions, selectedTrip, weatherCache }) => {
           <TripMembers members={selectedTrip.members} />
         </LeftPanel>
         <MainPanel>
-          <StatusNotification />
           <MainContentArea>
             {selectedTrip ? (
               <React.Fragment>
@@ -121,15 +121,10 @@ TripDetail.propTypes = {
 };
 
 const Container = styled.div`
-  padding: 20px;
-
-  ${({ theme }) =>
-    breakpointMin(
-      theme.sizes.small,
-      css`
-        padding: 10px;
-      `,
-    )};
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
 `;
 
 const Contents = styled.div`

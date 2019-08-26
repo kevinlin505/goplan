@@ -23,7 +23,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export const StatusNotification = ({ actions, notification }) => {
+export const StatusNotification = ({ actions, currentPage, notification }) => {
   function handleCloseNotification() {
     actions.notification.setNotification();
   }
@@ -56,7 +56,7 @@ export const StatusNotification = ({ actions, notification }) => {
   }
 
   return (
-    <Container status={notification.status}>
+    <Container currentPage={currentPage} status={notification.status}>
       <Wrapper>
         {constructNotificationIcon()}
         <Message>{notification.message}</Message>
@@ -73,6 +73,7 @@ export const StatusNotification = ({ actions, notification }) => {
 
 StatusNotification.propTypes = {
   actions: PropTypes.object.isRequired,
+  currentPage: PropTypes.string.isRequired,
   notification: PropTypes.object.isRequired,
 };
 
@@ -81,6 +82,8 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  max-width: ${({ currentPage }) =>
+    currentPage === 'userPage' ? '975px' : '1225px'};
   position: relative;
   margin: 0 auto 10px;
   padding: 8px 8px 8px 16px;
