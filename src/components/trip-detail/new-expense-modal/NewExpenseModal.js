@@ -37,9 +37,12 @@ const mapDispatchToProps = dispatch => {
 const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
   const [files, setFiles] = useState([]);
   const [previewImageSrcs, setPreviewImageSrcs] = useState([]);
-  const payeesList = Object.values(members).map(member => {
+  const payeesList = [];
+  const payeesIdList = [];
+  Object.values(members).forEach(member => {
     const { id, email, name } = member;
-    return { id, email, name };
+    payeesList.push({ id, email, name });
+    payeesIdList.push(id);
   });
   const [form, setValues] = useState({
     category: '',
@@ -49,11 +52,25 @@ const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
     payees: payeesList,
     description: '',
   });
+  const [payeeIdList, setPayeeIdList] = useState(payeesIdList);
 
   const updateField = event => {
     setValues({
       ...form,
       [event.target.name]: event.target.value,
+    });
+  };
+
+  const updatePayeeField = event => {
+    const payeeObjects = event.target.value.map(payeeId => {
+      const { name, id, email } = members[payeeId];
+      return { name, id, email };
+    });
+
+    setPayeeIdList(event.target.value);
+    setValues({
+      ...form,
+      [event.target.name]: payeeObjects,
     });
   };
 
@@ -91,20 +108,18 @@ const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
   function memberRenderValue(selectedValues) {
     return (
       <div>
-        {selectedValues.map(value => (
-          <Chip key={`selected-values-${value.id}`} label={value.name} />
+        {selectedValues.map(id => (
+          <Chip key={`selected-values-${id}`} label={members[id].name} />
         ))}
       </div>
     );
   }
 
   function constructPayees() {
-    return Object.keys(members).map(memberId => {
-      const member = members[memberId];
-
+    return payeesList.map(payee => {
       return (
-        <MenuItem key={`${member.name}-${member.id}`} value={member}>
-          {member.name}
+        <MenuItem key={`${payee.name}-${payee.id}`} value={payee.id}>
+          {payee.name}
         </MenuItem>
       );
     });
@@ -173,9 +188,9 @@ const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
               input={<MultiSelectField id="select-multiple-chip" />}
               multiple
               name="payees"
-              onChange={updateField}
+              onChange={updatePayeeField}
               renderValue={selected => memberRenderValue(selected)}
-              value={form.payees}
+              value={payeeIdList}
             >
               {constructPayees()}
             </Select>

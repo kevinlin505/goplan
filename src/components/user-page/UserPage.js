@@ -74,13 +74,13 @@ const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
 
   return (
     <Container>
+      <StatusNotification currentPage="userPage" />
       <Contents>
         <LeftPanel>
           <ProfileCard actions={actions} profile={profile} />
           <UserExpense />
         </LeftPanel>
         <MainPanel>
-          <StatusNotification />
           <TripList>
             {sortedTrips.current.length > 0 && (
               <div>
@@ -115,6 +115,8 @@ UserPage.propTypes = {
 
 const Container = styled.div`
   padding: 20px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Contents = styled.div`
@@ -127,20 +129,20 @@ const Contents = styled.div`
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.small,
-    css`
-      flex-direction: column;
-      flex: 1 1 auto;
-    `,
-  )};
+      css`
+        flex-direction: column;
+        flex: 1 1 auto;
+      `,
+    )};
 
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.medium,
-    css`
-      flex-direction: row;
-      flex: 1 1 auto;
-    `,
-  )};
+      css`
+        flex-direction: row;
+        flex: 1 1 auto;
+      `,
+    )};
 `;
 
 const LeftPanel = styled.div`
@@ -149,28 +151,28 @@ const LeftPanel = styled.div`
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.small,
-    css`
-      width: 100%;
-    `,
-  )};
+      css`
+        width: 100%;
+      `,
+    )};
 
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.smallPlus,
-    css`
-      display: flex;
-    `,
-  )};
+      css`
+        display: flex;
+      `,
+    )};
 
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.medium,
-    css`
-      flex-direction: column;
-      width: 35%;
-      max-width: 300px;
-    `,
-  )};
+      css`
+        flex-direction: column;
+        width: 35%;
+        max-width: 300px;
+      `,
+    )};
 `;
 
 const MainPanel = styled.div`
@@ -180,30 +182,30 @@ const MainPanel = styled.div`
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.small,
-    css`
-      width: 100%;
-      margin: 0;
-    `,
-  )};
+      css`
+        width: 100%;
+        margin: 0;
+      `,
+    )};
 
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.medium,
-    css`
-      width: 65%;
-      max-width: 650px;
-      margin: 0 0 0 25px;
-    `,
-  )};
+      css`
+        width: 65%;
+        max-width: 650px;
+        margin: 0 0 0 25px;
+      `,
+    )};
 
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.large,
-    css`
-      max-width: 650px;
-      margin: 0 0 0 25px;
-    `,
-  )};
+      css`
+        max-width: 650px;
+        margin: 0 0 0 25px;
+      `,
+    )};
 `;
 
 const RightPanel = styled.div`
@@ -212,21 +214,21 @@ const RightPanel = styled.div`
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.small,
-    css`
-      display: none;
-    `,
-  )};
+      css`
+        display: none;
+      `,
+    )};
 
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.large,
-    css`
-      display: flex;
-      width: 224px;
-      max-width: 300px;
-      display: none;
-    `,
-  )};
+      css`
+        display: flex;
+        width: 224px;
+        max-width: 300px;
+        display: none;
+      `,
+    )};
 `;
 
 const TripList = styled.div`

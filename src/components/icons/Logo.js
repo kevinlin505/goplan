@@ -21,6 +21,7 @@ export const Logo = () => {
 
 const Svg = styled.svg`
   width: 100%;
+  padding-right: 10px;
 `;
 
 export default Logo;
