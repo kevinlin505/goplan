@@ -1,5 +1,6 @@
 {
   "projects": {
-    "staging": "goplan-3b4b1"
+    "prod": "goplan-40acb",
+    "dev": "goplan-3b4b1"
   }
 }
