@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { HashRouter } from 'react-router-dom';
+import { HashRouter, Route } from 'react-router-dom';
 import { authActions } from '@providers/auth/auth';
+import googleMapsApi from '@utils/googleMapsApi';
 import {
   AuthRoute,
   ProtectedRoute,
@@ -11,7 +12,8 @@ import {
 import SignIn from '@components/auth/SignIn';
 import TripDetailRenderHandler from '@components/routers/component-handlers/TripDetailRenderHandler';
 import UserPageRenderHandler from '@components/routers/component-handlers/UserPageRenderHandler';
-import googleMapsApi from '@utils/googleMapsApi';
+import Privacy from '@components/PrivacyAndTerms/Privacy';
+import Terms from '@components/PrivacyAndTerms/Terms';
 
 const mapStateToProps = state => {
   return {
@@ -46,6 +48,8 @@ const AppRouter = ({ actions, auth }) => {
         component={TripDetailRenderHandler}
         path="/trip/:tripId"
       />
+      <Route component={Privacy} exact path="/privacypolicy" />
+      <Route component={Terms} exact path="/termsandconditions" />
     </HashRouter>
   );
 };
