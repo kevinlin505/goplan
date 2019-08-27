@@ -28,10 +28,8 @@ PhotoAttribution.propTypes = {
 const Attribution = styled.div`
   position: absolute;
   right: ${({ splashPage }) => (splashPage ? '20px' : '10px')};
-  bottom: ${({ splashPage }) => (splashPage ? '20px' : '5px')};
-
+  bottom: ${({ splashPage }) => (splashPage ? '16px' : '5px')};
   color: ${({ theme }) => theme.colors.white};
-  text-shadow: 1px 1px 2px ${({ theme }) => theme.colors.black};
 `;
 
 const ReferenceLink = styled.a`
