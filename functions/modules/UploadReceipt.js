@@ -28,8 +28,9 @@ const UploadHelper = {
 
 const uploadToS3 = async (options, context) => {
   const buff = UploadHelper.getBase64(options.data).data;
-  const bucketName =
-    options.env === 'production' ? keys.AWS.bucketName : keys.AWS.bucketNameDev;
+  const bucketName = functions.config().app.environment === 'dev' ? 
+    keys.AWS.bucketNameDev : keys.AWS.bucketName
+  console.log(`bucketName: ${bucketName}`);
   const params = {
     Bucket: `${bucketName}/expense/${options.tripId}`,
     Key: uuidv3(
