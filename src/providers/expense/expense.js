@@ -186,7 +186,6 @@ export const expenseActions = {
           type: file.type,
           name: file.name,
           tripId: selectedTrip.id,
-          env: process.env.environment,
         };
         expense()
           .uploadReceipt(options)
