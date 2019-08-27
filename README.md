@@ -30,4 +30,4 @@ dev (goplan-3b4b1)
 1. Choose firebase project: firebase use prod (or dev)
 2. Add environment config to the project: firebase functions:config:set app.environment="prod" (or dev)
 3. Repeat steps 1-2 for the dev project
-4. Run this to deploy: firebase deploy --only functions:uploadReceipt
+4. Run this to deploy: firebase deploy --only functions:uploadReceipt (to deploy all functions: firebase deploy --only functions)
