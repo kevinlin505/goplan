@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import deepEqual from 'fast-deep-equal';
-import { CardMedia, IconButton } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { Edit, Check } from '@material-ui/icons';
 import { breakpointMin } from '@utils/styleUtils';
 import CardContainer from '@styles/card/CardContainer';
@@ -42,7 +42,6 @@ export const ProfileCard = ({ actions, profile }) => {
 
   return (
     <Container>
-      <BackgroundImg imageUrl={profile.profile_url} />
       <Profile>
         <Avatar src={profile.profile_url} />
       </Profile>
@@ -111,6 +110,7 @@ const Container = styled(CardContainer)`
   flex-direction: column;
   justify-content: start;
   align-items: center;
+  background: transparent;
 
   ${({ theme }) =>
     breakpointMin(
@@ -121,22 +121,10 @@ const Container = styled(CardContainer)`
     )};
 `;
 
-const BackgroundImg = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  width: 100%;
-  height: 150px;
-  background-color: ${({ theme }) => theme.colors.contrast};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.contrast};
-  overflow: hidden;
-`;
-
 const Profile = styled.div`
   width: 90px;
   height: 90px;
-  margin: 100px auto 10px;
+  margin: 30px auto 10px;
   border-radius: 50%;
   overflow: hidden;
   z-index: 1;

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -111,10 +110,6 @@ const TripDetail = ({ actions, selectedTrip, weatherCache }) => {
       {isExpenseModal && (
         <NewExpenseModal toggleCreateExpenseModal={toggleCreateExpenseModal} />
       )}
-      <Footer>
-        <FooterLink to="/privacypolicy">Privacy Policy</FooterLink>
-        <FooterLink to="/termsandconditions">Terms and Conditions</FooterLink>
-      </Footer>
     </Container>
   );
 };
@@ -267,26 +262,7 @@ const TripNotes = styled.div`
   font-size: 16px;
 `;
 
-const Footer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 50px;
-  background-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.4));
-  text-align: center;
-`;
-
-const FooterLink = styled(Link)`
-  margin: 0 10px;
-  color: ${({ theme }) => theme.colors.white};
-  text-decoration: underline;
-`;
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withRouter(TripDetail));
+)(TripDetail);
