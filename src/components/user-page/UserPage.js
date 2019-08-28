@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
@@ -104,10 +103,6 @@ const UserPage = ({ actions, auth, profile, sortedTrips, trip }) => {
           <div></div>
         </RightPanel>
       </Contents>
-      <Footer>
-        <FooterLink to="/privacypolicy">Privacy Policy</FooterLink>
-        <FooterLink to="/termsandconditions">Terms and Conditions</FooterLink>
-      </Footer>
     </Container>
   );
 };
@@ -121,9 +116,10 @@ UserPage.propTypes = {
 };
 
 const Container = styled.div`
-  padding: 20px;
   display: flex;
   flex-direction: column;
+  position: relative;
+  padding: 20px 20px 100px;
 `;
 
 const Contents = styled.div`
@@ -249,26 +245,7 @@ const TripListLabel = styled.div`
   font-weight: 600;
 `;
 
-const Footer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 50px;
-  background-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.4));
-  text-align: center;
-`;
-
-const FooterLink = styled(Link)`
-  margin: 0 10px;
-  color: ${({ theme }) => theme.colors.white};
-  text-decoration: underline;
-`;
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withRouter(UserPage));
+)(UserPage);
