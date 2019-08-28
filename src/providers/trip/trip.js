@@ -485,26 +485,13 @@ export const tripActions = {
 
   updateTrip: () => (dispatch, getState) => {
     const {
-      auth: { profile },
       trip: {
         form,
         selectedTrip: { members },
       },
     } = getState();
-
     const memberEmails = Object.values(members).map(member => member.email);
-
-    const organizer = {
-      email: profile.email,
-      id: profile.id,
-      name: profile.name,
-    };
-    const tripDetail = {
-      ...form,
-      members: {
-        [profile.id]: organizer,
-      },
-    };
+    const tripDetail = { ...form };
 
     return trip()
       .updateTrip(tripDetail)
