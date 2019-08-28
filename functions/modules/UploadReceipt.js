@@ -60,7 +60,7 @@ const uploadToS3 = async (options, context) => {
   return promise.then(res => {
     if (res) {
       const url = UploadHelper.imageUrl(
-        keys.AWS.bucketName,
+        bucketName,
         options.tripId,
         params.Key,
       );
