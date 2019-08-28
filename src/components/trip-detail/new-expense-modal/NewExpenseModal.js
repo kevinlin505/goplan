@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import {
   Button,
   Chip,
+  CircularProgress,
   Input,
   InputLabel,
   MenuItem,
@@ -37,6 +38,7 @@ const mapDispatchToProps = dispatch => {
 const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
   const [files, setFiles] = useState([]);
   const [previewImageSrcs, setPreviewImageSrcs] = useState([]);
+  const [loading, setLoading] = useState(false);
   const payeesList = [];
   const payeesIdList = [];
   Object.values(members).forEach(member => {
@@ -76,6 +78,7 @@ const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
 
   const handleFormSubmit = event => {
     event.preventDefault();
+    setLoading(true);
 
     actions.expense.submitExpense(form, files).then(() => {
       toggleCreateExpenseModal();
@@ -231,8 +234,13 @@ const NewExpenseModal = ({ actions, members, toggleCreateExpenseModal }) => {
             </label>
           </FieldWrapper>
           <ButtonWrapper>
-            <Button color="primary" type="submit" variant="contained">
-              Submit
+            <Button
+              color="primary"
+              disabled={loading}
+              type="submit"
+              variant="contained"
+            >
+              {loading ? <CircularProgress size={22} /> : 'Submit'}
             </Button>
           </ButtonWrapper>
         </form>

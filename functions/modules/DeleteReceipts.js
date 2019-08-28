@@ -12,9 +12,11 @@ const deleteFromS3 = options => {
 
   return Promise.all(options.urls.map(url => {
     return new Promise((resolve, reject) => {
-        const path = url.split('s3.amazonaws.com/')[1];
+        const splitUrl = url.split('.s3.amazonaws.com/');
+        const path = splitUrl[1];
+        const bucketName = splitUrl[0].split('https://')[1];
         const params = {
-            Bucket: `${keys.AWS.bucketName}`,
+            Bucket: bucketName,
             Key: path,
         };
         bucket.deleteObject(params, (err, data) => {
