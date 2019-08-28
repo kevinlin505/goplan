@@ -123,11 +123,11 @@ export const TripExpenseList = ({
               <ListItemValue>{constructPayeeList(payees)}</ListItemValue>
             </DetailContentListItem>
             <DetailContentListItem>
-              {receipts.length ? (
+              {!!receipts.length && (
                 <ReceiptsContainer>
                   {constructReceiptsList(receipts)}
                 </ReceiptsContainer>
-              ) : null}
+              )}
             </DetailContentListItem>
           </List>
         </DetailExpenseContent>
