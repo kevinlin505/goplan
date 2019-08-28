@@ -64,6 +64,18 @@ export const TripExpenseList = ({
     });
   }
 
+  function constructReceiptsList(receipts) {
+    return receipts.map((receipt, idx) => (
+      <ReceiptLink
+        key={`receipt-${idx + 1}`}
+        href={receipt.url}
+        target="_blank"
+      >
+        {`Receipt #${idx + 1}`}
+      </ReceiptLink>
+    ));
+  }
+
   function renderExpenseList() {
     return Object.keys(tripExpenses).map((expenseId, idx) => {
       const {
@@ -111,11 +123,11 @@ export const TripExpenseList = ({
               <ListItemValue>{constructPayeeList(payees)}</ListItemValue>
             </DetailContentListItem>
             <DetailContentListItem>
-              {receipts[0] ? (
-                <a href={receipts[0].url} target="_blank">
-                  Receipt
-                </a>
-              ) : null}
+              {!!receipts.length && (
+                <ReceiptsContainer>
+                  {constructReceiptsList(receipts)}
+                </ReceiptsContainer>
+              )}
             </DetailContentListItem>
           </List>
         </DetailExpenseContent>
@@ -198,6 +210,14 @@ const ExpensePayee = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+`;
+
+const ReceiptsContainer = styled.div`
+  display: flex;
+`;
+
+const ReceiptLink = styled.a`
+  padding-right: 15px;
 `;
 
 export default connect(
