@@ -43,7 +43,7 @@ module.exports = function returnConfig(env) {
             },
           },
           {
-            test: /\.(png|svg|jpg|gif)$/,
+            test: /\.(png|svg|jpg|gif|ico)$/,
             include: [path.join(__dirname, 'src/assets/images')],
             use: [
               {
