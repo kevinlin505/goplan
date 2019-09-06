@@ -104,6 +104,7 @@ const Brand = styled.div`
 
 const LogoLink = styled(Link)`
   color: inherit;
+  text-decoration: none;
 `;
 
 const RightNavBarItems = styled.div`
