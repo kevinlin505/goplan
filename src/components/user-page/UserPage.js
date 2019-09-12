@@ -123,7 +123,9 @@ const Container = styled.div`
 `;
 
 const Contents = styled.div`
+  flex: 1 1 auto;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   width: 100%;
   max-width: ${({ theme }) => theme.sizes.giant}px;
@@ -131,41 +133,16 @@ const Contents = styled.div`
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.small,
-      css`
-        flex-direction: column;
-        flex: 1 1 auto;
-      `,
-    )};
-
-  ${({ theme }) =>
-    breakpointMin(
       theme.sizes.medium,
       css`
         flex-direction: row;
-        flex: 1 1 auto;
       `,
     )};
 `;
 
 const LeftPanel = styled.div`
-  width: 300px;
-
-  ${({ theme }) =>
-    breakpointMin(
-      theme.sizes.small,
-      css`
-        width: 100%;
-      `,
-    )};
-
-  ${({ theme }) =>
-    breakpointMin(
-      theme.sizes.smallPlus,
-      css`
-        display: flex;
-      `,
-    )};
+  display: flex;
+  width: 100%;
 
   ${({ theme }) =>
     breakpointMin(
@@ -179,17 +156,8 @@ const LeftPanel = styled.div`
 `;
 
 const MainPanel = styled.div`
-  width: 550px;
-  margin: 0 15px;
-
-  ${({ theme }) =>
-    breakpointMin(
-      theme.sizes.small,
-      css`
-        width: 100%;
-        margin: 0;
-      `,
-    )};
+  width: 100%;
+  margin: 0;
 
   ${({ theme }) =>
     breakpointMin(

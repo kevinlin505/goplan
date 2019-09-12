@@ -2,10 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import ActivityType from '@constants/ActivityType';
 import { activityActions } from '@providers/activity/activity';
 import { tripActions } from '@providers/trip/trip';
+import { breakpointMin } from '@utils/styleUtils';
 import Loading from '@components/loading/Loading';
 import formAcitivityString from '@utils/formAcitivityString';
 import formatTimestamp from '@utils/formatTimestamp';
@@ -142,8 +143,16 @@ const MessageContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 60px;
-  padding: 10px 16px;
+  padding: 10px;
   border-top: 1px solid ${({ theme }) => theme.colors.background};
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        padding: 10px 16px;
+      `,
+    )};
 `;
 
 const MessageInput = styled.input`

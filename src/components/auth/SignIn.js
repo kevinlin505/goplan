@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { authActions } from '@providers/auth/auth';
+import { breakpointMin } from '@utils/styleUtils';
 import GoogleAuthButton from '@components/auth/auth-buttons/GoogleAuthButton';
 import FacebookAuthButton from '@components/auth/auth-buttons/FacebookAuthButton';
 import PhotoAttribution from '@components/photo-attribution/PhotoAttribution';
@@ -130,13 +131,23 @@ const Background = styled.div`
 `;
 
 const ContentContainer = styled(CardContainer)`
-  padding: 40px;
-  width: 100%;
-  max-width: 400px;
+  padding: 20px;
+  width: 90%;
   background: rgba(255, 255, 255, 0.85);
   text-align: center;
   overflow: hidden;
   border-radius: 4px;
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
+      css`
+        width: 100%;
+        max-width: 400px;
+        padding: 40px;
+        margin: 0 auto;
+      `,
+    )};
 `;
 
 const LoginButtonContainer = styled.div`
@@ -144,8 +155,10 @@ const LoginButtonContainer = styled.div`
 `;
 
 const Logo = styled.div`
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   margin: 0 auto;
+  text-align: center;
 
   svg {
     width: 100%;
@@ -153,13 +166,10 @@ const Logo = styled.div`
 `;
 
 const Slogan = styled.div`
-  width: 300px;
-  margin: 0 auto;
-  padding-bottom: 30px;
-
-  svg {
-    width: 100%;
-  }
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 30px;
+  text-align: center;
 `;
 
 const Footer = styled.div`
@@ -170,7 +180,7 @@ const Footer = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  height: 50px;
+  height: 100px;
   background-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.4));
   text-align: center;
 `;
