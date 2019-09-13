@@ -21,7 +21,7 @@ const mapStateToProps = state => {
 };
 
 export const UserExpense = ({
-  userExpenses: { expenseCategories, expenseTotal, expenseTrips },
+  userExpenses: { expenses, expenseCategories, expenseTotal, expenseTrips },
   trips,
 }) => {
   const [isCategoryExpand, setCategoryExpand] = useState(true);
@@ -58,42 +58,44 @@ export const UserExpense = ({
   });
 
   return (
-    <CardContainer>
-      <List aria-labelledby="nested-list-header" component="nav">
-        <ListHeader id="nested-list-header">Spending Summary</ListHeader>
-        <ListItem button>
-          <ListItemIcon>
-            <AttachMoney />
-          </ListItemIcon>
-          <ListItemText>Total</ListItemText>
-          <ItemCost>{convertNumberToCurrency(expenseTotal)}</ItemCost>
-        </ListItem>
-        <ListItem button onClick={toggleCategoryList}>
-          <ListItemIcon>
-            <ListAlt />
-          </ListItemIcon>
-          <ListItemText>Categories</ListItemText>
-          {isCategoryExpand ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={isCategoryExpand} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {categoryList}
-          </List>
-        </Collapse>
-        <ListItem button onClick={toggleTripList}>
-          <ListItemIcon>
-            <LocationOn />
-          </ListItemIcon>
-          <ListItemText>Trips</ListItemText>
-          {isTripExpand ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={isTripExpand} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {tripList}
-          </List>
-        </Collapse>
-      </List>
-    </CardContainer>
+    expenses.length > 0 && (
+      <CardContainer>
+        <List aria-labelledby="nested-list-header" component="nav">
+          <ListHeader id="nested-list-header">Spending Summary</ListHeader>
+          <ListItem button>
+            <ListItemIcon>
+              <AttachMoney />
+            </ListItemIcon>
+            <ListItemText>Total</ListItemText>
+            <ItemCost>{convertNumberToCurrency(expenseTotal)}</ItemCost>
+          </ListItem>
+          <ListItem button onClick={toggleCategoryList}>
+            <ListItemIcon>
+              <ListAlt />
+            </ListItemIcon>
+            <ListItemText>Categories</ListItemText>
+            {isCategoryExpand ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={isCategoryExpand} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {categoryList}
+            </List>
+          </Collapse>
+          <ListItem button onClick={toggleTripList}>
+            <ListItemIcon>
+              <LocationOn />
+            </ListItemIcon>
+            <ListItemText>Trips</ListItemText>
+            {isTripExpand ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={isTripExpand} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {tripList}
+            </List>
+          </Collapse>
+        </List>
+      </CardContainer>
+    )
   );
 };
 

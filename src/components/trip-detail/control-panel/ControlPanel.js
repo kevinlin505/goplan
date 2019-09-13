@@ -58,15 +58,15 @@ export const ControlPanel = ({
   return (
     <React.Fragment>
       <TripInviteContainer>
-        <Button onClick={handleLeaveTrip}>Leave</Button>
+        <LeaveButton onClick={handleLeaveTrip}>Leave</LeaveButton>
         <InviteInput
           onChange={handleInviteEmail}
           placeholder="Enter an email to invite"
           value={inviteEmail}
         />
-        <Button disabled={!validEmail} onClick={handleInvite}>
+        <InviteButton disabled={!validEmail} onClick={handleInvite}>
           Invite
-        </Button>
+        </InviteButton>
       </TripInviteContainer>
       <ContentControlPanel>
         <ControlButton
@@ -108,27 +108,30 @@ ControlPanel.propTypes = {
 
 const TripInviteContainer = styled.div`
   display: flex;
+  flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 60px;
-  padding: 10px 16px;
+  padding: 10px;
   background: ${({ theme }) => theme.colors.contrast};
   border-bottom: 1px solid ${({ theme }) => theme.colors.background};
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.small,
+      theme.sizes.smallPlus,
       css`
-        flex-wrap: wrap;
-        height: auto;
+        flex-wrap: nowrap;
+        height: 60px;
+        padding: 10px 16px;
       `,
     )};
 `;
 
 const InviteInput = styled.input`
   flex: 1 1 auto;
-  margin: 0 10px;
+  order: 0;
+  width: 100%;
+  margin-bottom: 10px;
   padding: 10px;
   font-size: 16px;
   border: 1px solid ${({ theme }) => theme.colors.divider};
@@ -136,21 +139,37 @@ const InviteInput = styled.input`
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.small,
+      theme.sizes.smallPlus,
       css`
-        width: 100%;
-        order: -1;
-        margin: 0px 0 5px;
+        order: 1;
+        margin: 0 10px;
       `,
     )};
+`;
+
+const LeaveButton = styled(Button)`
+  order: 1;
+  width: calc(100% / 2 - 5px);
 
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.smallPlus,
       css`
         order: 0;
-        width: 50%;
-        margin: 0 10px;
+        width: auto;
+      `,
+    )};
+`;
+
+const InviteButton = styled(Button)`
+  order: 2;
+  width: calc(100% / 2 - 5px);
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        width: auto;
       `,
     )};
 `;
@@ -167,12 +186,13 @@ const ContentControlPanel = styled.div`
 const ControlButton = styled(Button)`
   width: calc(100% / 3);
   height: 100%;
-  padding: 10px 20px;
+  padding: 10px;
   color: ${({ isActive, theme }) =>
     isActive ? theme.colors.white : theme.colors.textLight};
   background: ${({ isActive, theme }) =>
     isActive ? theme.colors.accent : theme.colors.contrastLight};
   border-radius: 0;
+  font-size: 14px;
 
   &:active,
   &:focus,
@@ -192,9 +212,10 @@ const ControlButton = styled(Button)`
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.small,
+      theme.sizes.smallPlus,
       css`
-        padding: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
       `,
     )};
 `;

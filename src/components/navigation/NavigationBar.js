@@ -40,12 +40,12 @@ const NavigationBar = ({ actions, match, profile, trip }) => {
         <RightNavBarItems>
           <TripButton onClick={actions.trip.clearTripForm}>
             <NewTripIcon />
-            New Trip
+            New
           </TripButton>
           {match.params.tripId && (
             <TripButton onClick={actions.trip.populateTripForm}>
               <EditTripIcon />
-              Edit Trip
+              Edit
             </TripButton>
           )}
           <HomeLink to="/home">Home</HomeLink>
@@ -86,7 +86,15 @@ const NavBar = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  padding: 0 20px;
+  padding: 0 10px;
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
+      css`
+        padding: 0 20px;
+      `,
+    )}
 `;
 
 const Brand = styled.div`
@@ -104,6 +112,7 @@ const Brand = styled.div`
 
 const LogoLink = styled(Link)`
   color: inherit;
+  text-decoration: none;
 `;
 
 const RightNavBarItems = styled.div`
@@ -116,7 +125,7 @@ const TripButton = styled(Button)`
   justify-content: center;
   align-items: center;
   padding: 5px;
-  font-size: 14px;
+  font-size: 12px;
   color: ${({ theme }) => theme.colors.primary};
 
   &:active,
@@ -127,19 +136,38 @@ const TripButton = styled(Button)`
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.medium,
+      theme.sizes.smallPlus,
       css`
         padding: 5px 15px;
+        font-size: 14px;
       `,
     )}
 `;
 
 const EditTripIcon = styled(Edit)`
-  margin-right: 3px;
+  display: none;
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        display: block;
+        margin-right: 3px;
+      `,
+    )}
 `;
 
 const NewTripIcon = styled(AddPhotoAlternate)`
-  margin-right: 3px;
+  display: none;
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        display: block;
+        margin-right: 3px;
+      `,
+    )}
 `;
 
 const ProfileAvatar = styled.div`
@@ -152,7 +180,7 @@ const ProfileAvatar = styled.div`
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.medium,
+      theme.sizes.smallPlus,
       css`
         display: block;
       `,
@@ -169,7 +197,7 @@ const SignOutButton = styled(Button)`
   justify-content: center;
   align-items: center;
   padding: 5px;
-  font-size: 14px;
+  font-size: 12px;
   color: ${({ theme }) => theme.colors.textLight};
 
   &:active,
@@ -180,9 +208,10 @@ const SignOutButton = styled(Button)`
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.medium,
+      theme.sizes.smallPlus,
       css`
         padding: 15px;
+        font-size: 14px;
       `,
     )}
 `;
@@ -213,7 +242,7 @@ const HomeLink = styled(Link)`
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.medium,
+      theme.sizes.smallPlus,
       css`
         display: flex;
       `,

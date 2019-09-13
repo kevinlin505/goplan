@@ -64,6 +64,13 @@ const TripDetail = ({ actions, selectedTrip, weatherCache }) => {
             <TripNotes>{selectedTrip.notes}</TripNotes>
           </TripInfoCard>
           <TripMembers members={selectedTrip.members} />
+          <BreakpointWrapper>
+            <TripExpenseSummary
+              members={selectedTrip.members}
+              totalExpense={selectedTrip.costs}
+            />
+            <TripMap destinations={selectedTrip.destinations} />
+          </BreakpointWrapper>
         </LeftPanel>
         <MainPanel>
           <MainContentArea>
@@ -130,45 +137,35 @@ const Container = styled.div`
 const Contents = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
   width: 100%;
-  max-width: ${({ theme }) => theme.sizes.colossal}px;
+  max-width: ${({ theme }) => theme.sizes.giant}px;
   margin: 0 auto;
-
-  ${({ theme }) =>
-    breakpointMin(
-      theme.sizes.small,
-      css`
-        flex-direction: column;
-      `,
-    )};
 
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.smallPlus,
       css`
-        flex-direction: row;
-        flex-wrap: wrap;
+        flex-flow: row wrap;
+      `,
+    )};
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.large,
+      css`
+        flex-flow: row nowrap;
       `,
     )};
 `;
 
 const LeftPanel = styled.div`
-  width: 300px;
+  width: 100%;
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.small,
+      theme.sizes.medium,
       css`
-        width: 335px;
-        margin: 0 auto;
-      `,
-    )};
-
-  ${({ theme }) =>
-    breakpointMin(
-      theme.sizes.smallPlus,
-      css`
-        width: 52%;
         max-width: 300px;
         margin-right: 10px;
       `,
@@ -176,25 +173,29 @@ const LeftPanel = styled.div`
 `;
 
 const MainPanel = styled.div`
-  width: 550px;
-  margin: 0 15px;
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  margin: 0 auto;
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.small,
+      theme.sizes.medium,
       css`
-        width: 90%;
-        order: 1;
-        margin: 0 auto;
+        width: calc(100% - 310px);
       `,
     )};
+`;
+
+const RightPanel = styled.div`
+  width: 100%;
+  margin-bottom: 15px;
 
   ${({ theme }) =>
     breakpointMin(
-      theme.sizes.smallPlus,
+      theme.sizes.medium,
       css`
-        width: 95%;
-        max-width: 620px;
+        display: none;
       `,
     )};
 
@@ -202,42 +203,38 @@ const MainPanel = styled.div`
     breakpointMin(
       theme.sizes.large,
       css`
-        order: 0;
-        width: 42%;
-        max-width: 550px;
-      `,
-    )};
-`;
-
-const RightPanel = styled.div`
-  width: 300px;
-  margin-bottom: 15px;
-
-  ${({ theme }) =>
-    breakpointMin(
-      theme.sizes.small,
-      css`
-        width: 335px;
-        margin: 0 auto 15px;
-      `,
-    )};
-
-  ${({ theme }) =>
-    breakpointMin(
-      theme.sizes.smallPlus,
-      css`
-        width: 40%;
-        max-width: 300px;
+        display: block;
+        max-width: 270px;
         margin-left: 10px;
       `,
     )};
 
   ${({ theme }) =>
     breakpointMin(
+      theme.sizes.giant,
+      css`
+        display: block;
+        max-width: 300px;
+      `,
+    )};
+`;
+
+const BreakpointWrapper = styled.div`
+  display: none;
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.medium,
+      css`
+        display: block;
+      `,
+    )};
+
+  ${({ theme }) =>
+    breakpointMin(
       theme.sizes.large,
       css`
-        width: 22%;
-        max-width: 300px;
+        display: none;
       `,
     )};
 `;

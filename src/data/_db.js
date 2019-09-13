@@ -3,7 +3,7 @@ import 'firebase/firestore';
 import Keys from '@constants/Keys';
 
 const initializeFireBase = () => {
-  if (process.env.production) {
+  if (process.env.NODE_ENV === 'production') {
     firebase.initializeApp(Keys.FIREBASE);
   } else {
     firebase.initializeApp(Keys.FIREBASE_DEV);

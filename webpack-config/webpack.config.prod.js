@@ -31,6 +31,7 @@ module.exports = function returnWebpackSettings(PATHS) {
         template: 'src/index.tpl.ejs',
         inject: 'body',
         filename: 'index.html',
+        favicon: 'src/assets/favicon.ico',
       }),
 
       new CaseSensitivePathsPlugin(),

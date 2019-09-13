@@ -4,7 +4,7 @@ const googleMapsApi = () => {
   if (window.google) return window.google;
 
   const apiKey =
-    process.env === 'production'
+    process.env.NODE_ENV === 'production'
       ? Keys.FIREBASE.mapApiKey
       : Keys.FIREBASE_DEV.apiKey;
 

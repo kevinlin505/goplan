@@ -7,9 +7,12 @@
   ],
   "scripts": {
     "start": "nodemon --watch webpack.config.js --watch webpack-config* --exec \"webpack-dev-server --env.environment development\"",
-    "build": "NODE_ENV=production webpack --env.environment production --progress",
-    "deploy": "yarn build && firebase use prod && firebase deploy --only hosting",
-    "deploy:function": "firebase deploy --only functions",
+    "build:dev": "webpack --env.environment development --progress",
+    "build:prod": "webpack --env.environment production --progress",
+    "deploy:dev": "yarn build:dev && firebase use dev && firebase deploy --only hosting",
+    "deploy:prod": "yarn build:prod && firebase use prod && firebase deploy --only hosting",
+    "deploy:function:dev": "firebase use dev && firebase deploy --only functions",
+    "deploy:function:prod": "firebase use prod && firebase deploy --only functions",
     "lint": "eslint . --ext .js,.jsx --cache",
     "lint:check": "eslint --print-config . | eslint-config-prettier-check"
   },

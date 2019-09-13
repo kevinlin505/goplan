@@ -2,8 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '@components/App';
 
+function gtag(rest) {
+  window.dataLayer.push(rest);
+}
+
 // Global site tag (gtag.js) - Google Analytics
-if (process.env === 'production') {
+if (process.env.NODE_ENV === 'production') {
   const script = document.createElement('sript');
 
   script.src = 'https://www.googletagmanager.com/gtag/js?id=UA-146416934-1';
@@ -12,9 +16,6 @@ if (process.env === 'production') {
 
   window.dataLayer = window.dataLayer || [];
 
-  function gtag(rest) {
-    window.dataLayer.push(rest);
-  }
   gtag('js', new Date());
   gtag('config', 'UA-146416934-1');
 }
