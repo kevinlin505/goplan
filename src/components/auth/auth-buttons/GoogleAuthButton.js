@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 
 export const GoogleAuthButton = ({ handleSignIn }) => {
   return (
-    <Button onClick={() => handleSignIn('google')}>
+    <AuthButton onClick={() => handleSignIn('google')}>
       <svg
         height="46"
         viewBox="0 0 252 46"
@@ -83,12 +84,16 @@ export const GoogleAuthButton = ({ handleSignIn }) => {
           </g>
         </g>
       </svg>
-    </Button>
+    </AuthButton>
   );
 };
 
 GoogleAuthButton.propTypes = {
   handleSignIn: PropTypes.func.isRequired,
 };
+
+const AuthButton = styled(Button)`
+  width: 100%;
+`;
 
 export default GoogleAuthButton;

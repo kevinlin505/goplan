@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 
 const FacebookAuthButton = ({ handleSignIn }) => {
   return (
-    <Button onClick={() => handleSignIn('facebook')}>
+    <AuthButton onClick={() => handleSignIn('facebook')}>
       <svg
         height="46"
         viewBox="0 0 252 46"
@@ -72,12 +73,16 @@ const FacebookAuthButton = ({ handleSignIn }) => {
           />
         </g>
       </svg>
-    </Button>
+    </AuthButton>
   );
 };
 
 FacebookAuthButton.propTypes = {
   handleSignIn: PropTypes.func.isRequired,
 };
+
+const AuthButton = styled(Button)`
+  width: 100%;
+`;
 
 export default FacebookAuthButton;
