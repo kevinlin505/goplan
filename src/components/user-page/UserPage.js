@@ -142,7 +142,16 @@ const Contents = styled.div`
 
 const LeftPanel = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
+
+  ${({ theme }) =>
+    breakpointMin(
+      theme.sizes.smallPlus,
+      css`
+        flex-direction: row;
+      `,
+    )};
 
   ${({ theme }) =>
     breakpointMin(

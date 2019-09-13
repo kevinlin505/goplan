@@ -131,21 +131,21 @@ const Background = styled.div`
 `;
 
 const ContentContainer = styled(CardContainer)`
-  padding: 20px;
+  padding: 40px 20px;
   width: 90%;
+  max-width: 400px;
   background: rgba(255, 255, 255, 0.85);
   text-align: center;
   overflow: hidden;
   border-radius: 4px;
+  margin: 0 auto;
 
   ${({ theme }) =>
     breakpointMin(
       theme.sizes.medium,
       css`
         width: 100%;
-        max-width: 400px;
         padding: 40px;
-        margin: 0 auto;
       `,
     )};
 `;
