@@ -146,12 +146,14 @@ export const tripActions = {
       id: profile.id,
       name: profile.name,
     };
+    const travelDates = getTravelDates(form);
     const tripDetail = {
       ...form,
       members: {
         [profile.id]: organizer,
       },
       organizer,
+      travelDates,
     };
 
     return trip()
@@ -165,7 +167,7 @@ export const tripActions = {
               member,
               tripId,
               tripDetail.name,
-              getTravelDates(tripDetail),
+              travelDates,
             );
           }),
         ).then(() => {
@@ -206,10 +208,6 @@ export const tripActions = {
         const trips = tripDocs.reduce((tripMap, tripDoc) => {
           const tripData = tripDoc.data();
 
-          // calculate overall travel date
-          const traveDates = getTravelDates(tripData);
-
-          tripData.travelDates = traveDates;
           tripMap[tripDoc.data().id] = tripData;
 
           return tripMap;
@@ -263,8 +261,6 @@ export const tripActions = {
         return dispatch(tripActions.getMembers(tripDetails.members)).then(
           membersList => {
             tripDetails.members = membersList;
-
-            tripDetails.travelDates = getTravelDates(tripDetails);
 
             dispatch({
               type: types.SET_SELECTED_TRIP,
@@ -492,6 +488,9 @@ export const tripActions = {
     } = getState();
     const memberEmails = Object.values(members).map(member => member.email);
     const tripDetail = { ...form };
+    const travelDates = getTravelDates(tripDetail);
+
+    tripDetail.travelDates = travelDates;
 
     return trip()
       .updateTrip(tripDetail)
@@ -505,7 +504,7 @@ export const tripActions = {
                 memberEmail,
                 tripDetail.id,
                 tripDetail.name,
-                getTravelDates(tripDetail),
+                travelDates,
               );
             }
 
