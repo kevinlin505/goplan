@@ -126,6 +126,10 @@ export default function reducer(state = initialState, action) {
           ...state.selectedTrip,
           ...action.tripDetail,
         },
+        trips: {
+          ...state.trips,
+          [action.tripDetail.id]: action.tripDetail,
+        },
       };
     }
 
@@ -525,6 +529,7 @@ export const tripActions = {
 
         dispatch({
           type: types.UPDATE_TRIP,
+          tripDetail,
         });
 
         return dispatch(tripActions.toggleEditTripModal());
