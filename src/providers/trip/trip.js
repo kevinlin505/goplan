@@ -515,9 +515,11 @@ export const tripActions = {
             return Promise.resolve();
           }),
         ).then(() => {
-          activity().updateActivity(ActivityType.INVITE_TRIP, tripDetail.id, {
-            emails: form.invites,
-          });
+          if (form.invites.length > 0) {
+            activity().updateActivity(ActivityType.INVITE_TRIP, tripDetail.id, {
+              emails: form.invites,
+            });
+          }
         });
 
         dispatch(
