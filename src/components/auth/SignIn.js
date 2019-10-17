@@ -22,6 +22,7 @@ const mapDispatchToProps = dispatch => {
 const RANDOM_NUMBER = Math.floor(Math.random() * 7);
 
 const SignIn = ({ actions }) => {
+  const resizeParameters = '?fm=jpg&fit=crop&w=1080&q=80&fit=max';
   const backgrounds = [
     {
       handle: '@dinoreichmuth',
@@ -62,7 +63,7 @@ const SignIn = ({ actions }) => {
   const background = backgrounds[RANDOM_NUMBER];
 
   return (
-    <Background imageSource={background.url}>
+    <Background imageSource={`${background.url}${resizeParameters}`}>
       <ContentContainer>
         <Logo>
           <svg height="68" viewBox="0 0 390 68" width="390">
