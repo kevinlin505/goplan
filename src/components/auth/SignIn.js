@@ -63,7 +63,7 @@ const SignIn = ({ actions }) => {
   const background = backgrounds[RANDOM_NUMBER];
 
   return (
-    <Background imageSource={background.url + resizeParameters}>
+    <Background imageSource={`${background.url}${resizeParameters}`}>
       <ContentContainer>
         <Logo>
           <svg height="68" viewBox="0 0 390 68" width="390">
